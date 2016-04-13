@@ -1,44 +1,65 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>WHPF</title>
     <style>
-      #answer{
-        display: none;
+      .team-picture{
+        height: 40px;
       }
     </style>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
   </head>
   <body>
-    <h1>WHO HE PLAY FOR</h1>
-    <h2>{{ player.name }}</h2>
-    <img src="{{ player.picture }}" />
+    <div class="container">
+      <h1>WHO HE PLAY FOR</h1>
+      <div class="row">
+        <div class="col-sm-4">
+          <h2>{{ player.name }}</h2>
+          <img class="player-picture" src="{{ player.picture }}" data-answer="{{ player.team.code }}" />
+        </div>
 
-    <br />
-    <select id="choice">
-      <option value="" selected>---</option>
-      {% for team in teams %}
-      <option value="{{ team }}">{{ team }}</option>
-      {% endfor %}
-    </select>
-    <button id="guess">GUESS</button>
+        <div class="col-sm-4">
+          <h2>Guess</h2>
+          <div id="teams">
+          {% for team in teams %}
+            <a href="#" id="{{ team.code }}" class="guess"><img title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" /></a>
+          {% endfor %}
+          </div>
 
-    <p id="answer">{{ player.team }}</p>
 
-    <p>
-    <a href="/">GO AGAIN</a>
-    </p>
+        </div>
+      </div> <!-- row -->
+      <div id="result">
+      </div>
+      <div style="margin-top: 40px;">
+        <a class="btn btn-info" href="/">GO AGAIN</a>
+      </div>
+    </div> <!-- container -->
 
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
     <script>
-      $("#guess").click(function(){
-        var guess = $("#choice").val();
-        var answer = $("#answer").html();
-        var div = $("<div/>");
+      $("a.guess").click(function(e){
+        e.preventDefault();
+        var guess = $(this).attr("id");
+        var answer = $(".player-picture").data("answer");
+        var div = $("#result");
         if (guess == answer){
           div.html("SUCCESS");
         } else {
           div.html("Nooo, he play for " + answer);
         }
-        div.insertAfter($("#guess"));
       });
     </script>
   </body>
