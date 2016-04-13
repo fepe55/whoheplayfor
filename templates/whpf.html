@@ -65,6 +65,7 @@
         $(".round").html(round);
 
         $('#resultModal').modal('hide');
+
         var players = {{ players|tojson }};
         player = players[Math.floor(Math.random() * players.length)];
         $(".player-name").html(player.name);
@@ -72,11 +73,6 @@
       }
 
       $(document).ready(function(){
-        initialize();
-      });
-
-      $(".refresh").click(function(e){
-        console.log("restart");
         initialize();
       });
 
@@ -99,16 +95,13 @@
           modal_title.html("FAIL");
           result_container.html("Nooo, " + player.name + " plays for " + player.team.city + " " + player.team.name);
         }
-        $('#resultModal').modal({
-          'backdrop': 'static',
-          keyboard: false,
-        });
+        $('#resultModal').modal();
       });
 
     </script>
 
     <!-- modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="resultModal">
+    <div class="modal fade" tabindex="-1" role="dialog" id="resultModal" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
