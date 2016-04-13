@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-import random
 import json
 import requests
 from flask import (Flask, render_template, )
@@ -39,8 +38,8 @@ def main():
             players.append(player)
 
     teams = sorted(teams)
-    player = random.choice(players)
-    return render_template('whpf.html', player=player, teams=teams)
+    # player = random.choice(players)
+    return render_template('whpf.html', players=players, teams=teams)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8000)

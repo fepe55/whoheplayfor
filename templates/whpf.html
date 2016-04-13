@@ -27,11 +27,12 @@
   </head>
   <body>
     <div class="container">
-      <h1>WHO HE PLAY FOR</h1>
+      <h1>WHO HE PLAY FOR <small><span class="guessed"></span>/<span class="total"></span></small></h1>
+      <h2>Round <span class="round"></span></h2>
       <div class="row">
-        <div class="col-sm-4 text-center">
-          <h2>{{ player.name }}</h2>
-          <img class="player-picture" style="background-image: url('{{ player.picture }}');" data-playerinfo='{{ player|tojson }}' />
+        <div class="col-sm-4 text-center player">
+          <h2 class="player-name"></h2>
+          <img class="player-picture" />
         </div>
 
         <div class="col-sm-4 text-center">
@@ -52,10 +53,38 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <script>
+      var player;
+      var round = 1;
+      var guessed = 0;
+    </script>
+    <script>
+      function initialize(){
+        var total = round - 1;
+        $(".guessed").html(guessed);
+        $(".total").html(total);
+        $(".round").html(round);
+
+        $('#resultModal').modal('hide');
+        var players = {{ players|tojson }};
+        player = players[Math.floor(Math.random() * players.length)];
+        $(".player-name").html(player.name);
+        $(".player-picture").css("background-image", "url('" + player.picture + "')");
+      }
+
+      $(document).ready(function(){
+        initialize();
+      });
+
+      $(".refresh").click(function(e){
+        console.log("restart");
+        initialize();
+      });
+
       $("a.guess").click(function(e){
+        round += 1;
         e.preventDefault();
         var guess = $(this).attr("id");
-        var player = $(".player-picture").data("playerinfo");
+        // var player = $(".player-picture").data("playerinfo");
         var answer = player.team.code;
         var player_team = $(".player-picture").data("jsonanswer");
         var result_container = $("#resultModal .modal-body p");
@@ -63,6 +92,7 @@
         var img = $(".answer-image");
         img.attr("src", player.team.picture);
         if (guess == answer){
+          guessed += 1;
           modal_title.html("SUCCESS");
           result_container.html("Yes, " + player.name + " plays for " + player.team.city + " " + player.team.name);
         } else {
@@ -95,7 +125,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <a class="btn btn-info text-center" href="/">GO AGAIN</a>
+            <a class="btn btn-danger" href="/">Restart</a>
+            <button class="btn btn-success" onClick="initialize();">Next round</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
