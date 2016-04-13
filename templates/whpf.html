@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>WHPF</title>
+    <style>
+      #answer{
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WHO HE PLAY FOR</h1>
+    <h2>{{ player.name }}</h2>
+    <img src="{{ player.picture }}" />
+
+    <br />
+    <select id="choice">
+      <option value="" selected>---</option>
+      {% for team in teams %}
+      <option value="{{ team }}">{{ team }}</option>
+      {% endfor %}
+    </select>
+    <button id="guess">GUESS</button>
+
+    <p id="answer">{{ player.team }}</p>
+
+    <p>
+    <a href="/">GO AGAIN</a>
+    </p>
+
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script>
+      $("#guess").click(function(){
+        var guess = $("#choice").val();
+        var answer = $("#answer").html();
+        var div = $("<div/>");
+        if (guess == answer){
+          div.html("SUCCESS");
+        } else {
+          div.html("Nooo, he play for " + answer);
+        }
+        div.insertAfter($("#guess"));
+      });
+    </script>
+  </body>
+</html>
+
