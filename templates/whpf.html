@@ -7,8 +7,15 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>WHPF</title>
     <style>
+      .player-picture{
+        display: inline-block;
+        height: 0px;
+        width: 0px;
+        padding: 70px 115px 70px 115px;
+      }
+
       .team-picture{
-        height: 40px;
+        width: 15%;
       }
     </style>
     <!-- Latest compiled and minified CSS -->
@@ -22,13 +29,13 @@
     <div class="container">
       <h1>WHO HE PLAY FOR</h1>
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4 text-center">
           <h2>{{ player.name }}</h2>
-          <img class="player-picture" src="{{ player.picture }}" data-answer="{{ player.team.code }}" />
+          <img class="player-picture" style="background-image: url('{{ player.picture }}');" data-playerinfo='{{ player|tojson }}' />
         </div>
 
-        <div class="col-sm-4">
-          <h2>Guess</h2>
+        <div class="col-sm-4 text-center">
+          <h2>Your guess</h2>
           <div id="teams">
           {% for team in teams %}
             <a href="#" id="{{ team.code }}" class="guess"><img title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" /></a>
@@ -38,11 +45,6 @@
 
         </div>
       </div> <!-- row -->
-      <div id="result">
-      </div>
-      <div style="margin-top: 40px;">
-        <a class="btn btn-info" href="/">GO AGAIN</a>
-      </div>
     </div> <!-- container -->
 
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
@@ -53,15 +55,52 @@
       $("a.guess").click(function(e){
         e.preventDefault();
         var guess = $(this).attr("id");
-        var answer = $(".player-picture").data("answer");
-        var div = $("#result");
+        var player = $(".player-picture").data("playerinfo");
+        var answer = player.team.code;
+        var player_team = $(".player-picture").data("jsonanswer");
+        var result_container = $("#resultModal .modal-body p");
+        var modal_title = $("#resultModal .modal-title");
+        var img = $(".answer-image");
+        img.attr("src", player.team.picture);
         if (guess == answer){
-          div.html("SUCCESS");
+          modal_title.html("SUCCESS");
+          result_container.html("Yes, " + player.name + " plays for " + player.team.city + " " + player.team.name);
         } else {
-          div.html("Nooo, he play for " + answer);
+          modal_title.html("FAIL");
+          result_container.html("Nooo, " + player.name + " plays for " + player.team.city + " " + player.team.name);
         }
+        $('#resultModal').modal({
+          'backdrop': 'static',
+          keyboard: false,
+        });
       });
+
     </script>
+
+    <!-- modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="resultModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-2">
+                <img style="width: 100%" class="answer-image" />
+              </div>
+              <div class="col-xs-10">
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-info text-center" href="/">GO AGAIN</a>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
   </body>
 </html>
 

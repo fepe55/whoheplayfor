@@ -8,10 +8,11 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
+def main():
     PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
     PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
     TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
+
     r = requests.get(PLAYERS_URL)
     j = json.loads(r.text)
     nba_players = j['resultSets'][0]['rowSet']
@@ -42,4 +43,4 @@ def hello_world():
     return render_template('whpf.html', player=player, teams=teams)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(host='0.0.0.0', debug=True, port=8000)
