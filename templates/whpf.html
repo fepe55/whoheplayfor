@@ -87,6 +87,7 @@
       var player;
       var round = 1;
       var guessed = 0;
+      var code = "";
     </script>
     <script>
       function initialize(){
@@ -102,7 +103,7 @@
         $(".player-name").html(player.name);
         $(".player-picture").css("background-image", "url('" + player.picture + "')");
 
-        if (total == 10){
+        if (total == 2){
           $(".game").hide();
           $(".results").hide();
           $(".past-guesses h1").html("Final result: " + guessed + "/" + total);
@@ -111,7 +112,12 @@
             'href': '/',
           }).html("Play again");
 
+          var a = '000'.slice(0, 3-(total.toString().length)) + total.toString();
+          console.log(a);
+          code = a + code;
           go_again.insertBefore(".past-guesses h1");
+          console.log(code);
+          window.location = "/results/"+code;
         }
       }
 
@@ -171,6 +177,11 @@
         table.prepend(tr);
 
         round += 1;
+        var pad = "00000000";
+        // Padded player ID
+        code += pad.slice(0, 8 - player.id.toString().length) + player.id;
+        // Team id
+        code += team.id.toString().slice(-2);
         $('#resultModal').modal();
       });
 
