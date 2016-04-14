@@ -11,7 +11,7 @@
         display: inline-block;
         height: 0px;
         width: 0px;
-        padding: 70px 115px 70px 115px;
+        padding: 60px 115px 60px 115px;
       }
 
       .team-picture{
@@ -150,9 +150,15 @@
           'title': player.name, 
         });
         td_player = $("<td />").append(img_player);
-        img_guess = $("<img />", {'src': team.picture, });
+        img_guess = $("<img />", {
+          'src': team.picture,
+          'title': team.city + " " + team.name,
+        });
         td_your_guess = $("<td />").append(img_guess);
-        img_answer = $("<img />", {'src': player.team.picture, });
+        img_answer = $("<img />", {
+          'src': player.team.picture,
+          'title': player.team.city + " " + player.team.name,
+        });
         td_answer = $("<td />").append(img_answer);
 
         tr.append(th_round);
