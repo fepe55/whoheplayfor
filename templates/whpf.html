@@ -17,6 +17,14 @@
       .team-picture{
         width: 15%;
       }
+
+      .past-guesses{
+        display: none;
+      }
+
+      .past-guesses img{
+        height: 80px;
+      }
     </style>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -24,28 +32,51 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
   </head>
   <body>
     <div class="container">
-      <h1>WHO HE PLAY FOR <small><span class="guessed"></span>/<span class="total"></span></small></h1>
-      <h2>Round <span class="round"></span></h2>
-      <div class="row">
-        <div class="col-sm-4 text-center player">
-          <h2 class="player-name"></h2>
-          <img class="player-picture" />
-        </div>
-
-        <div class="col-sm-4 text-center">
-          <h2>Your guess</h2>
-          <div id="teams">
-          {% for team in teams %}
-            <a href="#" id="{{ team.code }}" class="guess"><img title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" /></a>
-          {% endfor %}
+      <h1>WHO HE PLAY FOR <small class="results"><span class="guessed"></span>/<span class="total"></span></small></h1>
+      <div class="game">
+        <h2>Round <span class="round"></span></h2>
+        <div class="row">
+          <div class="col-sm-4 text-center player">
+            <h2 class="player-name"></h2>
+            <img class="player-picture" />
           </div>
 
+          <div class="col-sm-4 text-center">
+            <h2>Your guess</h2>
+            <div id="teams">
+            {% for team in teams %}
+              <a href="#" class="guess" data-team='{{ team|tojson }}'>
+                <img title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+              </a>
+            {% endfor %}
+            </div>
 
+
+          </div>
+        </div> <!-- row -->
+      </div>
+      <div class="row past-guesses">
+        <div class="col-md-12">
+          <h1>Past guesses</h1>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Round</th>
+                <th>Player</th>
+                <th>Your guess</th>
+                <th>Correct guess</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
         </div>
-      </div> <!-- row -->
+      </div>
     </div> <!-- container -->
 
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
@@ -70,6 +101,18 @@
         player = players[Math.floor(Math.random() * players.length)];
         $(".player-name").html(player.name);
         $(".player-picture").css("background-image", "url('" + player.picture + "')");
+
+        if (total == 10){
+          $(".game").hide();
+          $(".results").hide();
+          $(".past-guesses h1").html("Final result: " + guessed + "/" + total);
+          var go_again = $("<a />", {
+            'class': 'btn btn-info btn-lg',
+            'href': '/',
+          }).html("Play again");
+
+          go_again.insertBefore(".past-guesses h1");
+        }
       }
 
       $(document).ready(function(){
@@ -77,24 +120,51 @@
       });
 
       $("a.guess").click(function(e){
-        round += 1;
         e.preventDefault();
-        var guess = $(this).attr("id");
-        // var player = $(".player-picture").data("playerinfo");
+        var team = $(this).data("team");
+        console.log(team);
+        var guess = team.code;
         var answer = player.team.code;
-        var player_team = $(".player-picture").data("jsonanswer");
         var result_container = $("#resultModal .modal-body p");
         var modal_title = $("#resultModal .modal-title");
         var img = $(".answer-image");
         img.attr("src", player.team.picture);
+        var tr = $("<tr />");
         if (guess == answer){
           guessed += 1;
           modal_title.html("SUCCESS");
           result_container.html("Yes, " + player.name + " plays for " + player.team.city + " " + player.team.name);
+          tr.attr("class", "success");
         } else {
           modal_title.html("FAIL");
           result_container.html("Nooo, " + player.name + " plays for " + player.team.city + " " + player.team.name);
+          tr.attr("class", "danger");
         }
+
+        th_round = $("<th />", {
+          "scope": "row",
+          "style": "vertical-align: middle",
+        }).html('<span class="fa-stack fa-2x"><i class="fa fa-circle fa-stack-2x"></i><strong class="fa-stack-1x" style="color: white;">' + round + '</strong></span>');
+        img_player = $("<img />", {
+          'src': player.picture, 
+          'title': player.name, 
+        });
+        td_player = $("<td />").append(img_player);
+        img_guess = $("<img />", {'src': team.picture, });
+        td_your_guess = $("<td />").append(img_guess);
+        img_answer = $("<img />", {'src': player.team.picture, });
+        td_answer = $("<td />").append(img_answer);
+
+        tr.append(th_round);
+        tr.append(td_player);
+        tr.append(td_your_guess);
+        tr.append(td_answer);
+
+        $(".past-guesses").show();
+        var table = $(".past-guesses tbody");
+        table.prepend(tr);
+
+        round += 1;
         $('#resultModal').modal();
       });
 
@@ -118,7 +188,6 @@
             </div>
           </div>
           <div class="modal-footer">
-            <a class="btn btn-danger" href="/">Restart</a>
             <button class="btn btn-success" onClick="initialize();">Next round</button>
           </div>
         </div><!-- /.modal-content -->
