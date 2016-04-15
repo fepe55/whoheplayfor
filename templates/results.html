@@ -1,60 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>WHPF</title>
-    <style>
-      .past-guesses img{
-        height: 80px;
-      }
-    </style>
-
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-  </head>
-
-  <body>
-    <div class="container">
-      <div class="row past-guesses">
-        <div class="col-md-12">
-          <h1>Guesses</h1>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Round</th>
-                <th>Player</th>
-                <th>Your guess</th>
-                <th>Correct guess</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for guess in guesses %}
-              {% if guess.team.id == guess.player.team.id %}
-              <tr class="success">
-              {% else %}
-              <tr class="danger">
-              {% endif %}
-                <th scope="row" style="vertical-align: middle">
-                  <span class="fa-stack fa-2x">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <strong class="fa-stack-1x" style="color: white;">{{ loop.index }}</strong>
-                  </span>
-                </th>
-                <td><img src="{{ guess.player.picture }}" title="{{ guess.player.name }}" /></td>
-                <td><img src="{{ guess.team.picture }}" title="{{ guess.team.city }} {{ guess.team.name }}" /></td>
-                <td><img src="{{ guess.player.team.picture }}" title="{{ guess.player.team.city }} {{ guess.player.team.name }}" /></td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
+{% extends "base.html" %}
+{% block content %}
+  <div class="row result-guesses">
+    <div class="col-md-12">
+      <h1>Guesses</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>Player</th>
+            <th>Your guess</th>
+            <th>Correct guess</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for guess in guesses %}
+          {% if guess.team.id == guess.player.team.id %}
+          <tr class="success">
+          {% else %}
+          <tr class="danger">
+          {% endif %}
+            <th scope="row" style="vertical-align: middle">
+              <span class="fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <strong class="fa-stack-1x" style="color: white;">{{ loop.index }}</strong>
+              </span>
+            </th>
+            <td><img src="{{ guess.player.picture }}" title="{{ guess.player.name }}" /></td>
+            <td><img src="{{ guess.team.picture }}" title="{{ guess.team.city }} {{ guess.team.name }}" /></td>
+            <td><img src="{{ guess.player.team.picture }}" title="{{ guess.player.team.city }} {{ guess.player.team.name }}" /></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,223 +1,177 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>WHPF</title>
-    <style>
-      .player-picture{
-        display: inline-block;
-        height: 0px;
-        width: 0px;
-        padding: 60px 115px 60px 115px;
-      }
-
-      .team-picture{
-        width: 15%;
-      }
-
-      .past-guesses{
-        display: none;
-      }
-
-      .past-guesses img{
-        height: 80px;
-      }
-    </style>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-
-  </head>
-  <body>
-    <div class="container">
-      <h1>WHO HE PLAY FOR <small class="results"><span class="guessed"></span>/<span class="total"></span></small></h1>
-      <div class="game">
-        <h2>Round <span class="round"></span></h2>
-        <div class="row">
-          <div class="col-sm-4 text-center player">
-            <h2 class="player-name"></h2>
-            <img class="player-picture" />
-          </div>
-
-          <div class="col-sm-4 text-center">
-            <h2>Your guess</h2>
-            <div id="teams">
-            {% for team in teams %}
-              <a href="#" class="guess" data-team='{{ team|tojson }}'>
-                <img title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
-              </a>
-            {% endfor %}
-            </div>
-
-
-          </div>
-        </div> <!-- row -->
+{% extends "base.html" %}
+{% block content %}
+  <h1>
+    WHO HE PLAY FOR <small class="results"><span class="guessed"></span>/<span class="total"></span></small>
+  </h1>
+  <div class="game">
+    <h2>Round <span class="round"></span></h2>
+    <div class="row">
+      <div class="col-sm-4 text-center player">
+        <h2 class="player-name"></h2>
+        <img class="player-picture" />
       </div>
-      <div class="row past-guesses">
-        <div class="col-md-12">
-          <h1>Past guesses</h1>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Round</th>
-                <th>Player</th>
-                <th>Your guess</th>
-                <th>Correct guess</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+      <div class="col-sm-4 text-center">
+        <h2>Your guess</h2>
+        <div id="teams">
+        {% for team in teams %}
+          <a href="#" class="guess" data-team='{{ team|tojson }}'>
+            <img title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+          </a>
+        {% endfor %}
         </div>
       </div>
-    </div> <!-- container -->
+    </div> <!-- row -->
+  </div>
+  <div class="row past-guesses">
+    <div class="col-md-12">
+      <h1>Past guesses</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>Player</th>
+            <th>Your guess</th>
+            <th>Correct guess</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
 
-    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+{% block js %}
+  <script>
+    var player;
+    var round = 1;
+    var guessed = 0;
+    var code = "";
+  </script>
+  <script>
+    function start_round(){
+      var total = round - 1;
+      $(".guessed").html(guessed);
+      $(".total").html(total);
+      $(".round").html(round);
 
-    <script>
-      var player;
-      var round = 1;
-      var guessed = 0;
-      var code = "";
-    </script>
-    <script>
-      function initialize(){
-        var total = round - 1;
-        $(".guessed").html(guessed);
-        $(".total").html(total);
-        $(".round").html(round);
+      $('#resultModal').modal('hide');
 
-        $('#resultModal').modal('hide');
+      var players = {{ players|tojson }};
+      player = players[Math.floor(Math.random() * players.length)];
+      $(".player-name").html(player.name);
+      $(".player-picture").css("background-image", "url('" + player.picture + "')");
 
-        var players = {{ players|tojson }};
-        player = players[Math.floor(Math.random() * players.length)];
-        $(".player-name").html(player.name);
-        $(".player-picture").css("background-image", "url('" + player.picture + "')");
+      if (total == 10){
+        $(".game").hide();
+        $(".results").hide();
+        $(".past-guesses h1").html("Final result: " + guessed + "/" + total);
+        var go_again = $("<a />", {
+          'class': 'btn btn-info btn-lg',
+          'href': '/',
+        }).html("Play again");
 
-        if (total == 10){
-          $(".game").hide();
-          $(".results").hide();
-          $(".past-guesses h1").html("Final result: " + guessed + "/" + total);
-          var go_again = $("<a />", {
-            'class': 'btn btn-info btn-lg',
-            'href': '/',
-          }).html("Play again");
+        var a = '000'.slice(0, 3-(total.toString().length)) + total.toString();
+        code = a + code;
+        go_again.insertBefore(".past-guesses h1");
+        // window.location = "/results/"+code;
+        var div_row = $("<div/>", {'class': 'row', });
+        var div_label = $("<div/>", {'class': 'col-md-2', });
+        var span_label = $("<span/>", {'class': 'text-right', }).html("Share your result");
+        div_label.append(span_label);
+        var div_input = $("<div/>", {'class': 'col-md-10', });
+        input = $("<input/>",{'type': 'text', 'class': 'form-control', }).val("{{ request.url }}" + "results/" + code);
+        div_input.append(input);
+        div_row.append(div_label);
+        div_row.append(div_input);
+        div_row.insertAfter(".past-guesses h1");
+      }
+    }
 
-          var a = '000'.slice(0, 3-(total.toString().length)) + total.toString();
-          code = a + code;
-          go_again.insertBefore(".past-guesses h1");
-          // window.location = "/results/"+code;
-          var div_row = $("<div/>", {'class': 'row', });
-          var div_label = $("<div/>", {'class': 'col-md-2', });
-          var span_label = $("<span/>", {'class': 'text-right', }).html("Share your result");
-          div_label.append(span_label);
-          var div_input = $("<div/>", {'class': 'col-md-10', });
-          input = $("<input/>",{'type': 'text', 'class': 'form-control', }).val("{{ request.url }}" + "results/" + code);
-          div_input.append(input);
-          div_row.append(div_label);
-          div_row.append(div_input);
-          div_row.insertAfter(".past-guesses h1");
-        }
+    $(document).ready(function(){
+      start_round();
+    });
+
+    $("a.guess").click(function(e){
+      e.preventDefault();
+      var team = $(this).data("team");
+      var result_container = $("#resultModal .modal-body p");
+      var modal_title = $("#resultModal .modal-title");
+      var img = $(".answer-image");
+      img.attr("src", player.team.picture);
+      var tr = $("<tr />");
+      if (team.code == player.team.code){
+        guessed += 1;
+        modal_title.html("SUCCESS");
+        result_container.html("Yes, " + player.name + " plays for " + player.team.city + " " + player.team.name);
+        tr.attr("class", "success");
+      } else {
+        modal_title.html("FAIL");
+        result_container.html("Nooo, " + player.name + " plays for " + player.team.city + " " + player.team.name);
+        tr.attr("class", "danger");
       }
 
-      $(document).ready(function(){
-        initialize();
+      th_round = $("<th />", {
+        "scope": "row",
+        "style": "vertical-align: middle",
+      }).html('<span class="fa-stack fa-2x"><i class="fa fa-circle fa-stack-2x"></i><strong class="fa-stack-1x" style="color: white;">' + round + '</strong></span>');
+      img_player = $("<img />", {
+        'src': player.picture,
+        'title': player.name,
       });
-
-      $("a.guess").click(function(e){
-        e.preventDefault();
-        var team = $(this).data("team");
-        var guess = team.code;
-        var answer = player.team.code;
-        var result_container = $("#resultModal .modal-body p");
-        var modal_title = $("#resultModal .modal-title");
-        var img = $(".answer-image");
-        img.attr("src", player.team.picture);
-        var tr = $("<tr />");
-        if (guess == answer){
-          guessed += 1;
-          modal_title.html("SUCCESS");
-          result_container.html("Yes, " + player.name + " plays for " + player.team.city + " " + player.team.name);
-          tr.attr("class", "success");
-        } else {
-          modal_title.html("FAIL");
-          result_container.html("Nooo, " + player.name + " plays for " + player.team.city + " " + player.team.name);
-          tr.attr("class", "danger");
-        }
-
-        th_round = $("<th />", {
-          "scope": "row",
-          "style": "vertical-align: middle",
-        }).html('<span class="fa-stack fa-2x"><i class="fa fa-circle fa-stack-2x"></i><strong class="fa-stack-1x" style="color: white;">' + round + '</strong></span>');
-        img_player = $("<img />", {
-          'src': player.picture, 
-          'title': player.name, 
-        });
-        td_player = $("<td />").append(img_player);
-        img_guess = $("<img />", {
-          'src': team.picture,
-          'title': team.city + " " + team.name,
-        });
-        td_your_guess = $("<td />").append(img_guess);
-        img_answer = $("<img />", {
-          'src': player.team.picture,
-          'title': player.team.city + " " + player.team.name,
-        });
-        td_answer = $("<td />").append(img_answer);
-
-        tr.append(th_round);
-        tr.append(td_player);
-        tr.append(td_your_guess);
-        tr.append(td_answer);
-
-        $(".past-guesses").show();
-        var table = $(".past-guesses tbody");
-        table.prepend(tr);
-
-        round += 1;
-        var pad = "00000000";
-        // Padded player ID
-        code += pad.slice(0, 8 - player.id.toString().length) + player.id;
-        // Team id
-        code += team.id.toString().slice(-2);
-        $('#resultModal').modal();
+      td_player = $("<td />").append(img_player);
+      img_guess = $("<img />", {
+        'src': team.picture,
+        'title': team.city + " " + team.name,
       });
+      td_your_guess = $("<td />").append(img_guess);
+      img_answer = $("<img />", {
+        'src': player.team.picture,
+        'title': player.team.city + " " + player.team.name,
+      });
+      td_answer = $("<td />").append(img_answer);
 
-    </script>
+      tr.append(th_round);
+      tr.append(td_player);
+      tr.append(td_your_guess);
+      tr.append(td_answer);
 
-    <!-- modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="resultModal" data-backdrop="static" data-keyboard="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title"></h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-xs-2">
-                <img style="width: 100%" class="answer-image" />
-              </div>
-              <div class="col-xs-10">
-                <p></p>
-              </div>
+      $(".past-guesses").show();
+      var table = $(".past-guesses tbody");
+      table.prepend(tr);
+
+      round += 1;
+      var pad = "00000000";
+      // Padded player ID
+      code += pad.slice(0, 8 - player.id.toString().length) + player.id;
+      // Team id
+      code += team.id.toString().slice(-2);
+      $('#resultModal').modal();
+    });
+
+  </script>
+
+  <!-- modal -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="resultModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-2">
+              <img style="width: 100%" class="answer-image" />
+            </div>
+            <div class="col-xs-10">
+              <p></p>
             </div>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-success" onClick="initialize();">Next round</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-  </body>
-</html>
-
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" onClick="start_round();">Next round</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+{% endblock %}
