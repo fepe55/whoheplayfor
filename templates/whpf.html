@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>WHO HE PLAY FOR <small>Level {{ level }}</small></h1>
+  <div class="pull-left">
+    <h1>WHO HE PLAY FOR</h1>
+  </div>
+  <div class="pull-right game-info text-right">
+    <ul>
+      <li>Level {{ level }}</li>
+      <li>Round <span class="round"></span></li>
+      <li>Score <small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></li>
+      <li>Time left: <span class="time-left"></span></li>
+    </ul>
+  </div>
   <div class="game">
-    <h2>Round <span class="round"></span> - <small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></h2>
     <div class="row">
       <div class="col-sm-12 text-center player">
         <h2 class="player-name"></h2>
@@ -13,7 +22,7 @@
         <div id="teams">
         {% for team in teams %}
           <a href="#" class="guess" data-team='{{ team|tojson }}'>
-            <img title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+            <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
           </a>
         {% endfor %}
         </div>
@@ -21,6 +30,12 @@
     </div> <!-- row -->
   </div>
 
+  <div class="row fail_results">
+    <div class="col-md-12">
+      <h1>What was that?</h1>
+      <a class="btn btn-info btn-lg" href="{{ url_for('home') }}">Play again</a>
+    </div>
+  </div>
   <div class="row results">
     <div class="col-md-12">
       <h1>Final result: <span class="guessed"></span>/<span class="total"></span></h1>
@@ -57,9 +72,31 @@
 
 {% block js %}
   <script>
+    function start_timer(){
+      var time_left = game_status['time_limit'];
+      $(".time-left").html(time_left);
+      var interval = setInterval(function(){
+        time_left -= 1;
+        $(".time-left").html(time_left);
+
+        if ((time_left < 10) && (time_left > 0)){
+          $(".time-left").addClass("text-danger");
+          $(".time-left").animate({opacity: 0.25}).animate({opacity: 1});
+        };
+
+        if (time_left == 0){
+          $(".time-left").removeClass("text-danger");
+          clearInterval(interval);
+          end_game();
+        };
+      }, 1000);
+    }
+
+
     $(document).ready(function(){
       initialize();
       start_round();
+      start_timer();
     });
 
 
@@ -78,6 +115,7 @@
         'guessed': 0,
         'level': {{ level }},
         'code': "",
+        'time_limit': 10,
       };
       level_initialize();
     }
@@ -150,6 +188,7 @@
       // Hide the game and the partial result
       var total = game_status['round'] - 1;
       $(".game").hide();
+      $('#resultModal').modal('hide');
 
       // Add the total number of rounds to the code
       var padding = '000';
@@ -159,7 +198,13 @@
 
       // Add an input to share the result
       input = $(".results input").val("{{ request.url_root }}" + "results/" + game_status['code']);
-      $(".results").show();
+      var guessed = game_status['guessed'];
+      var round = game_status['round'];
+      if (round > 1){
+        $(".results").show();
+      } else {
+        $(".fail_results").show();
+      };
     };
 
 

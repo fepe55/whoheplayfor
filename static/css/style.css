@@ -32,6 +32,10 @@ body > .container {
   padding: 0 5px;
 }
 
+.game-info ul{
+  list-style: none;
+}
+
 .guess:hover{
   text-decoration: none;
 }
@@ -49,6 +53,11 @@ body > .container {
 
 .team-picture{
   width: 9%;
+}
+
+.team-picture:hover{
+  background-color: #666;
+  border-radius: 25px;
 }
 
 @media(max-width:991px) {
@@ -78,6 +87,7 @@ body > .container {
   height: 80px;
 }
 
-.results{
+.results,
+.fail_results{
   display: none;
 }
