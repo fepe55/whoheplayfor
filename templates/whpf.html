@@ -103,7 +103,7 @@
         $(".player-name").html(player.name);
         $(".player-picture").css("background-image", "url('" + player.picture + "')");
 
-        if (total == 2){
+        if (total == 10){
           $(".game").hide();
           $(".results").hide();
           $(".past-guesses h1").html("Final result: " + guessed + "/" + total);
@@ -115,7 +115,17 @@
           var a = '000'.slice(0, 3-(total.toString().length)) + total.toString();
           code = a + code;
           go_again.insertBefore(".past-guesses h1");
-          window.location = "/results/"+code;
+          // window.location = "/results/"+code;
+          var div_row = $("<div/>", {'class': 'row', });
+          var div_label = $("<div/>", {'class': 'col-md-2', });
+          var span_label = $("<span/>", {'class': 'text-right', }).html("Share your result");
+          div_label.append(span_label);
+          var div_input = $("<div/>", {'class': 'col-md-10', });
+          input = $("<input/>",{'type': 'text', 'class': 'form-control', }).val("{{ request.url }}" + "results/" + code);
+          div_input.append(input);
+          div_row.append(div_label);
+          div_row.append(div_input);
+          div_row.insertAfter(".past-guesses h1");
         }
       }
 
