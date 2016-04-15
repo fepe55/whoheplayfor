@@ -2,6 +2,14 @@ body{
   background-image: url('../img/bg.jpg');
 }
 
+.guess:hover{
+  text-decoration: none;
+}
+
+.player-name{
+  display: none;
+}
+
 .player-picture{
   display: inline-block;
   height: 0px;
@@ -10,7 +18,7 @@ body{
 }
 
 .team-picture{
-  width: 15%;
+  width: 9%;
 }
 
 .past-guesses{
@@ -22,3 +30,6 @@ body{
   height: 80px;
 }
 
+.results{
+  display: none;
+}
