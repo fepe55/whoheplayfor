@@ -42,7 +42,12 @@
               {% else %}
               <tr class="danger">
               {% endif %}
-                <th scope="row" style="vertical-align: middle">{{ loop.index }}</th>
+                <th scope="row" style="vertical-align: middle">
+                  <span class="fa-stack fa-2x">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <strong class="fa-stack-1x" style="color: white;">{{ loop.index }}</strong>
+                  </span>
+                </th>
                 <td><img src="{{ guess.player.picture }}" title="{{ guess.player.name }}" /></td>
                 <td><img src="{{ guess.team.picture }}" title="{{ guess.team.city }} {{ guess.team.name }}" /></td>
                 <td><img src="{{ guess.player.team.picture }}" title="{{ guess.player.team.city }} {{ guess.player.team.name }}" /></td>
