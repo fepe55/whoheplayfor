@@ -1,5 +1,35 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+
 body{
   background-image: url('../img/bg.jpg');
+  font-family: 'Montserrat', sans-serif;
+}
+
+body > .container {
+  padding: 60px 0 50px 0;
+}
+
+.footer {
+  height: 40px;
+  width: 100%;
+  background-image: linear-gradient(to bottom, #3c3c3c 0px, #222 100%);
+  background-repeat: repeat-x;
+  border-color: #080808;
+  background-color: #222;
+}
+
+.footer .social{
+  line-height: 40px;
+  color: #999;
+}
+
+.footer .social small{
+  padding-right: 20px;
+}
+
+.footer .social a{
+  color: #999;
+  padding: 0 5px;
 }
 
 .guess:hover{
@@ -19,6 +49,24 @@ body{
 
 .team-picture{
   width: 9%;
+}
+
+@media(max-width:991px) {
+  .team-picture{
+    width: 14%;
+  }
+}
+
+@media(max-width:550px) {
+  .team-picture{
+    width: 19%;
+  }
+}
+
+@media(max-width:349px) {
+  .team-picture{
+    width: 32%;
+  }
 }
 
 .past-guesses{
