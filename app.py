@@ -15,7 +15,6 @@ def get_players():
         with open(filename, 'r') as f:
             data = f.read()
             j = json.loads(data)
-            print "Data from file"
     else:
         PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
         r = requests.get(PLAYERS_URL)
@@ -23,7 +22,6 @@ def get_players():
             f.write(r.text)
         try:
             j = r.json()
-            print "Data from NBA site"
         except ValueError:
             abort(500, "There's been a problem fetching info from NBA.com")
 
