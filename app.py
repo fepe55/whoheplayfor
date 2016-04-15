@@ -14,11 +14,11 @@ def show_user_profile(code):
     guesses_str = code[3:]
     guesses = []
     for i in xrange(rounds):
-        str = guesses_str[10*i:10*i+10]
+        guess_str = guesses_str[10*i:10*i+10]
         guess = {
             'round': i+1,
-            'player_id': int(str[:8]),
-            'team_id': int(str[8:]),
+            'player_id': int(guess_str[:8]),
+            'team_id': int(guess_str[8:]),
         }
         guesses.append(guess)
 
@@ -31,21 +31,29 @@ def show_user_profile(code):
     nba_players = j['resultSets'][0]['rowSet']
     proper_guesses = {}
     for i in xrange(rounds):
-        proper_guesses[rounds] = {}
+        proper_guesses[i+1] = {}
 
     for p in nba_players:
         # Roster status
         for g in guesses:
             if p[0] == g['player_id']:
+                team = {
+                    'id': p[7],
+                    'city': p[8],
+                    'name': p[9],
+                    'abbreviation': p[10],
+                    'code': p[11],
+                    'picture': TEAM_PICTURE_URL % p[10],
+                }
                 player = {
                     'id': p[0],
                     'name': p[2],
-                    'team': 'a',  # team,
+                    'team': team,
                     'picture': PLAYER_PICTURE_URL % p[6],
                 }
                 proper_guesses[g['round']]['player'] = player
 
-            if p[7] == g['team_id']:
+            if int(str(p[7])[-2:]) == g['team_id']:
                 team = {
                     'id': p[7],
                     'city': p[8],
@@ -56,8 +64,10 @@ def show_user_profile(code):
                 }
                 proper_guesses[g['round']]['team'] = team
 
-    print proper_guesses
-    return render_template('results.html', guesses=guesses)
+        final_guesses = []
+        for i in xrange(rounds):
+            final_guesses.append(proper_guesses[i+1])
+    return render_template('results.html', guesses=final_guesses)
 
 
 @app.route('/')

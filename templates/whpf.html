@@ -113,10 +113,8 @@
           }).html("Play again");
 
           var a = '000'.slice(0, 3-(total.toString().length)) + total.toString();
-          console.log(a);
           code = a + code;
           go_again.insertBefore(".past-guesses h1");
-          console.log(code);
           window.location = "/results/"+code;
         }
       }
@@ -128,7 +126,6 @@
       $("a.guess").click(function(e){
         e.preventDefault();
         var team = $(this).data("team");
-        console.log(team);
         var guess = team.code;
         var answer = player.team.code;
         var result_container = $("#resultModal .modal-body p");
