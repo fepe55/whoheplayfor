@@ -87,6 +87,7 @@
       var player;
       var round = 1;
       var guessed = 0;
+      var code = "";
     </script>
     <script>
       function initialize(){
@@ -111,7 +112,20 @@
             'href': '/',
           }).html("Play again");
 
+          var a = '000'.slice(0, 3-(total.toString().length)) + total.toString();
+          code = a + code;
           go_again.insertBefore(".past-guesses h1");
+          // window.location = "/results/"+code;
+          var div_row = $("<div/>", {'class': 'row', });
+          var div_label = $("<div/>", {'class': 'col-md-2', });
+          var span_label = $("<span/>", {'class': 'text-right', }).html("Share your result");
+          div_label.append(span_label);
+          var div_input = $("<div/>", {'class': 'col-md-10', });
+          input = $("<input/>",{'type': 'text', 'class': 'form-control', }).val("{{ request.url }}" + "results/" + code);
+          div_input.append(input);
+          div_row.append(div_label);
+          div_row.append(div_input);
+          div_row.insertAfter(".past-guesses h1");
         }
       }
 
@@ -122,7 +136,6 @@
       $("a.guess").click(function(e){
         e.preventDefault();
         var team = $(this).data("team");
-        console.log(team);
         var guess = team.code;
         var answer = player.team.code;
         var result_container = $("#resultModal .modal-body p");
@@ -171,6 +184,11 @@
         table.prepend(tr);
 
         round += 1;
+        var pad = "00000000";
+        // Padded player ID
+        code += pad.slice(0, 8 - player.id.toString().length) + player.id;
+        // Team id
+        code += team.id.toString().slice(-2);
         $('#resultModal').modal();
       });
 
