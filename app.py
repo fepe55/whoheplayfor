@@ -1,8 +1,33 @@
 # -*- encoding: utf-8 -*-
 
 import requests
+import json
+import os.path
+from datetime import datetime
+
 from flask import (Flask, render_template, abort, )
 app = Flask(__name__)
+
+
+def get_players():
+    filename = datetime.today().date().strftime("%Y%m%d") + ".json"
+    if os.path.isfile(filename):
+        with open(filename, 'r') as f:
+            data = f.read()
+            j = json.loads(data)
+            print "Data from file"
+    else:
+        PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
+        r = requests.get(PLAYERS_URL)
+        with open(filename, 'w') as f:
+            f.write(r.text)
+        try:
+            j = r.json()
+            print "Data from NBA site"
+        except ValueError:
+            abort(500, "There's been a problem fetching info from NBA.com")
+
+    return j['resultSets'][0]['rowSet']
 
 
 @app.route('/results/<code>')
@@ -23,17 +48,10 @@ def results(code):
         }
         guesses.append(guess)
 
-    PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
     PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
     TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
 
-    r = requests.get(PLAYERS_URL)
-    try:
-        j = r.json()
-    except ValueError:
-        abort(500, "There's been a problem fetching info from NBA.com")
-
-    nba_players = j['resultSets'][0]['rowSet']
+    nba_players = get_players()
     proper_guesses = {}
     for i in xrange(rounds):
         proper_guesses[i+1] = {}
@@ -82,18 +100,10 @@ def game(level):
     if level < 0 or level > 4:
         abort(404)
 
-    PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
     PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
     TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
 
-    r = requests.get(PLAYERS_URL)
-    try:
-        j = r.json()
-    except ValueError:
-        print dir(r)
-        abort(500, "There's been a problem fetching info from NBA.com")
-
-    nba_players = j['resultSets'][0]['rowSet']
+    nba_players = get_players()
     players = []
     teams = []
     for p in nba_players:
