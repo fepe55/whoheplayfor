@@ -128,8 +128,11 @@ def game(level):
 
     teams = sorted(teams)
     # player = random.choice(players)
+    game_info = {
+        'level': level,
+    }
     return render_template('whpf.html', players=players, teams=teams,
-                           level=level)
+                           game_info=game_info)
 
 
 @app.route('/')

@@ -5,7 +5,7 @@
   </div>
   <div class="pull-right game-info text-right">
     <ul>
-      <li>Level {{ level }}</li>
+      <li>Level <span class="level"></span></li>
       <li>Round <span class="round"></span></li>
       <li>Score <small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></li>
       <li>Time left: <span class="time-left"></span></li>
@@ -15,6 +15,8 @@
     <div class="row">
       <div class="col-sm-12 text-center player">
         <h2 class="player-name"></h2>
+        <!-- <i class="text-success fa fa-check fa-4x guess-right"></i> -->
+        <!-- <i class="text-danger fa fa-close fa-4x guess-wrong"></i> -->
         <img class="player-picture" />
       </div>
       <div class="col-sm-12 text-center">
@@ -110,15 +112,15 @@
     function initialize(){
       window.player;
       window.game_status = {
-        'total_rounds': 10,
+        'total_rounds': 20,
         'round': 1,
         'guessed': 0,
-        'level': {{ level }},
+        'level': {{ game_info.level }},
         'code': "",
-        'time_limit': 10,
+        'time_limit': 60,
       };
       level_initialize();
-    }
+    };
 
 
     // LEVEL
@@ -129,8 +131,11 @@
     function level_initialize(){
       if (game_status['level'] <= 2){
         $('.player-name').show();
-      }
-    }
+      };
+      $(".level").html(game_status['level']);
+
+    };
+
 
     function level_setup(){
       if (game_status['level'] == 2 || game_status['level'] == 4){
@@ -150,8 +155,6 @@
       $(".guessed").html(game_status['guessed']);
       $(".total").html(total);
       $(".round").html(game_status['round']);
-
-      $('#resultModal').modal('hide');
 
       var players = {{ players|tojson }};
       player = players[Math.floor(Math.random() * players.length)];
@@ -187,14 +190,17 @@
     function end_game(){
       // Hide the game and the partial result
       var total = game_status['round'] - 1;
+      $(".guessed").html(game_status['guessed']);
+      $(".total").html(total);
+      $(".round").html(game_status['round']);
+
       $(".game").hide();
-      $('#resultModal').modal('hide');
 
       // Add the total number of rounds to the code
       var padding = '000';
       var total_padded = padding.slice(0, padding.length-(total.toString().length)) + total.toString();
       game_status['code'] = total_padded + game_status['code'];
-      game_status['code'] = "{{ level }}" + game_status['code'];
+      game_status['code'] = game_status['level'] + game_status['code'];
 
       // Add an input to share the result
       input = $(".results input").val("{{ request.url_root }}" + "results/" + game_status['code']);
@@ -211,30 +217,16 @@
     function correct_guess(team){
       game_status['guessed'] += 1;
 
-      var modal_title = $("#resultModal .modal-title");
-      var result_container = $("#resultModal .modal-body p");
-      var img = $("#resultModal .answer-image");
-      img.attr("src", player.team.picture);
-
-      modal_title.html("SUCCESS");
-      result_container.html("Yes, " + player.name + " plays for " + player.team.city + " " + player.team.name);
-      $('#resultModal').modal();
-
+      // $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("success", team);
+      start_round();
     };
 
 
     function wrong_guess(team){
-      var modal_title = $("#resultModal .modal-title");
-      var result_container = $("#resultModal .modal-body p");
-      var img = $("#resultModal .answer-image");
-      img.attr("src", player.team.picture);
-
-      modal_title.html("FAIL");
-      result_container.html("Nooo, " + player.name + " plays for " + player.team.city + " " + player.team.name);
-      $('#resultModal').modal();
-
+      // $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("danger", team);
+      start_round();
     };
 
 
@@ -273,27 +265,4 @@
     };
   </script>
 
-  <!-- modal -->
-  <div class="modal fade" tabindex="-1" role="dialog" id="resultModal" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title"></h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-xs-2">
-              <img style="width: 100%" class="answer-image" />
-            </div>
-            <div class="col-xs-10">
-              <p></p>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success" onClick="start_round();">Next round</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
 {% endblock %}

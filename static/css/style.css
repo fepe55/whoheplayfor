@@ -78,6 +78,12 @@ body > .container {
   }
 }
 
+.guess-right,
+.guess-wrong{
+  position:absolute;
+  display: none;
+}
+
 .past-guesses{
   display: none;
 }
