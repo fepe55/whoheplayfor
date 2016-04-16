@@ -104,9 +104,11 @@ def game(level):
     nba_players = get_players()
     players = []
     teams = []
+    faceless = [204098, 1626162, 1627362, 1626210]
     for p in nba_players:
         # Roster status
-        if p[3] != 0:
+
+        if p[3] != 0 and p[0] not in faceless:
             team = {
                 'id': p[7],
                 'city': p[8],
