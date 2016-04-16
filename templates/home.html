@@ -3,52 +3,57 @@
   <div class="row">
     <div class="col-md-12">
       <h1>Star a new game</h1>
-      <form method="POST" class="form-horizontal" action="{{ url_for('home') }}">
-        <div class="form-group">
-          <label for="time">Time</label>
-          <select id="time" class="form-control" name="time">
-            <option value="30">30 seconds</option>
-            <option value="60">60 seconds</option>
-            <option value="90">90 seconds</option>
-            <option value="0">Unlimited</option>
-          </select>
+      <p>Do you know where does Tony Wroten play? And Willie Green? Chase Budinger?</p>
+      <p>Based on the game <a href="{{ url_for ('tv') }}">played on Inside The NBA</a>.</p>
+      <form method="POST" class="form" action="{{ url_for('home') }}">
+        <div class="advanced-options">
+          <div class="form-group">
+            <label for="time">Time</label>
+            <select id="time" class="form-control" name="time">
+              <option value="30">30 seconds</option>
+              <option value="60" selected>60 seconds</option>
+              <option value="90">90 seconds</option>
+              <option value="0">Unlimited</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="rounds">Round limit</label>
+            <select id="rounds" class="form-control" name="rounds">
+              <option value="10">10</option>
+              <option value="20" selected>20</option>
+              <option value="30">30</option>
+            </select>
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" id="shuffle_teams" name="shuffle_teams" />Shuffle teams positions
+            </label>
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" id="show_player_name" name="show_player_name" checked />Show player name
+            </label>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="rounds">Round limit</label>
-          <select id="rounds" class="form-control" name="rounds">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-          </select>
-        </div>
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" id="shuffle_teams" name="shuffle_teams" />Shuffle teams positions
-          </label>
-        </div>
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" id="show_player_name" name="show_player_name" checked />Show player name
-          </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-lg">Start</button>
+        <a class="show-advanced-options" href="#">Show advanced options</a>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Start</button>
 
       </form>
     </div>
   </div>
-  <div class="row">
-    <h1>Who he play for? on Inside The NBA</h1>
-    {% for video_id in videos %}
-    <div class="col-md-6 video">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ video_id }}" allowfullscreen></iframe>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
- 
+
+{% endblock %}
+
+{% block js %}
+  <script>
+    $(".show-advanced-options").click(function(e){
+      e.preventDefault();
+      $(".advanced-options").slideDown();
+      $(this).hide();
+    });
+  </script>
 {% endblock %}

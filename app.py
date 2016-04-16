@@ -107,14 +107,19 @@ def results(code):
                            game_info=game_info)
 
 
+@app.route('/tv')
+def tv():
+    videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
+    return render_template('tv.html', videos=videos)
+
+
 @app.route('/', methods=['GET', 'POST', ])
 def home():
     TIMES = [0, 30, 60, 90]
     ROUNDS = [10, 20, 30]
 
     if request.method != 'POST':
-        videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
-        return render_template('home.html', videos=videos)
+        return render_template('home.html')
 
     time = int(request.form['time'])
     rounds = int(request.form['rounds'])

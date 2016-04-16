@@ -15,6 +15,10 @@ body > .container {
   padding-bottom: 15px;
 }
 
+.advanced-options{
+  display: none;
+}
+
 .footer {
   height: 40px;
   width: 100%;

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row">
+    <h1>Who he play for? on Inside The NBA</h1>
+    {% for video_id in videos %}
+    <div class="col-md-6 video">
+      <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ video_id }}" allowfullscreen></iframe>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}
