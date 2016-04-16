@@ -5,7 +5,6 @@
   </div>
   <div class="pull-right game-info text-right">
     <ul>
-      <li>Level <span class="level"></span></li>
       <li>Round <span class="round"></span></li>
       <li>Score <small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></li>
       <li>Time left: <span class="time-left"></span></li>
@@ -77,7 +76,7 @@
     function start_timer(){
       var time_left = game_status['time_limit'];
       $(".time-left").html(time_left);
-      var interval = setInterval(function(){
+      game_status['timer'] = setInterval(function(){
         time_left -= 1;
         $(".time-left").html(time_left);
 
@@ -88,7 +87,6 @@
 
         if (time_left == 0){
           $(".time-left").removeClass("text-danger");
-          clearInterval(interval);
           end_game();
         };
       }, 1000);
@@ -98,7 +96,6 @@
     $(document).ready(function(){
       initialize();
       start_round();
-      start_timer();
     });
 
 
@@ -112,33 +109,31 @@
     function initialize(){
       window.player;
       window.game_status = {
-        'total_rounds': 20,
+        'timer': null,
+        'total_rounds': {{ game_info.rounds }},
         'round': 1,
         'guessed': 0,
-        'level': {{ game_info.level }},
+        'show_player_name': {% if game_info.show_player_name %} true {% else %} false {% endif %},
+        'shuffle_teams': {% if game_info.shuffle_teams %} true {% else %} false {% endif %},
         'code': "",
-        'time_limit': 60,
+        'time_limit': {{ game_info.time }},
       };
+      if (game_status['time_limit'] != 0){
+        start_timer();
+      }
       level_initialize();
     };
 
 
-    // LEVEL
-    // level 1: Sorted teams. Player with name
-    // level 2: Shuffled teams. Player with name
-    // level 3: Sorted teams. Player without name
-    // level 4: Shuffled teams. Player without name
     function level_initialize(){
-      if (game_status['level'] <= 2){
+      if (game_status['show_player_name']){
         $('.player-name').show();
       };
-      $(".level").html(game_status['level']);
-
     };
 
 
     function level_setup(){
-      if (game_status['level'] == 2 || game_status['level'] == 4){
+      if (game_status['shuffle_teams']){
         var parent = $("#teams");
         var children = parent.children();
         while (children.length) {
@@ -175,6 +170,7 @@
       game_status['code'] += pad.slice(0, 8 - player.id.toString().length) + player.id;
       // Team id
       game_status['code'] += team.id.toString().slice(-2);
+      start_round();
     };
 
     function react(team){
@@ -189,6 +185,7 @@
 
     function end_game(){
       // Hide the game and the partial result
+      clearInterval(game_status['timer']);
       var total = game_status['round'] - 1;
       $(".guessed").html(game_status['guessed']);
       $(".total").html(total);
@@ -200,7 +197,37 @@
       var padding = '000';
       var total_padded = padding.slice(0, padding.length-(total.toString().length)) + total.toString();
       game_status['code'] = total_padded + game_status['code'];
-      game_status['code'] = game_status['level'] + game_status['code'];
+
+      var time_limit = game_status['time_limit'];
+      var time_limit_padded = padding.slice(0, padding.length-(time_limit.toString().length)) + time_limit.toString();
+      game_status['code'] = time_limit_padded + game_status['code'];
+
+      if (game_status['shuffle_teams']){
+        game_status['code'] = '1' + game_status['code'];
+      } else {
+        game_status['code'] = '0' + game_status['code'];
+      };
+
+      if (game_status['show_player_name']){
+        game_status['code'] = '1' + game_status['code'];
+      } else {
+        game_status['code'] = '0' + game_status['code'];
+      };
+
+      // Random garbage
+      var random_number = Math.floor(1+Math.random()*20);
+      for(var i=0; i<random_number; i++){
+        game_status['code'] += Math.floor(1+Math.random()*9).toString();
+      };
+
+      //TODO: Obfuscate?
+      var code = game_status['code'];
+      var new_code = "";
+      var N = 10;
+      for (var i=0; i < code.length; i+=N){
+        slice = code.slice(i, i + N);
+        new_code += parseInt(slice).toString(16);
+      };
 
       // Add an input to share the result
       input = $(".results input").val("{{ request.url_root }}" + "results/" + game_status['code']);
@@ -219,14 +246,12 @@
 
       // $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("success", team);
-      start_round();
     };
 
 
     function wrong_guess(team){
       // $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("danger", team);
-      start_round();
     };
 
 

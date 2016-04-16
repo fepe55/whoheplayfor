@@ -5,7 +5,7 @@ import json
 import os.path
 from datetime import datetime
 
-from flask import (Flask, render_template, abort, )
+from flask import (Flask, render_template, abort, request, )
 app = Flask(__name__)
 
 
@@ -31,9 +31,24 @@ def get_players():
 @app.route('/results/<code>')
 def results(code):
     # code: level(1) + rounds(3) + n times (player_id(8), guess_id(2))
+    # code: show_player_name(1) + shuffle_teams(1) + time_limit(3) +
+    # rounds(3) + n times (player_id(8), guess_id(2))
 
-    level = int(code[:1])
+    show_player_name = int(code[:1])
     code = code[1:]
+
+    shuffle_teams = int(code[:1])
+    code = code[1:]
+
+    time_limit = int(code[:3])
+    code = code[3:]
+
+    game_info = {
+        'show_player_name': show_player_name,
+        'shuffle_teams': shuffle_teams,
+        'time_limit': time_limit,
+    }
+
     rounds = int(code[:3])
     code = code[3:]
     guesses = []
@@ -89,14 +104,29 @@ def results(code):
         for i in xrange(rounds):
             final_guesses.append(proper_guesses[i+1])
     return render_template('results.html', guesses=final_guesses,
-                           level=level)
+                           game_info=game_info)
 
 
-@app.route('/lvl/<level>')
-def game(level):
-    level = int(level)
-    if level < 0 or level > 4:
-        abort(404)
+@app.route('/', methods=['GET', 'POST', ])
+def home():
+    TIMES = [0, 30, 60, 90]
+    ROUNDS = [10, 20, 30]
+
+    if request.method != 'POST':
+        videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
+        return render_template('home.html', videos=videos)
+
+    time = int(request.form['time'])
+    rounds = int(request.form['rounds'])
+    if time not in TIMES or rounds not in ROUNDS:
+        abort(400)
+
+    game_info = {
+        'show_player_name': 'show_player_name' in request.form,
+        'shuffle_teams': 'shuffle_teams' in request.form,
+        'time': time,
+        'rounds': rounds,
+    }
 
     PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
     TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
@@ -130,16 +160,10 @@ def game(level):
 
     teams = sorted(teams)
     # player = random.choice(players)
-    game_info = {
-        'level': level,
-    }
     return render_template('whpf.html', players=players, teams=teams,
                            game_info=game_info)
 
 
-@app.route('/')
-def home():
-    return render_template('home.html')
 
 
 if __name__ == '__main__':

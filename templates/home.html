@@ -1,15 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Who he play for</h1>
-  <div>
-    <p>Level 1: Sorted teams. Player with name</p>
-    <p>Level 2: Shuffled teams. Player with name</p>
-    <p>Level 3: Sorted teams. Player without name</p>
-    <p>Level 4: Shuffled teams. Player without name</p>
-  </div>
-  <a class="btn btn-info" href="{{ url_for('game', level=1) }}">Level 1</a>
-  <a class="btn btn-info" href="{{ url_for('game', level=2) }}">Level 2</a>
-  <a class="btn btn-info" href="{{ url_for('game', level=3) }}">Level 3</a>
-  <a class="btn btn-info" href="{{ url_for('game', level=4) }}">Level 4</a>
-{% endblock %}
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Star a new game</h1>
+      <form method="POST" class="form-horizontal" action="{{ url_for('home') }}">
+        <div class="form-group">
+          <label for="time">Time</label>
+          <select id="time" class="form-control" name="time">
+            <option value="30">30 seconds</option>
+            <option value="60">60 seconds</option>
+            <option value="90">90 seconds</option>
+            <option value="0">Unlimited</option>
+          </select>
+        </div>
 
+        <div class="form-group">
+          <label for="rounds">Round limit</label>
+          <select id="rounds" class="form-control" name="rounds">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+          </select>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="shuffle_teams" name="shuffle_teams" />Shuffle teams positions
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="show_player_name" name="show_player_name" checked />Show player name
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Start</button>
+
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <h1>Who he play for? on Inside The NBA</h1>
+    {% for video_id in videos %}
+    <div class="col-md-6 video">
+      <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ video_id }}" allowfullscreen></iframe>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+ 
+{% endblock %}
