@@ -1,24 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="pull-left">
-    <h1>WHO HE PLAY FOR</h1>
-  </div>
-  <div class="pull-right game-info text-right">
-    <ul>
-      <li>Round <span class="round"></span></li>
-      <li>Score <small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></li>
-      <li>Time left: <span class="time-left"></span></li>
-    </ul>
-  </div>
   <div class="game">
     <div class="row">
-      <div class="col-sm-12 text-center player">
+      <div class="col-sm-3 col-xs-6 game-info">
+        <ul>
+          <li>Round <span class="round"></span></li>
+          <li>Score <small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></li>
+        </ul>
+      </div>
+      <div class="col-sm-push-6 col-sm-3 col-xs-6 game-info timer text-right">
+        <ul>
+          <li>Time left<br /><span class="time-left"></span></li>
+        </ul>
+      </div>
+
+      <div class="col-sm-6 col-sm-pull-3 col-xs-12 text-center player">
         <h2 class="player-name"></h2>
         <!-- <i class="text-success fa fa-check fa-4x guess-right"></i> -->
         <!-- <i class="text-danger fa fa-close fa-4x guess-wrong"></i> -->
         <img class="player-picture" />
       </div>
-      <div class="col-sm-12 text-center">
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
         <h2>Your guess</h2>
         <div id="teams">
         {% for team in teams %}
@@ -40,13 +44,10 @@
   <div class="row results">
     <div class="col-md-12">
       <h1>Final result: <span class="guessed"></span>/<span class="total"></span></h1>
-      <div class="row">
-        <div class="col-md-2">
-          <span class="text-right">Share your result</span>
-        </div>
-        <div class="col-md-10">
-          <input type="text" class="form-control" />
-        </div>
+
+      <div class="form-group">
+        <label for="exampleInputEmail1">Share your result</label>
+        <input type="text" class="form-control" />
       </div>
       <a class="btn btn-info btn-lg" href="{{ url_for('home') }}">Play again</a>
     </div>
@@ -120,6 +121,8 @@
       };
       if (game_status['time_limit'] != 0){
         start_timer();
+      } else {
+        $(".time-left").parent().hide();
       }
       level_initialize();
     };
@@ -192,6 +195,7 @@
       $(".round").html(game_status['round']);
 
       $(".game").hide();
+      $(".game-info").hide();
 
       // Add the total number of rounds to the code
       var padding = '000';

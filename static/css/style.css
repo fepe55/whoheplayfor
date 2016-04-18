@@ -43,6 +43,14 @@ body > .container {
 }
 
 .game-info ul{
+  padding-left: 0;
+}
+
+.time-left{
+  font-size: 3em;
+}
+
+.game-info ul{
   list-style: none;
 }
 
