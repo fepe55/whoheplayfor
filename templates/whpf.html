@@ -29,7 +29,7 @@
     </div>
     <div class="row">
       <div class="col-md-12 text-center">
-        <h2>Your guess</h2>
+        <h3>Your guess</h3>
         <div id="teams">
         {% for team in teams %}
           <a href="#" class="guess" data-team='{{ team|tojson }}'>
@@ -66,9 +66,9 @@
         <thead>
           <tr>
             <th>Round</th>
-            <th>Player</th>
-            <th>Your guess</th>
-            <th>Correct guess</th>
+            <th class="text-center">Player</th>
+            <th class="text-center">Your guess</th>
+            <th class="text-center">Correct guess</th>
           </tr>
         </thead>
         <tbody>
@@ -278,17 +278,17 @@
         'src': player.picture,
         'title': player.name,
       });
-      td_player = $("<td />").append(img_player);
+      td_player = $("<td />", {'class': 'text-center'}).append(img_player);
       img_guess = $("<img />", {
         'src': team.picture,
         'title': team.city + " " + team.name,
       });
-      td_your_guess = $("<td />").append(img_guess);
+      td_your_guess = $("<td />", {'class': 'text-center'}).append(img_guess);
       img_answer = $("<img />", {
         'src': player.team.picture,
         'title': player.team.city + " " + player.team.name,
       });
-      td_answer = $("<td />").append(img_answer);
+      td_answer = $("<td />", {'class': 'text-center'}).append(img_answer);
 
       tr.append(th_round);
       tr.append(td_player);

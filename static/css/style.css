@@ -14,6 +14,10 @@ input[type="checkbox"]#advanced{
   display: none;
 }
 
+.home h1{
+  margin-bottom: 25px;
+}
+
 .video{
   padding-top: 15px;
   padding-bottom: 15px;
@@ -24,7 +28,8 @@ input[type="checkbox"]#advanced{
 }
 
 .start-game{
-  margin-top: 20px;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
 
 .footer {
