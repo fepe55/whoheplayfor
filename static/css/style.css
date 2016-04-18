@@ -70,6 +70,26 @@ input[type="checkbox"]#advanced{
   text-decoration: none;
 }
 
+#player{
+  position: relative;
+}
+
+#guess-icons{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  text-align: center;
+  font-size: 100px;
+}
+
+.guess-right, .guess-wrong{
+  display: none;
+}
+
 .player-name{
   display: none;
 }

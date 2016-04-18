@@ -17,7 +17,14 @@
         <h2 class="player-name"></h2>
         <!-- <i class="text-success fa fa-check fa-4x guess-right"></i> -->
         <!-- <i class="text-danger fa fa-close fa-4x guess-wrong"></i> -->
-        <img class="player-picture" />
+
+        <div id="player" style="position: relative;">
+          <div id="guess-icons">
+            <i class="text-success fa fa-check guess-right"></i>
+            <i class="text-danger fa fa-close guess-wrong"></i>
+          </div>
+          <img class="player-picture" />
+        </div>
       </div>
     </div>
     <div class="row">
@@ -45,8 +52,8 @@
       <h1>Final result: <span class="guessed"></span>/<span class="total"></span></h1>
 
       <div class="form-group">
-        <label for="exampleInputEmail1">Share your result</label>
-        <input type="text" class="form-control" />
+        <label for="share">Share your result</label>
+        <input type="text" class="form-control" name="share" />
       </div>
       <a class="btn btn-primary btn-lg" href="{{ url_for('home') }}">Play again</a>
     </div>
@@ -155,6 +162,7 @@
 
       var players = {{ players|tojson }};
       player = players[Math.floor(Math.random() * players.length)];
+      // TODO: Check not to allow repeated players
 
       $(".player-name").html(player.name);
       $(".player-picture").css("background-image", "url('" + player.picture + "')");
@@ -247,13 +255,13 @@
     function correct_guess(team){
       game_status['guessed'] += 1;
 
-      // $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100);
+      $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("success", team);
     };
 
 
     function wrong_guess(team){
-      // $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100);
+      $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("danger", team);
     };
 
