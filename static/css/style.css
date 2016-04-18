@@ -10,6 +10,10 @@ body > .container {
   padding-bottom:50px;  /* to account for the footer */
 }
 
+input[type="checkbox"]#advanced{
+  display: none;
+}
+
 .video{
   padding-top: 15px;
   padding-bottom: 15px;

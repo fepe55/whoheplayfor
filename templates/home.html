@@ -37,6 +37,7 @@
               <input type="checkbox" id="show_player_name" name="show_player_name" checked />Show player name
             </label>
           </div>
+          <input type="checkbox" id="advanced" name="advanced" />
         </div>
 
         <a class="show-advanced-options" href="#">Show advanced options</a>
@@ -53,6 +54,7 @@
     $(".show-advanced-options").click(function(e){
       e.preventDefault();
       $(".advanced-options").slideDown();
+      $("#advanced").prop("checked", true);
       $(this).hide();
     });
   </script>

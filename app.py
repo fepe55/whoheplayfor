@@ -5,7 +5,7 @@ import json
 import os.path
 from datetime import datetime
 
-from flask import (Flask, render_template, abort, request, )
+from flask import (Flask, render_template, abort, request, session, )
 app = Flask(__name__)
 
 
@@ -116,19 +116,37 @@ def tv():
 @app.route('/', methods=['GET', 'POST', ])
 def home():
     TIMES = [0, 30, 60, 90]
+    TIME_DEFAULT = TIMES[2]  # 60
     ROUNDS = [10, 20, 30]
+    ROUNDS_DEFAULT = ROUNDS[1]  # 20
+    SPN_DEFAULT = True
+    SF_DEFAULT = False
 
     if request.method != 'POST':
         return render_template('home.html')
 
-    time = int(request.form['time'])
-    rounds = int(request.form['rounds'])
+    if 'advanced' in request.form:
+        time = int(request.form['time'])
+        session['time'] = time
+        rounds = int(request.form['rounds'])
+        session['rounds'] = rounds
+        show_player_name = 'show_player_name' in request.form
+        session['show_player_name'] = show_player_name
+        shuffle_teams = 'shuffle_teams' in request.form
+        session['shuffle_teams'] = shuffle_teams
+    else:
+        time = session.get('time', TIME_DEFAULT)
+        rounds = session.get('rounds', ROUNDS_DEFAULT)
+        show_player_name = session.get('show_player_name', SPN_DEFAULT)
+        shuffle_teams = session.get('shuffle_teams', SF_DEFAULT)
+
     if time not in TIMES or rounds not in ROUNDS:
+        session.clear()
         abort(400)
 
     game_info = {
-        'show_player_name': 'show_player_name' in request.form,
-        'shuffle_teams': 'shuffle_teams' in request.form,
+        'show_player_name': show_player_name,
+        'shuffle_teams': shuffle_teams,
         'time': time,
         'rounds': rounds,
     }
@@ -169,7 +187,6 @@ def home():
                            game_info=game_info)
 
 
-
-
 if __name__ == '__main__':
+    app.config['SECRET_KEY'] = 'J\x88P\x0b-R]\xf3\xa2\x0e\xb6\x0b\xb3\x84\xc7\xde\xf1\xfe\xd7\x06\xc3\xa26\xa6'
     app.run(host='0.0.0.0', debug=True, port=8000)
