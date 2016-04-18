@@ -23,6 +23,10 @@ input[type="checkbox"]#advanced{
   display: none;
 }
 
+.start-game{
+  margin-top: 20px;
+}
+
 .footer {
   height: 40px;
   width: 100%;

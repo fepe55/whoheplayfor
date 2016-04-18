@@ -116,12 +116,56 @@ def tv():
 
 @app.route('/', methods=['GET', 'POST', ])
 def home():
+    TEAMS = [
+        'hawks',
+        'nets',
+        'celtics',
+        'hornets',
+        'bulls',
+        'cavaliers',
+        'mavericks',
+        'nuggets',
+        'pistons',
+        'warriors',
+        'rockets',
+        'pacers',
+        'clippers',
+        'lakers',
+        'grizzlies',
+        'heat',
+        'bucks',
+        'timberwolves',
+        'pelicans',
+        'knicks',
+        'thunder',
+        'magic',
+        'sixers',
+        'suns',
+        'blazers',
+        'kings',
+        'spurs',
+        'raptors',
+        'jazz',
+        'wizards',
+    ]
+    PLAYOFF_TEAMS = [
+        'warriors', 'rockets',
+        'clippers', 'blazers',
+        'thunder', 'mavericks',
+        'spurs', 'grizzlies',
+        'cavaliers', 'pistons',
+        'hawks', 'celtics',
+        'heat', 'hornets',
+        'raptors', 'pacers',
+    ]
+
     TIMES = [0, 30, 60, 90]
     TIME_DEFAULT = TIMES[2]  # 60
     ROUNDS = [10, 20, 30]
     ROUNDS_DEFAULT = ROUNDS[1]  # 20
     SPN_DEFAULT = True
     SF_DEFAULT = False
+    PTO_DEFAULT = False
 
     if request.method != 'POST':
         return render_template('home.html')
@@ -135,11 +179,14 @@ def home():
         session['show_player_name'] = show_player_name
         shuffle_teams = 'shuffle_teams' in request.form
         session['shuffle_teams'] = shuffle_teams
+        playoff_teams_only = 'playoff_teams_only' in request.form
+        session['playoff_teams_only'] = playoff_teams_only
     else:
         time = session.get('time', TIME_DEFAULT)
         rounds = session.get('rounds', ROUNDS_DEFAULT)
         show_player_name = session.get('show_player_name', SPN_DEFAULT)
         shuffle_teams = session.get('shuffle_teams', SF_DEFAULT)
+        playoff_teams_only = session.get('playoff_teams_only', PTO_DEFAULT)
 
     if time not in TIMES or rounds not in ROUNDS:
         session.clear()
@@ -158,11 +205,15 @@ def home():
     nba_players = get_players()
     players = []
     teams = []
+    limit_teams = playoff_teams_only
+    allowed_teams = PLAYOFF_TEAMS
     faceless = [204098, 1626162, 1627362, 1626210]
     for p in nba_players:
         # Roster status
 
         if p[3] != 0 and p[0] not in faceless:
+            if limit_teams and p[11] not in allowed_teams:
+                continue
             team = {
                 'id': p[7],
                 'city': p[8],
