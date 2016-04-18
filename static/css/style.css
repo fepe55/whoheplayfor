@@ -50,6 +50,10 @@ input[type="checkbox"]#advanced{
   padding-left: 0;
 }
 
+.partial-results{
+  font-size: 3em;
+}
+
 .time-left{
   font-size: 3em;
 }

@@ -4,8 +4,7 @@
     <div class="row">
       <div class="col-sm-3 col-xs-6 game-info">
         <ul>
-          <li>Round <span class="round"></span></li>
-          <li>Score <small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></li>
+          <li class="score">Score<br /><small class="partial-results"><span class="guessed"></span>/<span class="total"></span></small></li>
         </ul>
       </div>
       <div class="col-sm-push-6 col-sm-3 col-xs-6 game-info timer text-right">
@@ -152,7 +151,7 @@
       var total = game_status['round'] - 1;
       $(".guessed").html(game_status['guessed']);
       $(".total").html(total);
-      $(".round").html(game_status['round']);
+      // $(".round").html(game_status['round']);
 
       var players = {{ players|tojson }};
       player = players[Math.floor(Math.random() * players.length)];
