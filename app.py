@@ -5,6 +5,8 @@ import json
 import os.path
 from datetime import datetime
 
+from teams import (ALL_TEAMS, PLAYOFF_TEAMS, EAST_TEAMS, WEST_TEAMS, )
+
 from flask import (Flask, render_template, abort, request, session, )
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'J\x88P\x0b-R]\xf3\xa2\x0e\xb6\x0b\xb3\x84\xc7\xde\xf1\xfe\xd7\x06\xc3\xa26\xa6'
@@ -116,56 +118,20 @@ def tv():
 
 @app.route('/', methods=['GET', 'POST', ])
 def home():
-    TEAMS = [
-        'hawks',
-        'nets',
-        'celtics',
-        'hornets',
-        'bulls',
-        'cavaliers',
-        'mavericks',
-        'nuggets',
-        'pistons',
-        'warriors',
-        'rockets',
-        'pacers',
-        'clippers',
-        'lakers',
-        'grizzlies',
-        'heat',
-        'bucks',
-        'timberwolves',
-        'pelicans',
-        'knicks',
-        'thunder',
-        'magic',
-        'sixers',
-        'suns',
-        'blazers',
-        'kings',
-        'spurs',
-        'raptors',
-        'jazz',
-        'wizards',
-    ]
-    PLAYOFF_TEAMS = [
-        'warriors', 'rockets',
-        'clippers', 'blazers',
-        'thunder', 'mavericks',
-        'spurs', 'grizzlies',
-        'cavaliers', 'pistons',
-        'hawks', 'celtics',
-        'heat', 'hornets',
-        'raptors', 'pacers',
-    ]
 
     TIMES = [0, 30, 60, 90]
     TIME_DEFAULT = TIMES[2]  # 60
     ROUNDS = [10, 20, 30]
     ROUNDS_DEFAULT = ROUNDS[1]  # 20
+    LIMIT_TEAMS = {
+        'all': ALL_TEAMS,
+        'playoffs': PLAYOFF_TEAMS,
+        'east': EAST_TEAMS,
+        'west': WEST_TEAMS,
+    }
+    LT_DEFAULT = 'all'
     SPN_DEFAULT = True
     SF_DEFAULT = False
-    PTO_DEFAULT = False
 
     if request.method != 'POST':
         return render_template('home.html')
@@ -179,16 +145,20 @@ def home():
         session['show_player_name'] = show_player_name
         shuffle_teams = 'shuffle_teams' in request.form
         session['shuffle_teams'] = shuffle_teams
-        playoff_teams_only = 'playoff_teams_only' in request.form
-        session['playoff_teams_only'] = playoff_teams_only
+        limit_teams = request.form['limit_teams']
+        session['limit_teams'] = limit_teams
     else:
         time = session.get('time', TIME_DEFAULT)
         rounds = session.get('rounds', ROUNDS_DEFAULT)
         show_player_name = session.get('show_player_name', SPN_DEFAULT)
         shuffle_teams = session.get('shuffle_teams', SF_DEFAULT)
-        playoff_teams_only = session.get('playoff_teams_only', PTO_DEFAULT)
+        limit_teams = session.get('limit_teams', LT_DEFAULT)
 
-    if time not in TIMES or rounds not in ROUNDS:
+    if (
+        time not in TIMES or
+        rounds not in ROUNDS or
+        limit_teams not in LIMIT_TEAMS.keys()
+    ):
         session.clear()
         abort(400)
 
@@ -205,14 +175,15 @@ def home():
     nba_players = get_players()
     players = []
     teams = []
-    limit_teams = playoff_teams_only
-    allowed_teams = PLAYOFF_TEAMS
+
+    allowed_teams = LIMIT_TEAMS[limit_teams]
+
     faceless = [204098, 1626162, 1627362, 1626210]
     for p in nba_players:
         # Roster status
 
         if p[3] != 0 and p[0] not in faceless:
-            if limit_teams and p[11] not in allowed_teams:
+            if p[11] not in allowed_teams:
                 continue
             team = {
                 'id': p[7],
