@@ -128,12 +128,6 @@ input[type="checkbox"]#advanced{
   }
 }
 
-.guess-right,
-.guess-wrong{
-  position:absolute;
-  display: none;
-}
-
 .past-guesses{
   display: none;
 }
