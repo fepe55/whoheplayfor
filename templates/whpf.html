@@ -116,7 +116,7 @@
     function initialize(){
       window.players = {{ players|tojson }};
       window.player = null;
-      window.past_players_id = []; 
+      window.past_players_id = [];
 
       window.game_status = {
         'timer': null,
@@ -164,7 +164,7 @@
       // $(".round").html(game_status['round']);
 
       if (player != null){
-        past_players_id.push(player.id); 
+        past_players_id.push(player.id);
       }
       var repeated = true;
       console.log(past_players_id);
