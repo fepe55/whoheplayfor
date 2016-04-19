@@ -114,7 +114,10 @@
 
 
     function initialize(){
-      window.player;
+      window.players = {{ players|tojson }};
+      window.player = null;
+      window.past_players_id = []; 
+
       window.game_status = {
         'timer': null,
         'total_rounds': {{ game_info.rounds }},
@@ -160,9 +163,17 @@
       $(".total").html(total);
       // $(".round").html(game_status['round']);
 
-      var players = {{ players|tojson }};
-      player = players[Math.floor(Math.random() * players.length)];
-      // TODO: Check not to allow repeated players
+      if (player != null){
+        past_players_id.push(player.id); 
+      }
+      var repeated = true;
+      console.log(past_players_id);
+      while(repeated){
+        player = players[Math.floor(Math.random() * players.length)];
+        if ($.inArray(player.id, past_players_id) == -1){
+          repeated = false;
+        };
+      };
 
       $(".player-name").html(player.name);
       $(".player-picture").css("background-image", "url('" + player.picture + "')");
