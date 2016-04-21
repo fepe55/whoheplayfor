@@ -108,8 +108,11 @@
 
     $("a.guess").click(function(e){
       e.preventDefault();
+      $("a.guess").off("click");
       var team = $(this).data("team");
-      react(team);
+      react(team, function(){
+        console.log("Hola");
+      });
     });
 
 
@@ -194,13 +197,13 @@
       start_round();
     };
 
-    function react(team){
+    function react(team, callback){
       if (team.code == player.team.code){
-        correct_guess(team);
+        correct_guess(team, callback);
       } else {
-        wrong_guess(team);
+        wrong_guess(team, callback);
       }
-      advance_round(team);
+      // advance_round(team);
     };
 
 
@@ -263,17 +266,23 @@
     };
 
 
-    function correct_guess(team){
+    function correct_guess(team, callback){
       game_status['guessed'] += 1;
 
-      $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("success", team);
+      $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100, function(){
+        advance_round(team);
+        callback();
+      });
     };
 
 
-    function wrong_guess(team){
-      $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100);
+    function wrong_guess(team, callback){
       add_past_guess("danger", team);
+      $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100, function(){
+        advance_round(team);
+        callback();
+      });
     };
 
 
