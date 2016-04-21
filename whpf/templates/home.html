@@ -4,9 +4,10 @@
     <div class="col-md-12">
       <h1>Start a new game</h1>
       <p>Do you know where does Tony Wroten play? And Willie Green? Chase Budinger?</p>
-      <p>Based on the game <a href="{{ url_for ('tv') }}">played on Inside The NBA</a>, comes the web version of <strong>Who He Play For?</strong></p>
+      <p>Based on the game <a href="{% url 'whpf:tv' %}">played on Inside The NBA</a>, comes the web version of <strong>Who He Play For?</strong></p>
       <p>Don't know how to play? Hit Start and I think you'll figure it out</p>
-      <form method="POST" class="form" action="{{ url_for('home') }}">
+      <form method="POST" class="form" action="{% url 'whpf:home' %}">
+        {% csrf_token %}
         <div class="advanced-options">
           <div class="form-group">
             <label for="time">Time</label>

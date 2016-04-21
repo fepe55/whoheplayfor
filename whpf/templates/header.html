@@ -1,3 +1,4 @@
+{% load static %}
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
@@ -8,11 +9,11 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ url_for ('home') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Who he play for" /></a>
+      <a class="navbar-brand" href="{% url 'whpf:home' %}"><img src="{% static 'img/logo.svg' %}" alt="Who he play for" /></a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li><a href="{{ url_for ('tv') }}">WHPF on NBA TV</a></li>
+        <li><a href="{% url 'whpf:tv' %}">WHPF on NBA TV</a></li>
         <!--
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Start new level <span class="caret"></span></a>
@@ -25,6 +26,15 @@
         </li>
         -->
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if user and not user.is_anonymous %}
+          <li class="navbar-text"><span>{{ user.get_full_name|default:user.username }} (<a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>)</span></li>
+        {% else %}
+          <li><a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a></li>
+          <li><a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a></li>
+        {% endif %}
+      </ul>
+
     </div><!--/.nav-collapse -->
   </div>
 </nav>

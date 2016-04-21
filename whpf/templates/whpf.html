@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load filters %}
 {% block content %}
   <div class="game">
     <div class="row">
@@ -32,7 +33,7 @@
         <h3>Your guess</h3>
         <div id="teams">
         {% for team in teams %}
-          <a href="#" class="guess" data-team='{{ team|tojson }}'>
+          <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
             <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
           </a>
         {% endfor %}
@@ -44,7 +45,7 @@
   <div class="row fail_results">
     <div class="col-md-12">
       <h1>What was that?</h1>
-      <a class="btn btn-primary btn-lg" href="{{ url_for('home') }}">Play again</a>
+      <a class="btn btn-primary btn-lg" href="{% url 'whpf:home' %}">Play again</a>
     </div>
   </div>
   <div class="row results">
@@ -55,7 +56,7 @@
         <label for="share">Share your result</label>
         <input type="text" class="form-control" name="share" />
       </div>
-      <a class="btn btn-primary btn-lg" href="{{ url_for('home') }}">Play again</a>
+      <a class="btn btn-primary btn-lg" href="{% url 'whpf:home' %}">Play again</a>
     </div>
   </div>
 
@@ -121,7 +122,7 @@
 
 
     function initialize(){
-      window.players = {{ players|tojson }};
+      window.players = {{ players|tojson|safe }};
       window.player = null;
       window.past_players_id = [];
 
@@ -259,7 +260,7 @@
       };
 
       // Add an input to share the result
-      input = $(".results input").val("{{ request.url_root }}" + "results/" + game_status['code']);
+      input = $(".results input").val("{{ request|get_domain_url }}" + "results/" + game_status['code']);
       var guessed = game_status['guessed'];
       var round = game_status['round'];
       if (round > 1){

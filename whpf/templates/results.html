@@ -22,7 +22,7 @@
             <th scope="row" style="vertical-align: middle">
               <span class="fa-stack fa-2x">
                 <i class="fa fa-circle fa-stack-2x"></i>
-                <strong class="fa-stack-1x" style="color: white;">{{ loop.index }}</strong>
+                <strong class="fa-stack-1x" style="color: white;">{{ forloop.counter }}</strong>
               </span>
             </th>
             <td><img src="{{ guess.player.picture }}" title="{{ guess.player.name }}" /></td>
