@@ -1,1 +1,1 @@
-web: gunicorn whoheplayfor:app --log-file=-
+web: gunicorn whoheplayfor.wsgi --log-file=-
