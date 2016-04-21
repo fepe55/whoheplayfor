@@ -3,7 +3,7 @@
 import requests
 import json
 import os.path
-from datetime import datetime
+from datetime import (datetime, timedelta, )
 
 from teams import (ALL_TEAMS, PLAYOFF_TEAMS, EAST_TEAMS, WEST_TEAMS, )
 
@@ -13,20 +13,32 @@ app.config['SECRET_KEY'] = 'J\x88P\x0b-R]\xf3\xa2\x0e\xb6\x0b\xb3\x84\xc7\xde\xf
 
 
 def get_players():
-    filename = datetime.today().date().strftime("%Y%m%d") + ".json"
-    if os.path.isfile(filename):
-        with open(filename, 'r') as f:
-            data = f.read()
-            j = json.loads(data)
-    else:
-        PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
-        r = requests.get(PLAYERS_URL)
+    dt = datetime.today().date()
+    tries_left = 3
+    while tries_left > 0:
+        filename = dt.strftime("%Y%m%d") + ".json"
+        if os.path.isfile(filename):
+            try:
+                with open(filename, 'r') as f:
+                    data = f.read()
+                    j = json.loads(data)
+                return j['resultSets'][0]['rowSet']
+            except:
+                os.remove(filename)
+        dt = dt - timedelta(days=1)
+        tries_left -= 1
+
+    PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
+    r = requests.get(PLAYERS_URL)
+
+    try:
+        j = r.json()
+        dt = datetime.today().date()
+        filename = dt.strftime("%Y%m%d") + ".json"
         with open(filename, 'w') as f:
             f.write(r.text)
-        try:
-            j = r.json()
-        except ValueError:
-            abort(500, "There's been a problem fetching info from NBA.com")
+    except ValueError:
+        abort(500, "There's been a problem fetching info from NBA.com")
 
     return j['resultSets'][0]['rowSet']
 
