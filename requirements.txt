@@ -4,4 +4,4 @@ Django==1.9.5
 python-social-auth==0.2.18
 dj-database-url==0.4.1
 whitenoise==3.0
-
+psycopg2
