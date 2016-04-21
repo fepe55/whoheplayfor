@@ -12,6 +12,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'J\x88P\x0b-R]\xf3\xa2\x0e\xb6\x0b\xb3\x84\xc7\xde\xf1\xfe\xd7\x06\xc3\xa26\xa6'
 
 
+@app.context_processor
+def inject_debug():
+    return dict(debug=app.debug)
+
+
 def get_players():
     dt = datetime.today().date()
     tries_left = 3
