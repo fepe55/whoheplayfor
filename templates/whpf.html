@@ -97,7 +97,7 @@
           end_game();
         };
       }, 1000);
-    }
+    };
 
 
     $(document).ready(function(){
@@ -108,8 +108,15 @@
 
     $("a.guess").click(function(e){
       e.preventDefault();
-      var team = $(this).data("team");
-      react(team);
+      if (!$(this).data("disabled")){
+        $("a.guess").data("disabled", true);
+        $("a.guess").addClass("disabled");
+        var team = $(this).data("team");
+        react(team, function(){
+          $("a.guess").data("disabled", false);
+          $("a.guess").removeClass("disabled");
+        });
+      };
     });
 
 
@@ -167,7 +174,6 @@
         past_players_id.push(player.id);
       }
       var repeated = true;
-      console.log(past_players_id);
       while(repeated){
         player = players[Math.floor(Math.random() * players.length)];
         if ($.inArray(player.id, past_players_id) == -1){
@@ -184,23 +190,24 @@
     };
 
 
-    function advance_round(team){
+    function advance_round(team, callback){
       game_status['round'] += 1;
       var pad = "00000000";
       // Padded player ID
       game_status['code'] += pad.slice(0, 8 - player.id.toString().length) + player.id;
       // Team id
       game_status['code'] += team.id.toString().slice(-2);
+      callback();
       start_round();
     };
 
-    function react(team){
+    function react(team, callback){
       if (team.code == player.team.code){
-        correct_guess(team);
+        correct_guess(team, callback);
       } else {
-        wrong_guess(team);
+        wrong_guess(team, callback);
       }
-      advance_round(team);
+      // advance_round(team);
     };
 
 
@@ -263,17 +270,21 @@
     };
 
 
-    function correct_guess(team){
+    function correct_guess(team, callback){
       game_status['guessed'] += 1;
 
-      $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100);
       add_past_guess("success", team);
+      $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100, function(){
+        advance_round(team, callback);
+      });
     };
 
 
-    function wrong_guess(team){
-      $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100);
+    function wrong_guess(team, callback){
       add_past_guess("danger", team);
+      $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100, function(){
+        advance_round(team, callback);
+      });
     };
 
 

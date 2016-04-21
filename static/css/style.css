@@ -80,6 +80,10 @@ input[type="checkbox"]#advanced{
   list-style: none;
 }
 
+.guess.disabled:hover{
+  cursor:not-allowed;
+}
+
 .guess:hover{
   text-decoration: none;
 }
