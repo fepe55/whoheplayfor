@@ -54,7 +54,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'WhoHePlayFor.urls'
+ROOT_URLCONF = 'whoheplayfor.urls'
 
 TEMPLATES = [
     {
@@ -74,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'WhoHePlayFor.wsgi.application'
+WSGI_APPLICATION = 'whoheplayfor.wsgi.application'
 
 
 # Database
