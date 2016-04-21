@@ -1,1 +1,1 @@
-web: gunicorn WhoHePlayFor:app --log-file=-
+web: gunicorn whoheplayfor:app --log-file=-
