@@ -4,10 +4,12 @@ import json
 import os.path
 from datetime import (datetime, timedelta, )
 
-from teams import (ALL_TEAMS, PLAYOFF_TEAMS, EAST_TEAMS, WEST_TEAMS, )
-
 from django.http import Http404
 from django.shortcuts import render
+
+from .teams import (ALL_TEAMS, PLAYOFF_TEAMS, EAST_TEAMS, WEST_TEAMS, )
+from .forms import (GameForm,
+                    TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
 
 
 def get_players():
@@ -42,49 +44,59 @@ def get_players():
 
 
 def home(request):
-
-    TIMES = [0, 30, 60, 90]
-    TIME_DEFAULT = TIMES[2]  # 60
-    ROUNDS = [10, 20, 30]
-    ROUNDS_DEFAULT = ROUNDS[1]  # 20
+    TIME_DEFAULT = TIME_CHOICES[2][0]  # 60
+    ROUNDS_DEFAULT = ROUNDS_CHOICES[1][0]  # 20
     LIMIT_TEAMS = {
         'all': ALL_TEAMS,
         'playoffs': PLAYOFF_TEAMS,
         'east': EAST_TEAMS,
         'west': WEST_TEAMS,
     }
-    LT_DEFAULT = 'all'
+    LT_DEFAULT = LIMIT_TEAMS_CHOICES[0][0]  # 'all'
     SPN_DEFAULT = True
     SF_DEFAULT = False
 
-    if request.method != 'POST':
-        return render(request, 'home.html')
+    time = request.session.get('time', TIME_DEFAULT)
+    rounds = request.session.get('rounds', ROUNDS_DEFAULT)
+    limit_teams = request.session.get('limit_teams', LT_DEFAULT)
+    shuffle_teams = request.session.get('shuffle_teams', SF_DEFAULT)
+    show_player_name = request.session.get('show_player_name', SPN_DEFAULT)
 
-    if 'advanced' in request.POST:
-        time = int(request.POST['time'])
-        request.session['time'] = time
-        rounds = int(request.POST['rounds'])
-        request.session['rounds'] = rounds
-        show_player_name = 'show_player_name' in request.POST
-        request.session['show_player_name'] = show_player_name
-        shuffle_teams = 'shuffle_teams' in request.POST
-        request.session['shuffle_teams'] = shuffle_teams
-        limit_teams = request.POST['limit_teams']
-        request.session['limit_teams'] = limit_teams
-    else:
-        time = request.session.get('time', TIME_DEFAULT)
-        rounds = request.session.get('rounds', ROUNDS_DEFAULT)
-        show_player_name = request.session.get('show_player_name', SPN_DEFAULT)
-        shuffle_teams = request.session.get('shuffle_teams', SF_DEFAULT)
-        limit_teams = request.session.get('limit_teams', LT_DEFAULT)
+    form = GameForm(initial={
+        'time': time,
+        'rounds': rounds,
+        'limit_teams': limit_teams,
+        'shuffle_teams': shuffle_teams,
+        'show_player_name': show_player_name,
+    })
+
+    if not request.POST:
+        return render(request, "home.html", {'form': form, })
+
+    form = GameForm(request.POST)
+
+    if not form.is_valid():
+        return render(request, "home.html", {'form': form, })
+
+    time = int(form.cleaned_data['time'])
+    rounds = int(form.cleaned_data['rounds'])
+    limit_teams = form.cleaned_data['limit_teams']
+    shuffle_teams = form.cleaned_data['shuffle_teams']
+    show_player_name = form.cleaned_data['show_player_name']
 
     if (
-        time not in TIMES or
-        rounds not in ROUNDS or
-        limit_teams not in LIMIT_TEAMS.keys()
+        time not in [x[0] for x in TIME_CHOICES] or
+        rounds not in [x[0] for x in ROUNDS_CHOICES] or
+        limit_teams not in [x[0] for x in LIMIT_TEAMS_CHOICES]
     ):
         request.session.clear()
-        raise Http404
+        raise Http404("Hola")
+
+    request.session['time'] = time
+    request.session['rounds'] = rounds
+    request.session['limit_teams'] = limit_teams
+    request.session['shuffle_teams'] = shuffle_teams
+    request.session['show_player_name'] = show_player_name
 
     game_info = {
         'show_player_name': show_player_name,
@@ -131,7 +143,7 @@ def home(request):
     teams = sorted(teams)
     # player = random.choice(players)
     return render(request, 'whpf.html', {
-        'players': players, 'teams': teams, 'game_info': game_info
+        'players': players, 'teams': teams, 'game_info': game_info,
     })
 
 

@@ -9,46 +9,37 @@
       <form method="POST" class="form" action="{% url 'whpf:home' %}">
         {% csrf_token %}
         <div class="advanced-options">
+
           <div class="form-group">
-            <label for="time">Time</label>
-            <select id="time" class="form-control" name="time">
-              <option value="30">30 seconds</option>
-              <option value="60" selected>60 seconds</option>
-              <option value="90">90 seconds</option>
-              <option value="0">Unlimited</option>
-            </select>
+            {{ form.time.errors }}
+            <label for="{{ form.time.id_for_label }}">Time</label>
+            {{ form.time }}
           </div>
 
           <div class="form-group">
-            <label for="rounds">Round limit</label>
-            <select id="rounds" class="form-control" name="rounds">
-              <option value="10">10</option>
-              <option value="20" selected>20</option>
-              <option value="30">30</option>
-            </select>
+            {{ form.rounds.errors }}
+            <label for="{{ form.rounds.id_for_label }}">Rounds</label>
+            {{ form.rounds }}
           </div>
 
           <div class="form-group">
-            <label for="limit_teams">Limit teams</label>
-            <select id="limit_teams" class="form-control" name="limit_teams">
-              <option value="all" selected>All teams</option>
-              <option value="playoffs">Playoff teams</option>
-              <option value="east">East teams</option>
-              <option value="west">West teams</option>
-            </select>
+            {{ form.limit_teams.errors }}
+            <label for="{{ form.limit_teams.id_for_label }}">Limit teams</label>
+            {{ form.limit_teams }}
           </div>
 
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" id="shuffle_teams" name="shuffle_teams" />Shuffle teams positions
-            </label>
+          <div class="form-group">
+            {{ form.shuffle_teams.errors }}
+            <label for="{{ form.shuffle_teams.id_for_label }}">Shuffle teams positions</label>
+            {{ form.shuffle_teams }}
           </div>
 
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" id="show_player_name" name="show_player_name" checked />Show player name
-            </label>
+          <div class="form-group">
+            {{ form.show_player_name.errors }}
+            <label for="{{ form.show_player_name.id_for_label }}">Show player name</label>
+            {{ form.show_player_name }}
           </div>
+
           <input type="checkbox" id="advanced" name="advanced" />
         </div>
 
@@ -62,6 +53,10 @@
 {% endblock %}
 
 {% block js %}
+  <script>
+    $("select").addClass("form-control");
+  </script>
+
   <script>
     $(".show-advanced-options").click(function(e){
       e.preventDefault();
