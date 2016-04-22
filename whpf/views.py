@@ -153,7 +153,6 @@ def tv(request):
 
 
 def results(request, code):
-    # code: level(1) + rounds(3) + n times (player_id(8), guess_id(2))
     # code: show_player_name(1) + shuffle_teams(1) + time_limit(3) +
     # rounds(3) + n times (player_id(8), guess_id(2))
 

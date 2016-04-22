@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 from django import forms
 
-TIME_CHOICES = [(0, 'unlimited'), (30, '30 seconds'),
+TIME_CHOICES = [(0, 'Unlimited time'), (30, '30 seconds'),
                 (60, '60 seconds'), (90, '90 seconds'), ]
 ROUNDS_CHOICES = [(10, 10), (20, 20), (30, 30), ]
 LIMIT_TEAMS_CHOICES = [
@@ -13,7 +13,6 @@ LIMIT_TEAMS_CHOICES = [
 
 
 class GameForm(forms.Form):
-
     time = forms.ChoiceField(choices=TIME_CHOICES)
     rounds = forms.ChoiceField(choices=ROUNDS_CHOICES)
     limit_teams = forms.ChoiceField(choices=LIMIT_TEAMS_CHOICES)
