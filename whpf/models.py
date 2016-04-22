@@ -43,7 +43,8 @@ class Team(ModelWithDates):
 
     @property
     def picture(self):
-        TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
+        TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/"\
+            "logos/%s_logo.svg"
         return TEAM_PICTURE_URL % self.abbreviation
 
 
@@ -59,7 +60,8 @@ class Player(ModelWithDates):
 
     @property
     def picture(self):
-        PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
+        PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/"\
+            "img/2.0/sect/statscube/players/large/%s.png"
         return PLAYER_PICTURE_URL % self.code
 
 
