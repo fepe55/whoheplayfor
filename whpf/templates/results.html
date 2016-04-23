@@ -14,7 +14,7 @@
         </thead>
         <tbody>
           {% for guess in guesses %}
-          {% if guess.team.id == guess.player.team.id %}
+          {% if guess.team.nba_id == guess.player.team.nba_id %}
           <tr class="success">
           {% else %}
           <tr class="danger">

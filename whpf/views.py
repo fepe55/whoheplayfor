@@ -1,57 +1,28 @@
 # -*- encoding: utf-8 -*-
-import requests
 import json
-import os.path
-from datetime import (datetime, timedelta, )
 
-from django.http import Http404
+from django.http import (HttpResponse, Http404, )
 from django.shortcuts import render
 
-from .teams import (ALL_TEAMS, PLAYOFF_TEAMS, EAST_TEAMS, WEST_TEAMS, )
+from .models import Result
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
+from .helpers import (get_teams_and_players_database,
+                      get_teams_and_players_api,
+                      get_players_api, )
 
 
-def get_players():
-    dt = datetime.today().date()
-    tries_left = 3
-    while tries_left > 0:
-        filename = dt.strftime("%Y%m%d") + ".json"
-        if os.path.isfile(filename):
-            try:
-                with open(filename, 'r') as f:
-                    data = f.read()
-                    j = json.loads(data)
-                return j['resultSets'][0]['rowSet']
-            except:
-                os.remove(filename)
-        dt = dt - timedelta(days=1)
-        tries_left -= 1
-
-    PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
-    r = requests.get(PLAYERS_URL)
-
-    try:
-        j = r.json()
-        dt = datetime.today().date()
-        filename = dt.strftime("%Y%m%d") + ".json"
-        with open(filename, 'w') as f:
-            f.write(r.text)
-    except ValueError:
-        raise Http404("There's been a problem fetching info from NBA.com")
-
-    return j['resultSets'][0]['rowSet']
+def get_teams_and_players(limit_teams):
+    database = True
+    if database:
+        return get_teams_and_players_database(limit_teams)
+    else:
+        return get_teams_and_players_api(limit_teams)
 
 
 def home(request):
     TIME_DEFAULT = TIME_CHOICES[2][0]  # 60
     ROUNDS_DEFAULT = ROUNDS_CHOICES[1][0]  # 20
-    LIMIT_TEAMS = {
-        'all': ALL_TEAMS,
-        'playoffs': PLAYOFF_TEAMS,
-        'east': EAST_TEAMS,
-        'west': WEST_TEAMS,
-    }
     LT_DEFAULT = LIMIT_TEAMS_CHOICES[0][0]  # 'all'
     SPN_DEFAULT = True
     SF_DEFAULT = False
@@ -90,7 +61,7 @@ def home(request):
         limit_teams not in [x[0] for x in LIMIT_TEAMS_CHOICES]
     ):
         request.session.clear()
-        raise Http404("Hola")
+        raise Http404()
 
     request.session['time'] = time
     request.session['rounds'] = rounds
@@ -105,43 +76,8 @@ def home(request):
         'rounds': rounds,
     }
 
-    PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
-    TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
+    (teams, players) = get_teams_and_players(limit_teams)
 
-    nba_players = get_players()
-    players = []
-    teams = []
-
-    allowed_teams = LIMIT_TEAMS[limit_teams]
-
-    faceless = [204098, 1626162, 1627362, 1626210]
-    for p in nba_players:
-        # Roster status
-
-        if p[3] != 0 and p[0] not in faceless:
-            if p[11] not in allowed_teams:
-                continue
-            team = {
-                'id': p[7],
-                'city': p[8],
-                'name': p[9],
-                'abbreviation': p[10],
-                'code': p[11],
-                'picture': TEAM_PICTURE_URL % p[10],
-            }
-            if team not in teams:
-                teams.append(team)
-
-            player = {
-                'id': p[0],
-                'name': p[2],
-                'team': team,
-                'picture': PLAYER_PICTURE_URL % p[6],
-            }
-            players.append(player)
-
-    teams = sorted(teams)
-    # player = random.choice(players)
     return render(request, 'whpf.html', {
         'players': players, 'teams': teams, 'game_info': game_info,
     })
@@ -150,6 +86,17 @@ def home(request):
 def tv(request):
     videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
     return render(request, "tv.html", {'videos': videos})
+
+
+def save(request, code):
+    if request.is_ajax():
+        r = Result.objects.create(user=request.user, code=code, )
+        r.calculate_score()
+        to_json = {'success': True, }
+        return HttpResponse(json.dumps(to_json),
+                            content_type='application/json')
+    else:
+        raise Http404
 
 
 def results(request, code):
@@ -183,10 +130,13 @@ def results(request, code):
         }
         guesses.append(guess)
 
-    PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
+    PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/"\
+        "sect/statscube/players/large/%s.png"
     TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
 
-    nba_players = get_players()
+    nba_players = get_players_api()
+    if not nba_players:
+        raise Http404
     proper_guesses = {}
     for i in xrange(rounds):
         proper_guesses[i+1] = {}
@@ -196,7 +146,7 @@ def results(request, code):
         for g in guesses:
             if p[0] == g['player_id']:
                 team = {
-                    'id': p[7],
+                    'nba_id': p[7],
                     'city': p[8],
                     'name': p[9],
                     'abbreviation': p[10],
@@ -204,7 +154,7 @@ def results(request, code):
                     'picture': TEAM_PICTURE_URL % p[10],
                 }
                 player = {
-                    'id': p[0],
+                    'nba_id': p[0],
                     'name': p[2],
                     'team': team,
                     'picture': PLAYER_PICTURE_URL % p[6],
@@ -213,7 +163,7 @@ def results(request, code):
 
             if int(str(p[7])[-2:]) == g['team_id']:
                 team = {
-                    'id': p[7],
+                    'nba_id': p[7],
                     'city': p[8],
                     'name': p[9],
                     'abbreviation': p[10],
@@ -229,3 +179,8 @@ def results(request, code):
     return render(request, 'results.html', {
         'guesses': final_guesses, 'game_info': game_info
     })
+
+
+def scoreboard(request):
+    results = Result.objects.all()[:10]
+    return render(request, 'scoreboard.html', {'scores': results, })

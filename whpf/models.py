@@ -69,21 +69,30 @@ class Result(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User)
     code = models.TextField()
-    time = models.CharField(max_length=255, choices=TIME_CHOICES)
-    rounds = models.CharField(max_length=255, choices=ROUNDS_CHOICES)
-    limit_teams = models.CharField(max_length=255, choices=LIMIT_TEAMS_CHOICES)
-    shuffle_teams = models.BooleanField()
-    show_player_name = models.BooleanField()
     score = models.IntegerField(default=0)
 
     @property
+    def show_player_name(self):
+        return self.code[:1] == '1'
+
+    @property
+    def shuffle_teams(self):
+        return self.code[1:2] == '1'
+
+    @property
+    def time(self):
+        return int(self.code[2:5])
+
+    @property
+    def rounds(self):
+        return int(self.code[5:8])
+
+    @property
     def difficulty(self):
-        difficulty = 0
+        difficulty = 1
         if self.shuffle_teams:
             difficulty += 1
         if not self.show_player_name:
-            difficulty += 1
-        if self.limit_teams == 'all':
             difficulty += 1
         return difficulty
 
@@ -93,7 +102,7 @@ class Result(models.Model):
         difficulty = self.difficulty
         guesses = self.get_guesses()
         for guess in guesses:
-            if guess.player.team.id == guess.team.id:
+            if guess['player'].team.id == guess['team'].id:
                 correct_guesses += 1
             else:
                 wrong_guesses += 1
@@ -115,7 +124,7 @@ class Result(models.Model):
             player_id = int(guess_str[:8])
             player = Player.objects.get(nba_id=player_id)
             team_id = int(guess_str[8:])
-            team = Team.objects.get(nba_id=team_id)
+            team = Team.objects.get(nba_id__endswith=team_id)
             guess = {
                 'round': i+1,
                 'player': player,
@@ -123,3 +132,6 @@ class Result(models.Model):
             }
             guesses.append(guess)
         return guesses
+
+    class Meta:
+        ordering = ['-score', ]

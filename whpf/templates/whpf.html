@@ -172,12 +172,12 @@
       // $(".round").html(game_status['round']);
 
       if (player != null){
-        past_players_id.push(player.id);
+        past_players_id.push(player.nba_id);
       }
       var repeated = true;
       while(repeated){
         player = players[Math.floor(Math.random() * players.length)];
-        if ($.inArray(player.id, past_players_id) == -1){
+        if ($.inArray(player.nba_id, past_players_id) == -1){
           repeated = false;
         };
       };
@@ -195,9 +195,9 @@
       game_status['round'] += 1;
       var pad = "00000000";
       // Padded player ID
-      game_status['code'] += pad.slice(0, 8 - player.id.toString().length) + player.id;
+      game_status['code'] += pad.slice(0, 8 - player.nba_id.toString().length) + player.nba_id;
       // Team id
-      game_status['code'] += team.id.toString().slice(-2);
+      game_status['code'] += team.nba_id.toString().slice(-2);
       callback();
       start_round();
     };
@@ -213,7 +213,7 @@
 
 
     function end_game(){
-      // Hide the game and the partial result
+      // Hide the game
       clearInterval(game_status['timer']);
       var total = game_status['round'] - 1;
       $(".guessed").html(game_status['guessed']);
@@ -221,7 +221,7 @@
       $(".round").html(game_status['round']);
 
       $(".game").hide();
-      $(".game-info").hide();
+      // $(".game-info").hide();
 
       // Add the total number of rounds to the code
       var padding = '000';
@@ -265,6 +265,26 @@
       var round = game_status['round'];
       if (round > 1){
         $(".results").show();
+
+        {% if user.is_authenticated %}
+        var url_mask = "{% url 'whpf:save' 12345 %}".replace(/12345/, game_status['code'].toString());
+        $.ajax({
+          url: url_mask,
+          type: "POST",
+          data: {name: 'name', age: 'age'},
+          success:function(response){
+            console.log("Success");
+          },
+          error:function (xhr, textStatus, thrownError){
+            console.log("Error");
+            console.log(xhr);
+            console.log(textStatus);
+            console.log(thrownError);
+          }
+        });
+        {% endif %}
+
+
       } else {
         $(".fail_results").show();
       };
@@ -322,6 +342,39 @@
       table.prepend(tr);
       $(".past-guesses").show();
     };
+  </script>
+
+  <script>
+  // using jQuery
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+
+  function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  };
+  var csrftoken = getCookie('csrftoken');
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+    }
+  });
   </script>
 
 {% endblock %}

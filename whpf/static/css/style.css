@@ -159,3 +159,23 @@ input[type="checkbox"]#advanced{
 .fail_results{
   display: none;
 }
+
+/* SCOREBOARD */
+.score .trophy{
+  display: none;
+}
+
+.score.pos1 .trophy{
+  display: inline;
+  color: #CFB53B;
+}
+
+.score.pos2 .trophy{
+  display: inline;
+  color: #E6E8FA;
+}
+
+.score.pos3 .trophy{
+  display: inline;
+  color: #8C7853;
+}

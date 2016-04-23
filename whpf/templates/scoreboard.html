@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row">
+    <h1>Scoreboard</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Score</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for score in scores %}
+        <tr>
+          <td class="score pos{{ forloop.counter}}"><i class="fa fa-trophy trophy"></i> {{ score.user }}</td>
+          <td>{{ score.score }}</td>
+          <td><a href="{% url 'whpf:results' score.code %}">View details</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
