@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         nba_players = get_players_api()
         for p in nba_players:
-            if not Team.objects.filter(nba_id=p[7]).exists():
+            if p[7] and not Team.objects.filter(nba_id=p[7]).exists():
                 if p[11] in ATLANTIC_TEAMS:
                     division = Division.objects.get(name='Atlantic')
                 if p[11] in CENTRAL_TEAMS:
