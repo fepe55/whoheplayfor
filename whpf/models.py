@@ -5,8 +5,6 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
-from .forms import (TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
-
 
 class ModelWithDates(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -65,7 +63,7 @@ class Player(ModelWithDates):
         return PLAYER_PICTURE_URL % self.code
 
 
-class Result(models.Model):
+class Result(ModelWithDates):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User)
     code = models.TextField()
