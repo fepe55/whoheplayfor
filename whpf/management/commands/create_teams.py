@@ -1,6 +1,6 @@
 # coding=utf-8
 from django.core.management.base import BaseCommand
-from whpf.views import get_players
+from whpf.helpers import get_players_api
 from whpf.models import (Team, Division, )
 from whpf.teams import (ATLANTIC_TEAMS, CENTRAL_TEAMS, SOUTHEAST_TEAMS,
                         NORTHWEST_TEAMS, PACIFIC_TEAMS, SOUTHWEST_TEAMS)
@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Create teams'
 
     def handle(self, *args, **kwargs):
-        nba_players = get_players()
+        nba_players = get_players_api()
         for p in nba_players:
             if not Team.objects.filter(nba_id=p[7]).exists():
                 if p[11] in ATLANTIC_TEAMS:

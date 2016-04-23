@@ -1,6 +1,6 @@
 # coding=utf-8
 from django.core.management.base import BaseCommand
-from whpf.views import get_players
+from whpf.helpers import get_players_api
 from whpf.models import (Team, Player, )
 
 faceless = [204098, 1626162, 1627362, 1626210]
@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Create teams'
 
     def handle(self, *args, **kwargs):
-        nba_players = get_players()
+        nba_players = get_players_api()
         for p in nba_players:
             if p[3] != 0:
                 team = Team.objects.get(nba_id=p[7])
