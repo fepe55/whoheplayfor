@@ -32,6 +32,7 @@
           <li class="navbar-text"><span>{{ user.get_full_name|default:user.username }} (<a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>)</span></li>
         {% else %}
           <li><a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a></li>
+          <li><a href="{% url 'social:begin' 'reddit' %}?next={{ request.path }}">Login with Reddit</a></li>
           <li><a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a></li>
         {% endif %}
       </ul>

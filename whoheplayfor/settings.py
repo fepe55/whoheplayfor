@@ -87,6 +87,7 @@ DATABASES['default'] = dj_database_url.config()
 AUTHENTICATION_BACKENDS = [
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.twitter.TwitterOAuth',
+    'social.backends.reddit.RedditOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -143,6 +144,10 @@ SOCIAL_AUTH_FACEBOOK_KEY = '1534222313554399'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'ed06b107c073196d5d1af45214c1764c'
 SOCIAL_AUTH_TWITTER_KEY = 'X2u7r5SsCJmuxuBhUA2A9WGzB'
 SOCIAL_AUTH_TWITTER_SECRET = 'pSrcijo0BgBwkIDOLygcdZ7rX9ZEr4QqT00iLjKvbOzT3wMyaa'
+
+SOCIAL_AUTH_REDDIT_KEY = 'X1_KhooVyKJlKg'
+SOCIAL_AUTH_REDDIT_SECRET = '-_RDRQ3XYMYxEU_gKNKAnquZSn0'
+SOCIAL_AUTH_REDDIT_AUTH_EXTRA_ARGUMENTS = {'duration': 'permanent'}
 
 
 try:
