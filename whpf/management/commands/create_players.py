@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 from whpf.helpers import get_players_api
 from whpf.models import (Team, Player, )
 
-faceless = [204098, 1626162, 1627362, 1626210]
+faceless = [204098, 1626162, 1626210]
 
 
 class Command(BaseCommand):

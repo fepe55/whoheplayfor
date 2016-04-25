@@ -2,10 +2,15 @@
 {% block content %}
   <div class="row home">
     <div class="col-md-12">
+      <div class="alert alert-warning" role="alert">
+        <i class="fa fa-exclamation-triangle"></i> If you want your score to be saved, log in in the top right before you start
+      </div>
       <h1>Start a new game</h1>
-      <p>Do you know where does Tony Wroten play? And Willie Green? Chase Budinger?</p>
-      <p>Based on the game <a href="{% url 'whpf:tv' %}">played on Inside The NBA</a>, comes the web version of <strong>Who He Play For?</strong></p>
-      <p>Don't know how to play? Hit Start and I think you'll figure it out</p>
+      <div class="intro">
+        <p>Do you know where does Tony Wroten play? And Willie Green? Chase Budinger?</p>
+        <p>Based on the game <a href="{% url 'whpf:tv' %}">played on Inside The NBA</a>, comes the web version of <strong>Who He Play For?</strong></p>
+        <p>Don't know how to play? Hit Start and I think you'll figure it out</p>
+      </div>
       <form method="POST" class="form" action="{% url 'whpf:home' %}">
         {% csrf_token %}
         <div class="advanced-options">

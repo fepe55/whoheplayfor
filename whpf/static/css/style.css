@@ -36,8 +36,11 @@ input[type="checkbox"]#advanced{
   display: none;
 }
 
+.intro{
+  margin-bottom: 30px;
+}
+
 .start-game{
-  margin-top: 30px;
   margin-bottom: 10px;
 }
 

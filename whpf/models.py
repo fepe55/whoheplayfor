@@ -5,6 +5,8 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
+from .managers import PlayerManager
+
 
 class ModelWithDates(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -23,10 +25,16 @@ class Conference(models.Model):
             teams |= division.teams.all()
         return teams
 
+    def __unicode__(self):
+        return "%sern conference" % (self.name, )
+
 
 class Division(models.Model):
     name = models.CharField(max_length=255)
     conference = models.ForeignKey(Conference, related_name="divisions")
+
+    def __unicode__(self):
+        return "%s division" % (self.name, )
 
 
 class Team(ModelWithDates):
@@ -45,6 +53,12 @@ class Team(ModelWithDates):
             "logos/%s_logo.svg"
         return TEAM_PICTURE_URL % self.abbreviation
 
+    def __unicode__(self):
+        return "%s %s" % (self.city, self.name, )
+
+    class Meta:
+        ordering = ['division__conference__name', 'code', ]
+
 
 class Player(ModelWithDates):
     active = models.BooleanField(default=True)
@@ -56,11 +70,16 @@ class Player(ModelWithDates):
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
 
+    objects = PlayerManager()
+
     @property
     def picture(self):
         PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/"\
             "img/2.0/sect/statscube/players/large/%s.png"
         return PLAYER_PICTURE_URL % self.code
+
+    def __unicode__(self):
+        return "%s" % (self.name, )
 
 
 class Result(ModelWithDates):

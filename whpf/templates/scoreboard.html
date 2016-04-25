@@ -7,14 +7,22 @@
         <tr>
           <th>User</th>
           <th>Score</th>
+          <th>Show Player Name</th>
+          <th>Shuffle teams</th>
+          <th>Time</th>
+          <th>Rounds</th>
           <th>Result</th>
         </tr>
       </thead>
       <tbody>
         {% for score in scores %}
         <tr>
-          <td class="score pos{{ forloop.counter}}"><i class="fa fa-trophy trophy"></i> {{ score.user }}</td>
+          <th class="score pos{{ forloop.counter}}"><i class="fa fa-trophy trophy"></i> {{ score.user }}</th>
           <td>{{ score.score }}</td>
+          <td>{% if score.show_player_name %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
+          <td>{% if score.shuffle_teams %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
+          <td>{% if time %}{{ score.time }}{% else %}Unlimited{% endif %}</td>
+          <td>{{ score.rounds }}</td>
           <td><a href="{% url 'whpf:results' score.code %}">View details</a></td>
         </tr>
         {% endfor %}
