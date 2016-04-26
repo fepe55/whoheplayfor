@@ -19,6 +19,8 @@ def get_domain_url(request):
 def get_user_info(user):
     social = user.social_auth.get()
     backend = social.get_backend().name
+    url = ''
+    icon_class = ''
     if backend == 'twitter':
         screen_name = social.extra_data['access_token']['screen_name']
         url = "http://www.twitter.com/%s" % screen_name
@@ -33,5 +35,9 @@ def get_user_info(user):
         username = social.extra_data['username']
         url = "http://www.reddit.com/u/%s" % username
         icon_class = 'fa fa-reddit-alien'
+
+    if backend == 'google-oauth2':
+        url = ''
+        icon_class = 'fa fa-google'
 
     return {'url': url, 'icon_class': icon_class, }

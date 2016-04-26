@@ -168,6 +168,10 @@ input[type="checkbox"]#advanced{
   background-color: rgba(249, 249, 249, 0.7);
 }
 
+.scoreboard tr{
+  height: 55px;
+}
+
 .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
   vertical-align: middle;
 }
@@ -177,7 +181,8 @@ input[type="checkbox"]#advanced{
 }
 
 .score a:hover{
-  color: #ccc;
+  color: #666;
+  text-decoration: none;
 }
 
 .score .trophy-stack{

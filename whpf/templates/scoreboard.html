@@ -6,6 +6,7 @@
     <table class="table table-hover scoreboard">
       <thead>
         <tr>
+          <th></th>
           <th>User</th>
           <th>Score</th>
           <th class="advanced-details">Show Player Name</th>
@@ -18,12 +19,17 @@
       <tbody>
         {% for score in scores %}
         <tr>
+          <td>{{ forloop.counter }}</td>
           <th class="score pos{{ forloop.counter}}">
             {% with user_info=score.user|get_user_info %}
-            <a href="{{ user_info.url }}">
+              {% if user_info.url %}
+                <a title="View user profile" href="{{ user_info.url }}">
+                  <i class="{{ user_info.icon_class }}"></i>
+                </a>
+              {% else %}
                 <i class="{{ user_info.icon_class }}"></i>
-              </a>
-              {{ score.user }}
+              {% endif %}
+              {{ score.user.get_full_name|default:score.user.username }}
             {% endwith %}
             <span class="fa-stack fa-lg trophy-stack">
               <i class="fa fa-circle fa-stack-2x"></i>
