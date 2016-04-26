@@ -172,22 +172,33 @@ input[type="checkbox"]#advanced{
   vertical-align: middle;
 }
 
-.score .trophy{
+.score a{
+  color: #999;
+}
+
+.score a:hover{
+  color: #ccc;
+}
+
+.score .trophy-stack{
   display: none;
 }
 
+.score.pos1 .trophy-stack,
+.score.pos2 .trophy-stack,
+.score.pos3 .trophy-stack{
+  display: inline-block;
+}
+
 .score.pos1 .trophy{
-  display: inline;
   color: #CFB53B;
 }
 
 .score.pos2 .trophy{
-  display: inline;
   color: #E6E8FA;
 }
 
 .score.pos3 .trophy{
-  display: inline;
   color: #8C7853;
 }
 

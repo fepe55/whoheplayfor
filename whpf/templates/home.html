@@ -2,9 +2,11 @@
 {% block content %}
   <div class="row home">
     <div class="col-md-12">
-      <div class="alert alert-warning" role="alert">
-        <i class="fa fa-exclamation-triangle"></i> If you want your score to be saved, log in in the top right before you start
-      </div>
+      {% if not user.is_authenticated %}
+        <div class="alert alert-warning" role="alert">
+          <i class="fa fa-exclamation-triangle"></i> If you want your score to be saved, log in in the top right before you start
+        </div>
+      {% endif %}
       <h1>Start a new game</h1>
       <div class="intro">
         <p>Do you know where does Tony Wroten play? And Willie Green? Chase Budinger?</p>

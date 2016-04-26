@@ -86,6 +86,7 @@ DATABASES['default'] = dj_database_url.config()
 
 AUTHENTICATION_BACKENDS = [
     'social.backends.facebook.FacebookOAuth2',
+    'social.backends.google.GoogleOAuth2',
     'social.backends.twitter.TwitterOAuth',
     'social.backends.reddit.RedditOAuth2',
     'django.contrib.auth.backends.ModelBackend',
@@ -142,6 +143,10 @@ LOGIN_REDIRECT_URL = reverse_lazy("whpf:home")
 
 SOCIAL_AUTH_FACEBOOK_KEY = '1534222313554399'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'ed06b107c073196d5d1af45214c1764c'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '861844858337-hqls442qksjj4di6n3b77p41rlngrbj3.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'elkLaVr1gDgmgC8HlFac367Q'
+
 SOCIAL_AUTH_TWITTER_KEY = 'X2u7r5SsCJmuxuBhUA2A9WGzB'
 SOCIAL_AUTH_TWITTER_SECRET = 'pSrcijo0BgBwkIDOLygcdZ7rX9ZEr4QqT00iLjKvbOzT3wMyaa'
 
