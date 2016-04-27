@@ -153,6 +153,11 @@ def results(request, code):
     # rounds(3) + n times (player_id(8), guess_id(2))
 
     score = get_score(code)
+    results = Result.objects.filter(code=code)
+    if results.count() == 1:
+        result = results[0]
+    else:
+        result = None
 
     show_player_name = int(code[:1])
     code = code[1:]
@@ -229,6 +234,7 @@ def results(request, code):
 
     return render(request, 'results.html', {
         'guesses': final_guesses, 'game_info': game_info, 'score': score,
+        'result': result,
     })
 
 

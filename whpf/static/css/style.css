@@ -163,6 +163,10 @@ input[type="checkbox"]#advanced{
   display: none;
 }
 
+.view-user-profile:hover{
+  text-decoration: none;
+}
+
 /* SCOREBOARD */
 .scoreboard{
   background-color: rgba(249, 249, 249, 0.7);
