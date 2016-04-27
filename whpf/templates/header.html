@@ -34,10 +34,29 @@
           <li class="navbar-text"><i class="{{ user_info.icon_class }}"></i> <span>{{ user.get_full_name|default:user.username }} (<a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>)</span></li>
         {% endwith %}
         {% else %}
-          <li><a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a></li>
-          <li><a href="{% url 'social:begin' 'reddit' %}?next={{ request.path }}">Login with Reddit</a></li>
-          <li><a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a></li> 
-          <li><a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a></li>
+          <li>
+            <p class="navbar-text loginwith">Login using:</p>
+          </li>
+          <li>
+              <a title="Reddit" href="{% url 'social:begin' 'reddit' %}?next={{ request.path }}">
+                <i class="fa fa-reddit-alien"></i>
+              </a>
+          </li>
+          <li>
+              <a title="Google" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">
+                <i class="fa fa-google"></i>
+              </a>
+          </li>
+          <li>
+              <a title="Twitter" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+                <i class="fa fa-twitter"></i>
+              </a>
+          </li>
+          <li>
+              <a title="Facebook" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">
+                <i class="fa fa-facebook"></i>
+              </a>
+          </li>
         {% endif %}
       </ul>
 
