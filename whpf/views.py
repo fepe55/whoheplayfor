@@ -9,7 +9,7 @@ from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
 from .helpers import (get_teams_and_players_database,
                       get_teams_and_players_api,
-                      get_players_api, )
+                      get_players_api, get_score, )
 
 
 def get_teams_and_players(limit_teams):
@@ -184,3 +184,12 @@ def results(request, code):
 def scoreboard(request):
     results = Result.objects.all()[:10]
     return render(request, 'scoreboard.html', {'scores': results, })
+
+
+def score(request, code):
+    if request.is_ajax():
+        to_json = {'score': get_score(code), }
+        return HttpResponse(json.dumps(to_json),
+                            content_type='application/json')
+    else:
+        raise Http404

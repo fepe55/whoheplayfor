@@ -138,3 +138,53 @@ def get_teams_and_players_api(limit_teams):
     teams = sorted(teams)
     # player = random.choice(players)
     return (teams, players)
+
+
+# SCORE
+
+def get_guesses(code):
+    code = code[1:]  # show_player_name
+    code = code[1:]  # shuffle_teams
+    code = code[3:]  # time_limit
+    rounds = int(code[:3])
+    code = code[3:]  # rounds
+    guesses = []
+    for i in xrange(rounds):
+        guess_str = code[10*i:10*i+10]
+        player_id = int(guess_str[:8])
+        player = Player.objects.get(nba_id=player_id)
+        team_id = int(guess_str[8:])
+        team = Team.objects.get(nba_id__endswith=team_id)
+        guess = {
+            'round': i+1,
+            'player': player,
+            'team': team,
+        }
+        guesses.append(guess)
+    return guesses
+
+
+def get_difficulty(code):
+    difficulty = 1
+    show_player_name = code[:1] == '1'
+    shuffle_teams = code[1:2] == '1'
+    if not show_player_name:
+        difficulty += 1
+    if shuffle_teams:
+        difficulty += 1
+    return difficulty
+
+
+def get_score(code):
+    correct_guesses = 0
+    wrong_guesses = 0
+    difficulty = get_difficulty(code)
+    guesses = get_guesses(code)
+    for guess in guesses:
+        if guess['player'].team.id == guess['team'].id:
+            correct_guesses += 1
+        else:
+            wrong_guesses += 1
+
+    score = (3*correct_guesses - wrong_guesses) * difficulty
+    return score

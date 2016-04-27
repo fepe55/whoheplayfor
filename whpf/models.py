@@ -104,51 +104,11 @@ class Result(ModelWithDates):
     def rounds(self):
         return int(self.code[5:8])
 
-    @property
-    def difficulty(self):
-        difficulty = 1
-        if self.shuffle_teams:
-            difficulty += 1
-        if not self.show_player_name:
-            difficulty += 1
-        return difficulty
-
     def calculate_score(self):
-        correct_guesses = 0
-        wrong_guesses = 0
-        difficulty = self.difficulty
-        guesses = self.get_guesses()
-        for guess in guesses:
-            if guess['player'].team.id == guess['team'].id:
-                correct_guesses += 1
-            else:
-                wrong_guesses += 1
-
-        self.score = (3*correct_guesses - wrong_guesses) * difficulty
+        from .helpers import get_score
+        self.score = get_score(self.code)
         self.save()
         return self.score
-
-    def get_guesses(self):
-        code = self.code
-        code = code[1:]  # show_player_name
-        code = code[1:]  # shuffle_teams
-        code = code[3:]  # time_limit
-        rounds = int(code[:3])
-        code = code[3:]  # rounds
-        guesses = []
-        for i in xrange(rounds):
-            guess_str = code[10*i:10*i+10]
-            player_id = int(guess_str[:8])
-            player = Player.objects.get(nba_id=player_id)
-            team_id = int(guess_str[8:])
-            team = Team.objects.get(nba_id__endswith=team_id)
-            guess = {
-                'round': i+1,
-                'player': player,
-                'team': team,
-            }
-            guesses.append(guess)
-        return guesses
 
     class Meta:
         ordering = ['-score', ]

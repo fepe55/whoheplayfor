@@ -50,7 +50,10 @@
   </div>
   <div class="row results">
     <div class="col-md-12">
-      <h1>Final result: <span class="guessed"></span>/<span class="total"></span></h1>
+      {% comment %}
+      <h1>Final result: <span class="guessed"></span>/<span class="total"></span>. Score: <span class="final_score"></span></h1>
+      {% endcomment %}
+      <h1>Final score: <span class="final_score"></span></h1>
 
       <div class="form-group">
         <label for="share">Share your result</label>
@@ -264,6 +267,22 @@
       var guessed = game_status['guessed'];
       var round = game_status['round'];
       if (round > 1){
+        var score_url_mask = "{% url 'whpf:score' 12345 %}".replace(/12345/, game_status['code'].toString());
+        $.ajax({
+          url: score_url_mask,
+          type: "POST",
+          data: {name: 'name', age: 'age'},
+          success:function(response){
+            $(".final_score").html(response.score);
+          },
+          error:function (xhr, textStatus, thrownError){
+            console.log("Error");
+            console.log(xhr);
+            console.log(textStatus);
+            console.log(thrownError);
+          }
+        });
+
         $(".results").show();
 
         {% if user.is_authenticated %}
@@ -271,7 +290,6 @@
         $.ajax({
           url: url_mask,
           type: "POST",
-          data: {name: 'name', age: 'age'},
           success:function(response){
             console.log("Success");
           },
