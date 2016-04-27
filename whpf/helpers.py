@@ -169,7 +169,7 @@ def get_difficulty(code):
     show_player_name = code[:1] == '1'
     shuffle_teams = code[1:2] == '1'
     if not show_player_name:
-        difficulty += 1
+        difficulty += 2
     if shuffle_teams:
         difficulty += 1
     return difficulty

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Frequently Asked Questions</h1>
+  <div id="table-of-content">
+    <ul>
+      {% for question in questions %}
+        <li><a href="#{{ question.id }}">{{ question.question }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div id="faq" class="questions">
+  {% for question in questions %}
+    <div class="question" id="{{ question.id }}">
+      <h2><span>{{ question.question|safe }}</span></h2>
+      <p>{{ question.answer|safe }}</p>
+    </div>
+  {% endfor %}
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script>
+    function highlight_question(hash){
+      $(".question").css('background-color', 'transparent');
+      $(".question").css('padding', '0');
+      if (hash != ""){
+
+        id = hash.substring(hash.indexOf("#")+1);
+        console.log(id);
+
+        $('html, body').animate({
+          scrollTop: $("#"+id).offset().top - 55
+        }, 1000);
+
+        $("#"+id).css('background-color', 'rgba(255, 255, 255, 0.4)');
+        $("#"+id).css('padding', '5px');
+      };
+    };
+
+    highlight_question(window.location.hash);
+    window.location.hash = "";
+
+    $("#table-of-content a").click(function(e){
+      e.preventDefault();
+      hash = $(this).attr('href');
+      highlight_question(hash);
+    });
+  </script>
+{% endblock %}

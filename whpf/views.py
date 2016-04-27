@@ -88,6 +88,35 @@ def tv(request):
     return render(request, "tv.html", {'videos': videos})
 
 
+def faq(request):
+    questions = [
+        {
+            'id': 'whoareyou',
+            'question': "Who are you?",
+            'answer': "I'm Fepe. Hi."
+        },
+        {
+            'id': "scores",
+            'question': "How are scores calculated?",
+            'answer': "It's a work in progress. For now, it's simply "
+            "<code>(3*correct_guesses - wrong_guesses) * difficulty</code> "
+            "where <code>difficulty</code> starts being 1, and adds 2 if "
+            "the players name are not shown, and 1 if the teams are shuffled. "
+            "While <code>correct_guesses</code> and "
+            "<code>wrong_guesses</code> are... well, you know."
+        },
+        {
+            'id': 'contact',
+            'question': "I have a question/suggestion/complaint, how can I "
+            "contact you?",
+            'answer': "You can find me in Reddit at "
+            "<a href='http://reddit.com/u/fepe55'>u/fepe55</a> and in "
+            "Twitter at <a href='http://twitter.com/fepe55/'>@fepe55</a>."
+        },
+    ]
+    return render(request, "faq.html", {'questions': questions, })
+
+
 def save(request, code):
     if request.is_ajax():
         r = Result.objects.create(user=request.user, code=code, )
