@@ -3,6 +3,7 @@ import json
 
 from django.http import (HttpResponse, Http404, )
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
 
 from .models import Result
 from .forms import (GameForm,
@@ -89,6 +90,7 @@ def tv(request):
 
 
 def faq(request):
+    tv_url = reverse("whpf:tv")
     questions = [
         {
             'id': 'whoareyou',
@@ -96,9 +98,20 @@ def faq(request):
             'answer': "I'm Fepe. Hi."
         },
         {
+            'id': 'idea',
+            'question': "Where did you get the idea to do this?",
+            'answer': "<strong>Who He Play For?</strong> is a recurrent game "
+            "on <a href='"+tv_url+"' %}'>Inside the NBA</a>, where Ernie asks "
+            "Chuck to guess where certain players play. And I've always "
+            "found the idea fun to play. So I made it into a web game, so I "
+            "(and you) can play it."
+
+        },
+        {
             'id': "scores",
             'question': "How are scores calculated?",
-            'answer': "It's a work in progress. For now, it's simply "
+            'answer': "It's a work in progress, so it can change anytime. "
+            "For now, it's simply "
             "<code>(3*correct_guesses - wrong_guesses) * difficulty</code> "
             "where <code>difficulty</code> starts being 1, and adds 2 if "
             "the players name are not shown, and 1 if the teams are shuffled. "
@@ -106,12 +119,19 @@ def faq(request):
             "<code>wrong_guesses</code> are... well, you know."
         },
         {
+            'id': 'roster',
+            'question': "How updated are the rosters?",
+            'answer': "They are updated as of April 25th, 2016."
+        },
+        {
             'id': 'contact',
             'question': "I have a question/suggestion/complaint, how can I "
             "contact you?",
-            'answer': "You can find me in Reddit at "
-            "<a href='http://reddit.com/u/fepe55'>u/fepe55</a> and in "
-            "Twitter at <a href='http://twitter.com/fepe55/'>@fepe55</a>."
+            'answer': "If what you want is not covered in this FAQ, you can "
+            "find me at <a href='http://reddit.com/u/fepe55'>"
+            "<i class='fa fa-reddit-alien'></i> /u/fepe55</a> and "
+            "at <a href='http://twitter.com/fepe55/'>"
+            "<i class='fa fa-twitter'></i> @fepe55</a>."
         },
     ]
     return render(request, "faq.html", {'questions': questions, })
