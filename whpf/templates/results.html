@@ -2,7 +2,7 @@
 {% block content %}
   <div class="row result-guesses">
     <div class="col-md-12">
-      <h1>Guesses</h1>
+      <h1>Final score<small><a href="{% url 'whpf:faq' %}#scores"><sup>1</sup></a></small>: <span class="final_score">{{ score }}</span></h1>
       <table class="table table-striped">
         <thead>
           <tr>

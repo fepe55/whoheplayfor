@@ -152,6 +152,8 @@ def results(request, code):
     # code: show_player_name(1) + shuffle_teams(1) + time_limit(3) +
     # rounds(3) + n times (player_id(8), guess_id(2))
 
+    score = get_score(code)
+
     show_player_name = int(code[:1])
     code = code[1:]
 
@@ -226,7 +228,7 @@ def results(request, code):
             final_guesses.append(proper_guesses[i+1])
 
     return render(request, 'results.html', {
-        'guesses': final_guesses, 'game_info': game_info
+        'guesses': final_guesses, 'game_info': game_info, 'score': score,
     })
 
 
