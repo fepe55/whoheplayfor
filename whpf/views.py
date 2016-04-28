@@ -116,7 +116,9 @@ def faq(request):
             "where <code>difficulty</code> starts being 1, and adds 2 if "
             "the players name are not shown, and 1 if the teams are shuffled. "
             "While <code>correct_guesses</code> and "
-            "<code>wrong_guesses</code> are... well, you know."
+            "<code>wrong_guesses</code> are... well, you know.<br />"
+            "I'll eventually come up with a better way to calculate scores "
+            "but for now, this'll have to do."
         },
         {
             'id': 'roster',
