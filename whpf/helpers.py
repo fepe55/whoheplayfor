@@ -143,11 +143,9 @@ def get_teams_and_players_api(limit_teams):
 # SCORE
 
 def get_guesses(code):
-    code = code[1:]  # show_player_name
-    code = code[1:]  # shuffle_teams
-    code = code[3:]  # time_limit
-    rounds = int(code[:3])
-    code = code[3:]  # rounds
+    parsed_code = parse_code(code)
+    rounds = parsed_code['rounds']
+    code = parsed_code['guesses']
     guesses = []
     for i in xrange(rounds):
         guess_str = code[10*i:10*i+10]
@@ -166,8 +164,9 @@ def get_guesses(code):
 
 def get_difficulty(code):
     difficulty = 1
-    show_player_name = code[:1] == '1'
-    shuffle_teams = code[1:2] == '1'
+    parsed_code = parse_code(code)
+    show_player_name = parsed_code['show_player_name']
+    shuffle_teams = parsed_code['shuffle_teams']
     if not show_player_name:
         difficulty += 2
     if shuffle_teams:
@@ -188,3 +187,19 @@ def get_score(code):
 
     score = (3*correct_guesses - wrong_guesses) * difficulty
     return score
+
+
+def parse_code(code):
+    show_player_name = code[:1] == '1'
+    shuffle_teams = code[1:2] == '1'
+    time_limit = int(code[2:5])
+    rounds = int(code[5:8])
+    guesses = code[8:]
+
+    return {
+        'show_player_name': show_player_name,
+        'shuffle_teams': shuffle_teams,
+        'time_limit': time_limit,
+        'rounds': rounds,
+        'guesses': guesses,
+    }

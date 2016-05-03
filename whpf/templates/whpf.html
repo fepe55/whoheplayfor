@@ -84,6 +84,17 @@
 
 {% block js %}
   <script>
+    // val: Value to pad
+    // width: Width of padding
+    // chart to pad with. Defaults to '0'
+    function pad(val, width, z) {
+      var z = z || '0';
+      val = val + '';
+      return val.length >= width ? val : new Array(width - val.length + 1).join(z) + val;
+    };
+  </script>
+
+  <script>
     function start_timer(){
       var time_left = game_status['time_limit'];
       $(".time-left").html(time_left);
@@ -138,6 +149,7 @@
         'shuffle_teams': {% if game_info.shuffle_teams %} true {% else %} false {% endif %},
         'code': "",
         'time_limit': {{ game_info.time }},
+        'limit_teams': '{{ game_info.limit_teams }}',
       };
       if (game_status['time_limit'] != 0){
         start_timer();
@@ -194,13 +206,12 @@
     };
 
 
+
     function advance_round(team, callback){
       game_status['round'] += 1;
-      var pad = "00000000";
-      // Padded player ID
-      game_status['code'] += pad.slice(0, 8 - player.nba_id.toString().length) + player.nba_id;
-      // Team id
+      game_status['code'] += pad(player.nba_id.toString(), 8);
       game_status['code'] += team.nba_id.toString().slice(-2);
+
       callback();
       start_round();
     };
@@ -227,13 +238,12 @@
       // $(".game-info").hide();
 
       // Add the total number of rounds to the code
-      var padding = '000';
-      var total_padded = padding.slice(0, padding.length-(total.toString().length)) + total.toString();
-      game_status['code'] = total_padded + game_status['code'];
+      game_status['code'] = pad(total.toString(), 3) + game_status['code'];
 
+      // Add the total number of rounds to the code
       var time_limit = game_status['time_limit'];
-      var time_limit_padded = padding.slice(0, padding.length-(time_limit.toString().length)) + time_limit.toString();
-      game_status['code'] = time_limit_padded + game_status['code'];
+      game_status['code'] = pad(time_limit.toString(), 3) + game_status['code'];
+
 
       if (game_status['shuffle_teams']){
         game_status['code'] = '1' + game_status['code'];
@@ -246,6 +256,7 @@
       } else {
         game_status['code'] = '0' + game_status['code'];
       };
+
 
       // Random garbage
       var random_number = Math.floor(1+Math.random()*20);

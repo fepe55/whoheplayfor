@@ -8,9 +8,10 @@ from django.core.urlresolvers import reverse
 from .models import Result
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
-from .helpers import (get_teams_and_players_database,
+from .helpers import (parse_code, get_score,
+                      get_teams_and_players_database,
                       get_teams_and_players_api,
-                      get_players_api, get_score, )
+                      get_players_api, )
 
 
 def get_teams_and_players(limit_teams):
@@ -71,10 +72,11 @@ def home(request):
     request.session['show_player_name'] = show_player_name
 
     game_info = {
-        'show_player_name': show_player_name,
-        'shuffle_teams': shuffle_teams,
         'time': time,
         'rounds': rounds,
+        'limit_teams': limit_teams,
+        'shuffle_teams': shuffle_teams,
+        'show_player_name': show_player_name,
     }
 
     (teams, players) = get_teams_and_players(limit_teams)
@@ -155,20 +157,24 @@ def results(request, code):
     # rounds(3) + n times (player_id(8), guess_id(2))
 
     score = get_score(code)
+    parsed_code = parse_code(code)
     results = Result.objects.filter(code=code)
     if results.count() == 1:
         result = results[0]
     else:
         result = None
 
-    show_player_name = int(code[:1])
-    code = code[1:]
+    if parsed_code['show_player_name']:
+        show_player_name = 1
+    else:
+        show_player_name = 0
 
-    shuffle_teams = int(code[:1])
-    code = code[1:]
+    if parsed_code['shuffle_teams']:
+        shuffle_teams = 1
+    else:
+        shuffle_teams = 0
 
-    time_limit = int(code[:3])
-    code = code[3:]
+    time_limit = parsed_code['time_limit']
 
     game_info = {
         'show_player_name': show_player_name,
@@ -176,8 +182,8 @@ def results(request, code):
         'time_limit': time_limit,
     }
 
-    rounds = int(code[:3])
-    code = code[3:]
+    rounds = parsed_code['rounds']
+    code = parsed_code['guesses']
     guesses = []
     for i in xrange(rounds):
         guess_str = code[10*i:10*i+10]

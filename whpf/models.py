@@ -88,21 +88,21 @@ class Result(ModelWithDates):
     code = models.TextField()
     score = models.IntegerField(default=0)
 
-    @property
-    def show_player_name(self):
-        return self.code[:1] == '1'
+    # @property
+    # def show_player_name(self):
+    #     return self.code[:1] == '1'
 
-    @property
-    def shuffle_teams(self):
-        return self.code[1:2] == '1'
+    # @property
+    # def shuffle_teams(self):
+    #     return self.code[1:2] == '1'
 
-    @property
-    def time(self):
-        return int(self.code[2:5])
+    # @property
+    # def time(self):
+    #     return int(self.code[2:5])
 
-    @property
-    def rounds(self):
-        return int(self.code[5:8])
+    # @property
+    # def rounds(self):
+    #     return int(self.code[5:8])
 
     def calculate_score(self):
         from .helpers import get_score
