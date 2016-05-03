@@ -11,13 +11,15 @@
           <th>Score</th>
           <th style="width: 9%" class="advanced-details">Show Player Name</th>
           <th style="width: 9%" class="advanced-details">Shuffle teams</th>
-          <th class="advanced-details">Time</th>
+          <th style="width: 9%" class="advanced-details">Time limit (seconds)</th>
+          <th style="width: 9%" class="advanced-details">Time left (seconds)</th>
           <th class="advanced-details">Rounds</th>
           <th>Result</th>
         </tr>
       </thead>
       <tbody>
         {% for score in scores %}
+        {% with parsed_code=score.parsed_code %}
         <tr>
           <td>{{ forloop.counter }}</td>
           <th class="score pos{{ forloop.counter}}">
@@ -37,12 +39,14 @@
             </span>
           </th>
           <td>{{ score.score }}</td>
-          <td class="advanced-details">{% if score.show_player_name %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
-          <td class="advanced-details">{% if score.shuffle_teams %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
-          <td class="advanced-details">{% if time %}{{ score.time }}{% else %}Unlimited{% endif %}</td>
-          <td class="advanced-details">{{ score.rounds }}</td>
+          <td class="advanced-details">{% if parsed_code.show_player_name %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
+          <td class="advanced-details">{% if parsed_code.shuffle_teams %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
+          <td class="advanced-details">{% if parsed_code.time_limit %}{{ parsed_code.time_limit }}{% else %}Unlimited{% endif %}</td>
+          <td class="advanced-details">{{ parsed_code.time_left }}</td>
+          <td class="advanced-details">{{ parsed_code.rounds_played }} / {{ parsed_code.total_rounds }}</td>
           <td><a href="{% url 'whpf:results' score.code %}">View details</a></td>
         </tr>
+        {% endwith %}
         {% endfor %}
       </tbody>
     </table>

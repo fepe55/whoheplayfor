@@ -144,10 +144,10 @@ def get_teams_and_players_api(limit_teams):
 
 def get_guesses(code):
     parsed_code = parse_code(code)
-    rounds = parsed_code['rounds']
+    rounds_played = parsed_code['rounds_played']
     code = parsed_code['guesses']
     guesses = []
-    for i in xrange(rounds):
+    for i in xrange(rounds_played):
         guess_str = code[10*i:10*i+10]
         player_id = int(guess_str[:8])
         player = Player.objects.get(nba_id=player_id)
@@ -167,10 +167,13 @@ def get_difficulty(code):
     parsed_code = parse_code(code)
     show_player_name = parsed_code['show_player_name']
     shuffle_teams = parsed_code['shuffle_teams']
+    time_limit = parsed_code['time_limit']
     if not show_player_name:
         difficulty += 2
     if shuffle_teams:
         difficulty += 1
+    if time_limit:
+        difficulty += (4 - time_limit/30)
     return difficulty
 
 
@@ -190,16 +193,24 @@ def get_score(code):
 
 
 def parse_code(code):
+    # code: show_player_name(1) + shuffle_teams(1) +
+    # time_left(3) + time_limit(3) +
+    # rounds_played(3) + total_rounds(3) +
+    # n times (player_id(8), guess_id(2))
     show_player_name = code[:1] == '1'
     shuffle_teams = code[1:2] == '1'
-    time_limit = int(code[2:5])
-    rounds = int(code[5:8])
-    guesses = code[8:]
+    time_left = int(code[2:5])
+    time_limit = int(code[5:8])
+    rounds_played = int(code[8:11])
+    total_rounds = int(code[11:14])
+    guesses = code[14:]
 
     return {
         'show_player_name': show_player_name,
         'shuffle_teams': shuffle_teams,
+        'time_left': time_left,
         'time_limit': time_limit,
-        'rounds': rounds,
+        'rounds_played': rounds_played,
+        'total_rounds': total_rounds,
         'guesses': guesses,
     }

@@ -153,8 +153,6 @@ def save(request, code):
 
 
 def results(request, code):
-    # code: show_player_name(1) + shuffle_teams(1) + time_limit(3) +
-    # rounds(3) + n times (player_id(8), guess_id(2))
 
     score = get_score(code)
     parsed_code = parse_code(code)
@@ -182,10 +180,10 @@ def results(request, code):
         'time_limit': time_limit,
     }
 
-    rounds = parsed_code['rounds']
+    rounds_played = parsed_code['rounds_played']
     code = parsed_code['guesses']
     guesses = []
-    for i in xrange(rounds):
+    for i in xrange(rounds_played):
         guess_str = code[10*i:10*i+10]
         guess = {
             'round': i+1,
@@ -202,7 +200,7 @@ def results(request, code):
     if not nba_players:
         raise Http404
     proper_guesses = {}
-    for i in xrange(rounds):
+    for i in xrange(rounds_played):
         proper_guesses[i+1] = {}
 
     for p in nba_players:
@@ -237,7 +235,7 @@ def results(request, code):
                 proper_guesses[g['round']]['team'] = team
 
         final_guesses = []
-        for i in xrange(rounds):
+        for i in xrange(rounds_played):
             final_guesses.append(proper_guesses[i+1])
 
     return render(request, 'results.html', {

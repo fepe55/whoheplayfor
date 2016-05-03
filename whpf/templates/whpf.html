@@ -100,6 +100,8 @@
       $(".time-left").html(time_left);
       game_status['timer'] = setInterval(function(){
         time_left -= 1;
+        game_status['time_left'] = time_left;
+
         $(".time-left").html(time_left);
 
         if ((time_left < 10) && (time_left > 0)){
@@ -149,6 +151,7 @@
         'shuffle_teams': {% if game_info.shuffle_teams %} true {% else %} false {% endif %},
         'code': "",
         'time_limit': {{ game_info.time }},
+        'time_left': {{ game_info.time }},  // Will be decreasing
         'limit_teams': '{{ game_info.limit_teams }}',
       };
       if (game_status['time_limit'] != 0){
@@ -237,13 +240,21 @@
       $(".game").hide();
       // $(".game-info").hide();
 
-      // Add the total number of rounds to the code
+      // Add the number of rounds selected at the start to play
+      var total_rounds = game_status['total_rounds'];
+      game_status['code'] = pad(total_rounds.toString(), 3) + game_status['code'];
+
+      // Add the number of rounds played to the code
       game_status['code'] = pad(total.toString(), 3) + game_status['code'];
 
-      // Add the total number of rounds to the code
+
+      // Add the time selected at the start
       var time_limit = game_status['time_limit'];
       game_status['code'] = pad(time_limit.toString(), 3) + game_status['code'];
 
+      // Add the time left when it finished
+      var time_left = game_status['time_left'];
+      game_status['code'] = pad(time_left.toString(), 3) + game_status['code'];
 
       if (game_status['shuffle_teams']){
         game_status['code'] = '1' + game_status['code'];

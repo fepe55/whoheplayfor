@@ -104,6 +104,11 @@ class Result(ModelWithDates):
     # def rounds(self):
     #     return int(self.code[5:8])
 
+    @property
+    def parsed_code(self):
+        from .helpers import parse_code
+        return parse_code(self.code)
+
     def calculate_score(self):
         from .helpers import get_score
         self.score = get_score(self.code)

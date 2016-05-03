@@ -211,7 +211,7 @@ input[type="checkbox"]#advanced{
   color: #8C7853;
 }
 
-@media(max-width:768px) {
+@media(max-width:991px) {
   .advanced-details{
     display: none;
   }
