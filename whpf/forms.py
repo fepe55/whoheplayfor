@@ -5,10 +5,10 @@ TIME_CHOICES = [(0, 'Unlimited time'), (30, '30 seconds'),
                 (60, '60 seconds'), (90, '90 seconds'), ]
 ROUNDS_CHOICES = [(10, 10), (20, 20), (30, 30), ]
 LIMIT_TEAMS_CHOICES = [
-    ('all', 'All teams'),
-    ('playoffs', 'Playoff teams'),
-    ('west', 'West teams'),
-    ('east', 'East teams'),
+    ('0', 'All teams'),
+    ('1', 'East teams'),
+    ('2', 'West teams'),
+    ('3', 'Playoff teams'),
 ]
 
 

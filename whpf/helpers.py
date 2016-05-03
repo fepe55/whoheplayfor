@@ -31,20 +31,20 @@ def get_teams_and_players_database(limit_teams):
     players = []
     teams = []
     LIMIT_TEAMS = {
-        'all': Team.objects.all(),
-        'playoffs': Team.objects.filter(code__in=PLAYOFF_TEAMS),
-        'east': Team.objects.filter(division__conference__name='East'),
-        'west': Team.objects.filter(division__conference__name='West'),
+        '0': Team.objects.all(),
+        '1': Team.objects.filter(division__conference__name='East'),
+        '2': Team.objects.filter(division__conference__name='West'),
+        '3': Team.objects.filter(code__in=PLAYOFF_TEAMS),
     }
     LIMIT_PLAYERS = {
-        'all': Player.objects.all(),
-        'playoffs': Player.objects.filter(team__code__in=PLAYOFF_TEAMS),
-        'east': Player.objects.filter(
+        '0': Player.objects.all(),
+        '1': Player.objects.filter(
             team__division__conference__name='East'
         ),
-        'west': Player.objects.filter(
+        '2': Player.objects.filter(
             team__division__conference__name='West'
         ),
+        '3': Player.objects.filter(team__code__in=PLAYOFF_TEAMS),
     }
 
     for team in LIMIT_TEAMS[limit_teams]:
@@ -93,10 +93,10 @@ def get_players_api():
 
 def get_teams_and_players_api(limit_teams):
     LIMIT_TEAMS = {
-        'all': ALL_TEAMS,
-        'playoffs': PLAYOFF_TEAMS,
-        'east': EAST_TEAMS,
-        'west': WEST_TEAMS,
+        '0': ALL_TEAMS,
+        '1': EAST_TEAMS,
+        '2': WEST_TEAMS,
+        '3': PLAYOFF_TEAMS,
     }
 
     PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/"\
@@ -168,12 +168,17 @@ def get_difficulty(code):
     show_player_name = parsed_code['show_player_name']
     shuffle_teams = parsed_code['shuffle_teams']
     time_limit = parsed_code['time_limit']
+    limit_teams = parsed_code['limit_teams']
     if not show_player_name:
         difficulty += 2
     if shuffle_teams:
         difficulty += 1
+    if limit_teams == 0:  # All teams
+        difficulty += 1
     if time_limit:
         difficulty += (4 - time_limit/30)
+    else:
+        difficulty = 0
     return difficulty
 
 
@@ -188,22 +193,26 @@ def get_score(code):
         else:
             wrong_guesses += 1
 
+    parsed_code = parse_code(code)
+    wrong_guesses += parsed_code['total_rounds'] - parsed_code['rounds_played']
     score = (3*correct_guesses - wrong_guesses) * difficulty
+    score = score*100 + parsed_code['time_left']
     return score
 
 
 def parse_code(code):
-    # code: show_player_name(1) + shuffle_teams(1) +
+    # code: show_player_name(1) + shuffle_teams(1) + limit_teams(2) +
     # time_left(3) + time_limit(3) +
     # rounds_played(3) + total_rounds(3) +
     # n times (player_id(8), guess_id(2))
     show_player_name = code[:1] == '1'
     shuffle_teams = code[1:2] == '1'
-    time_left = int(code[2:5])
-    time_limit = int(code[5:8])
-    rounds_played = int(code[8:11])
-    total_rounds = int(code[11:14])
-    guesses = code[14:]
+    limit_teams = int(code[2:4])
+    time_left = int(code[4:7])
+    time_limit = int(code[7:10])
+    rounds_played = int(code[10:13])
+    total_rounds = int(code[13:16])
+    guesses = code[16:]
 
     return {
         'show_player_name': show_player_name,
@@ -213,4 +222,5 @@ def parse_code(code):
         'rounds_played': rounds_played,
         'total_rounds': total_rounds,
         'guesses': guesses,
+        'limit_teams': limit_teams,
     }

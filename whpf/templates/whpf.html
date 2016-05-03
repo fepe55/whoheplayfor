@@ -256,6 +256,10 @@
       var time_left = game_status['time_left'];
       game_status['code'] = pad(time_left.toString(), 3) + game_status['code'];
 
+      // Add the limit_teams value
+      var limit_teams = game_status['limit_teams'];
+      game_status['code'] = pad(limit_teams.toString(), 2) + game_status['code'];
+
       if (game_status['shuffle_teams']){
         game_status['code'] = '1' + game_status['code'];
       } else {
