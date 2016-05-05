@@ -196,7 +196,7 @@ def get_score(code):
     parsed_code = parse_code(code)
     wrong_guesses += parsed_code['total_rounds'] - parsed_code['rounds_played']
     score = (3*correct_guesses - wrong_guesses) * difficulty
-    score = score*100 + parsed_code['time_left']
+    # score = score*100 + parsed_code['time_left']
     return score
 
 
