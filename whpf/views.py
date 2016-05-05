@@ -5,13 +5,12 @@ from django.http import (HttpResponse, Http404, )
 from django.shortcuts import (render, get_object_or_404, )
 from django.core.urlresolvers import reverse
 
-from .models import (Result, Player, )
+from .models import (Result, Player, Team, )
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
 from .helpers import (parse_code, get_score,
                       get_teams_and_players_database,
-                      get_teams_and_players_api,
-                      get_players_api, )
+                      get_teams_and_players_api, )
 
 
 def get_teams_and_players(limit_teams):
@@ -173,85 +172,24 @@ def results(request, code):
     else:
         result = None
 
-    if parsed_code['show_player_name']:
-        show_player_name = 1
-    else:
-        show_player_name = 0
-
-    if parsed_code['shuffle_teams']:
-        shuffle_teams = 1
-    else:
-        shuffle_teams = 0
-
-    time_limit = parsed_code['time_limit']
-
-    game_info = {
-        'show_player_name': show_player_name,
-        'shuffle_teams': shuffle_teams,
-        'time_limit': time_limit,
-    }
-
     rounds_played = parsed_code['rounds_played']
     code = parsed_code['guesses']
     guesses = []
     for i in xrange(rounds_played):
         guess_str = code[10*i:10*i+10]
+        player_id = int(guess_str[:8])
+        team_id = int(guess_str[8:])
+        p = get_object_or_404(Player, nba_id=player_id)
+        t = get_object_or_404(Team, nba_id__endswith=team_id)
         guess = {
             'round': i+1,
-            'player_id': int(guess_str[:8]),
-            'team_id': int(guess_str[8:]),
+            'player': p,
+            'team': t,
         }
         guesses.append(guess)
 
-    PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/"\
-        "sect/statscube/players/large/%s.png"
-    TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
-
-    nba_players = get_players_api()
-    if not nba_players:
-        raise Http404
-    proper_guesses = {}
-    for i in xrange(rounds_played):
-        proper_guesses[i+1] = {}
-
-    for p in nba_players:
-        # Roster status
-        for g in guesses:
-            if p[0] == g['player_id']:
-                team = {
-                    'nba_id': p[7],
-                    'city': p[8],
-                    'name': p[9],
-                    'abbreviation': p[10],
-                    'code': p[11],
-                    'picture': TEAM_PICTURE_URL % p[10],
-                }
-                player = {
-                    'nba_id': p[0],
-                    'name': p[2],
-                    'team': team,
-                    'picture': PLAYER_PICTURE_URL % p[6],
-                }
-                proper_guesses[g['round']]['player'] = player
-
-            if int(str(p[7])[-2:]) == g['team_id']:
-                team = {
-                    'nba_id': p[7],
-                    'city': p[8],
-                    'name': p[9],
-                    'abbreviation': p[10],
-                    'code': p[11],
-                    'picture': TEAM_PICTURE_URL % p[10],
-                }
-                proper_guesses[g['round']]['team'] = team
-
-        final_guesses = []
-        for i in xrange(rounds_played):
-            final_guesses.append(proper_guesses[i+1])
-
     return render(request, 'results.html', {
-        'guesses': final_guesses, 'game_info': game_info, 'score': score,
-        'result': result,
+        'guesses': guesses, 'score': score, 'result': result,
     })
 
 

@@ -85,6 +85,7 @@ def get_players_api():
         with open(filename, 'w') as f:
             f.write(r.text)
     except ValueError:
+        print "There's been a problem fetching info from NBA.com"
         return
         # raise Http404("There's been a problem fetching info from NBA.com")
 

@@ -39,8 +39,27 @@
             </span>
           </th>
           <td>{{ score.score }}</td>
-          <td class="advanced-details">{% if parsed_code.show_player_name %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
-          <td class="advanced-details">{% if parsed_code.shuffle_teams %}<i class="fa fa-check"></i>{% else %}<i class="fa fa-times"></i>{% endif %}</td>
+          <td class="advanced-details">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              {% if parsed_code.show_player_name %}
+                <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+              {% else %}
+                <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+              {% endif %}
+            </span>
+          </td>
+
+          <td class="advanced-details">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              {% if parsed_code.shuffle_teams %}
+                <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+              {% else %}
+                <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+              {% endif %}
+            </span>
+          </td>
           <td class="advanced-details">{% if parsed_code.time_limit %}{{ parsed_code.time_limit }}{% else %}Unlimited{% endif %}</td>
           <td class="advanced-details">{{ parsed_code.time_left }}</td>
           <td class="advanced-details">{{ parsed_code.rounds_played }} / {{ parsed_code.total_rounds }}</td>
