@@ -2,10 +2,10 @@
 import json
 
 from django.http import (HttpResponse, Http404, )
-from django.shortcuts import render
+from django.shortcuts import (render, get_object_or_404, )
 from django.core.urlresolvers import reverse
 
-from .models import Result
+from .models import (Result, Player, )
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
 from .helpers import (parse_code, get_score,
@@ -263,6 +263,37 @@ def scoreboard(request):
 def score(request, code):
     if request.is_ajax():
         to_json = {'score': get_score(code), }
+        return HttpResponse(json.dumps(to_json),
+                            content_type='application/json')
+    else:
+        raise Http404
+
+
+# types: 'right', 'wrong'
+def guess(player_id, type_of_guess):
+    player = get_object_or_404(Player, nba_id=player_id)
+    if type_of_guess == 'right':
+        player.times_guessed_right += 1
+    if type_of_guess == 'wrong':
+        player.times_guessed_wrong += 1
+    player.save()
+    return
+
+
+def right_guess(request, pid):
+    if request.is_ajax():
+        guess(pid, 'right')
+        to_json = {'success': True, }
+        return HttpResponse(json.dumps(to_json),
+                            content_type='application/json')
+    else:
+        raise Http404
+
+
+def wrong_guess(request, pid):
+    if request.is_ajax():
+        guess(pid, 'wrong')
+        to_json = {'success': True, }
         return HttpResponse(json.dumps(to_json),
                             content_type='application/json')
     else:
