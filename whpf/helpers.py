@@ -85,6 +85,7 @@ def get_players_api():
         with open(filename, 'w') as f:
             f.write(r.text)
     except ValueError:
+        print "There's been a problem fetching info from NBA.com"
         return
         # raise Http404("There's been a problem fetching info from NBA.com")
 
@@ -196,7 +197,7 @@ def get_score(code):
     parsed_code = parse_code(code)
     wrong_guesses += parsed_code['total_rounds'] - parsed_code['rounds_played']
     score = (3*correct_guesses - wrong_guesses) * difficulty
-    score = score*100 + parsed_code['time_left']
+    # score = score*100 + parsed_code['time_left']
     return score
 
 

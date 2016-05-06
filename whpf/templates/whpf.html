@@ -92,6 +92,25 @@
       val = val + '';
       return val.length >= width ? val : new Array(width - val.length + 1).join(z) + val;
     };
+
+    function ajax_call(url, callback){
+      $.ajax({
+        url: url,
+        type: "POST",
+        success:function(response){
+          if (typeof callback === 'function'){
+            callback(response);
+          }
+        },
+        error:function (xhr, textStatus, thrownError){
+          console.log("Error");
+          console.log(xhr);
+          console.log(textStatus);
+          console.log(thrownError);
+        }
+      });
+
+    }
   </script>
 
   <script>
@@ -294,38 +313,15 @@
       var round = game_status['round'];
       if (round > 1){
         var score_url_mask = "{% url 'whpf:score' 12345 %}".replace(/12345/, game_status['code'].toString());
-        $.ajax({
-          url: score_url_mask,
-          type: "POST",
-          data: {name: 'name', age: 'age'},
-          success:function(response){
-            $(".final_score").html(response.score);
-          },
-          error:function (xhr, textStatus, thrownError){
-            console.log("Error");
-            console.log(xhr);
-            console.log(textStatus);
-            console.log(thrownError);
-          }
+        ajax_call(score_url_mask, function(response){
+          $(".final_score").html(response.score);
         });
 
         $(".results").show();
 
         {% if user.is_authenticated %}
-        var url_mask = "{% url 'whpf:save' 12345 %}".replace(/12345/, game_status['code'].toString());
-        $.ajax({
-          url: url_mask,
-          type: "POST",
-          success:function(response){
-            console.log("Success");
-          },
-          error:function (xhr, textStatus, thrownError){
-            console.log("Error");
-            console.log(xhr);
-            console.log(textStatus);
-            console.log(thrownError);
-          }
-        });
+          var url_mask = "{% url 'whpf:save' 12345 %}".replace(/12345/, game_status['code'].toString());
+          ajax_call(url_mask);
         {% endif %}
 
 
@@ -338,6 +334,9 @@
     function correct_guess(team, callback){
       game_status['guessed'] += 1;
 
+      var url_mask = "{% url 'whpf:right_guess' 12345 %}".replace(/12345/, player.nba_id.toString());
+      ajax_call(url_mask);
+
       add_past_guess("success", team);
       $(".guess-right").fadeIn( 100 ).delay( 200 ).fadeOut(100, function(){
         advance_round(team, callback);
@@ -346,6 +345,9 @@
 
 
     function wrong_guess(team, callback){
+      var url_mask = "{% url 'whpf:wrong_guess' 12345 %}".replace(/12345/, player.nba_id.toString());
+      ajax_call(url_mask);
+
       add_past_guess("danger", team);
       $(".guess-wrong").fadeIn( 100 ).delay( 200 ).fadeOut(100, function(){
         advance_round(team, callback);

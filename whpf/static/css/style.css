@@ -176,6 +176,11 @@ input[type="checkbox"]#advanced{
   height: 55px;
 }
 
+.scoreboard .fa-circle{
+  color: #666;
+  color: rgba(0, 0, 0, 0.6);
+}
+
 .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
   vertical-align: middle;
 }
