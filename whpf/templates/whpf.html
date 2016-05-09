@@ -157,6 +157,11 @@
 
 
     function initialize(){
+      // 24 - Start the game already
+      $('html, body').animate({
+        scrollTop: $(".game").offset().top
+      }, 1);
+
       window.players = {{ players|tojson|safe }};
       window.player = null;
       window.past_players_id = [];
