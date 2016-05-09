@@ -138,6 +138,12 @@ def faq(request):
             'answer': "They are updated as of April 25th, 2016."
         },
         {
+            'id': 'shoutouts',
+            'question': "Shout-outs",
+            'answer': "For helping me with tips, testing, and more, "
+            "shout-outs to Jess, SR, Alex Ntale, German, Duckie and Mora"
+        },
+        {
             'id': 'contact',
             'question': "I have a question/suggestion/complaint, how can I "
             "contact you?",
