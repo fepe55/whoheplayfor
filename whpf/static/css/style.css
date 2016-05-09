@@ -5,9 +5,67 @@ body{
   font-family: 'Montserrat', sans-serif;
 }
 
-body > .container {
+.main-container {
   padding-top: 60px;  /* to account for the header */
-  padding-bottom:50px;  /* to account for the footer */
+  padding-bottom: 50px;  /* to account for the footer */
+}
+
+.footer {
+  height: 40px;
+  width: 100%;
+  background-image: linear-gradient(to bottom, #3c3c3c 0px, #222 100%);
+  background-repeat: repeat-x;
+  border-color: #080808;
+  background-color: #222;
+}
+
+.footer .social{
+  line-height: 40px;
+  color: #999;
+}
+
+.footer .social small{
+  padding-right: 20px;
+}
+
+.footer .social a{
+  color: #999;
+  padding: 0 5px;
+}
+
+@media(max-width:767px){
+  .navbar-fixed-top,
+  .navbar-fixed-bottom{
+    position: static;
+  }
+
+  .main-container{
+    padding-top: 0;  /* to account for the header */
+    padding-bottom: 0;  /* to account for the footer */
+  }
+
+  html, body {
+      height: 100%;
+  }
+
+  .wrapper {
+      min-height: 100%;
+      margin: 0 auto -40px; /* the bottom margin is the negative value of the footer's height */
+  }
+  .footer, .push {
+      height: 40px; /* .push must be the same height as .footer */
+  }
+
+  h3.your-guess{
+    display: none;
+  }
+
+}
+
+@media (max-width:991px) and (min-width:767px){
+  .loginwith{
+    display:none;
+  }
 }
 
 .navbar-brand{
@@ -42,29 +100,6 @@ input[type="checkbox"]#advanced{
 
 .start-game{
   margin-bottom: 10px;
-}
-
-.footer {
-  height: 40px;
-  width: 100%;
-  background-image: linear-gradient(to bottom, #3c3c3c 0px, #222 100%);
-  background-repeat: repeat-x;
-  border-color: #080808;
-  background-color: #222;
-}
-
-.footer .social{
-  line-height: 40px;
-  color: #999;
-}
-
-.footer .social small{
-  padding-right: 20px;
-}
-
-.footer .social a{
-  color: #999;
-  padding: 0 5px;
 }
 
 .game-info ul{

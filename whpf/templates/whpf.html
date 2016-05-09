@@ -30,7 +30,7 @@
     </div>
     <div class="row">
       <div class="col-md-12 text-center">
-        <h3>Your guess</h3>
+        <h3 class="your-guess">Your guess</h3>
         <div id="teams">
         {% for team in teams %}
           <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
