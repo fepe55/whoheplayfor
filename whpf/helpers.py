@@ -59,20 +59,20 @@ def get_teams_and_players_database(limit_teams):
 
 
 def get_players_api():
-    dt = datetime.today().date()
-    tries_left = 3
-    while tries_left > 0:
-        filename = dt.strftime("%Y%m%d") + ".json"
-        if os.path.isfile(filename):
-            try:
-                with open(filename, 'r') as f:
-                    data = f.read()
-                    j = json.loads(data)
-                return j['resultSets'][0]['rowSet']
-            except:
-                os.remove(filename)
-        dt = dt - timedelta(days=1)
-        tries_left -= 1
+    # dt = datetime.today().date()
+    # tries_left = 3
+    # while tries_left > 0:
+    #     filename = dt.strftime("%Y%m%d") + ".json"
+    #     if os.path.isfile(filename):
+    #         try:
+    #             with open(filename, 'r') as f:
+    #                 data = f.read()
+    #                 j = json.loads(data)
+    #             return j['resultSets'][0]['rowSet']
+    #         except:
+    #             os.remove(filename)
+    #     dt = dt - timedelta(days=1)
+    #     tries_left -= 1
 
     PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers"\
         "?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
@@ -80,10 +80,10 @@ def get_players_api():
 
     try:
         j = r.json()
-        dt = datetime.today().date()
-        filename = dt.strftime("%Y%m%d") + ".json"
-        with open(filename, 'w') as f:
-            f.write(r.text)
+        # dt = datetime.today().date()
+        # filename = dt.strftime("%Y%m%d") + ".json"
+        # with open(filename, 'w') as f:
+        #     f.write(r.text)
     except ValueError:
         print "There's been a problem fetching info from NBA.com"
         return
