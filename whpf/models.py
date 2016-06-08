@@ -70,6 +70,7 @@ class Player(ModelWithDates):
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
 
+    all_players = models.Manager()
     objects = PlayerManager()
 
     @property
