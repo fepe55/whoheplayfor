@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 import requests
-from .teams import (ALL_TEAMS, PLAYOFF_TEAMS, EAST_TEAMS, WEST_TEAMS, )
+from .teams import (ALL_TEAMS, EAST_TEAMS, WEST_TEAMS,
+                    PLAYOFF_TEAMS_2016, FINALS_TEAMS_2016)
 from .models import (Player, Team, )
 
 
@@ -31,7 +32,8 @@ def get_teams_and_players_database(limit_teams):
         '0': Team.objects.all(),
         '1': Team.objects.filter(division__conference__name='East'),
         '2': Team.objects.filter(division__conference__name='West'),
-        '3': Team.objects.filter(code__in=PLAYOFF_TEAMS),
+        '3': Team.objects.filter(code__in=PLAYOFF_TEAMS_2016),
+        '4': Team.objects.filter(code__in=FINALS_TEAMS_2016),
     }
     LIMIT_PLAYERS = {
         '0': Player.objects.all(),
@@ -41,7 +43,8 @@ def get_teams_and_players_database(limit_teams):
         '2': Player.objects.filter(
             team__division__conference__name='West'
         ),
-        '3': Player.objects.filter(team__code__in=PLAYOFF_TEAMS),
+        '3': Player.objects.filter(team__code__in=PLAYOFF_TEAMS_2016),
+        '4': Player.objects.filter(team__code__in=FINALS_TEAMS_2016),
     }
 
     for team in LIMIT_TEAMS[limit_teams]:
@@ -94,7 +97,8 @@ def get_teams_and_players_api(limit_teams):
         '0': ALL_TEAMS,
         '1': EAST_TEAMS,
         '2': WEST_TEAMS,
-        '3': PLAYOFF_TEAMS,
+        '3': PLAYOFF_TEAMS_2016,
+        '4': FINALS_TEAMS_2016,
     }
 
     PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/"\

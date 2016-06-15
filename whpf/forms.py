@@ -8,7 +8,8 @@ LIMIT_TEAMS_CHOICES = [
     ('0', 'All teams'),
     ('1', 'East teams'),
     ('2', 'West teams'),
-    ('3', 'Playoff teams'),
+    ('3', '2016 Playoff teams'),
+    ('4', '2016 Finals')
 ]
 
 

@@ -13,7 +13,7 @@ WEST_TEAMS = NORTHWEST_TEAMS + PACIFIC_TEAMS + SOUTHWEST_TEAMS
 
 ALL_TEAMS = EAST_TEAMS + WEST_TEAMS
 
-PLAYOFF_TEAMS = [
+PLAYOFF_TEAMS_2016 = [
     'warriors', 'rockets',
     'clippers', 'blazers',
     'thunder', 'mavericks',
@@ -22,4 +22,9 @@ PLAYOFF_TEAMS = [
     'hawks', 'celtics',
     'heat', 'hornets',
     'raptors', 'pacers',
+]
+
+
+FINALS_TEAMS_2016 = [
+    'warriors', 'cavaliers',
 ]
