@@ -208,11 +208,16 @@ def results(request, code):
 
     return render(request, 'results.html', {
         'guesses': guesses, 'score': score, 'result': result,
+        'parsed_code': parsed_code,
     })
 
 
 def scoreboard(request):
-    results = Result.objects.all()[:10]
+    results = Result.objects.all()[:15]
+    results = sorted(results, key=lambda x: x.parsed_code['time_left'],
+                     reverse=True)
+    results = sorted(results, key=lambda x: x.score, reverse=True)
+    results = results[:10]
     return render(request, 'scoreboard.html', {'scores': results, })
 
 

@@ -23,11 +23,9 @@
         {% endwith %}
         {% endif %}
       </h1>
-      {% if result %}
-      {% with parsed_code=result.parsed_code %}
       <h3>Game info</h3>
       <ul>
-        <li>Date: {{ result.created }}</li>
+        {% if result %}<li>Date: {{ result.created }}</li>{% endif %}
         <li>Players named shown: {{ parsed_code.show_player_name|yesno }}</li>
         <li>Shuffled teams: {{ parsed_code.shuffle_teams|yesno }}</li>
         <li>Time limit: {{ parsed_code.time_limit }} seconds</li>
@@ -35,8 +33,6 @@
         <li>Total rounds: {{ parsed_code.total_rounds }}</li>
         <li>Rounds actually played: {{ parsed_code.rounds_played }}</li>
       </ul>
-      {% endwith %}
-      {% endif %}
       <h2>Guesses</h2>
       <table class="table table-striped">
         <thead>
