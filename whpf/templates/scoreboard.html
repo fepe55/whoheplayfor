@@ -9,11 +9,9 @@
           <th></th>
           <th>User</th>
           <th>Score</th>
-          <th style="width: 9%" class="advanced-details">Show Player Name</th>
-          <th style="width: 9%" class="advanced-details">Shuffle teams</th>
-          <th style="width: 9%" class="advanced-details">Time limit (seconds)</th>
           <th style="width: 9%" class="advanced-details">Time left (seconds)</th>
-          <th class="advanced-details">Rounds</th>
+          <th style="width: 9%" class="advanced-details">Rounds played</th>
+          <th class="advanced-details">Date</th>
           <th>Result</th>
         </tr>
       </thead>
@@ -38,31 +36,10 @@
               <i class="fa fa-trophy trophy fa-stack-1x"></i>
             </span>
           </th>
-          <td>{{ score.score }}</td>
-          <td class="advanced-details">
-            <span class="fa-stack fa-lg">
-              <i class="fa fa-circle fa-stack-2x"></i>
-              {% if parsed_code.show_player_name %}
-                <i class="fa fa-check fa-stack-1x fa-inverse"></i>
-              {% else %}
-                <i class="fa fa-times fa-stack-1x fa-inverse"></i>
-              {% endif %}
-            </span>
-          </td>
-
-          <td class="advanced-details">
-            <span class="fa-stack fa-lg">
-              <i class="fa fa-circle fa-stack-2x"></i>
-              {% if parsed_code.shuffle_teams %}
-                <i class="fa fa-check fa-stack-1x fa-inverse"></i>
-              {% else %}
-                <i class="fa fa-times fa-stack-1x fa-inverse"></i>
-              {% endif %}
-            </span>
-          </td>
-          <td class="advanced-details">{% if parsed_code.time_limit %}{{ parsed_code.time_limit }}{% else %}Unlimited{% endif %}</td>
+          <th>{{ score.score }}</th>
           <td class="advanced-details">{{ parsed_code.time_left }}</td>
           <td class="advanced-details">{{ parsed_code.rounds_played }} / {{ parsed_code.total_rounds }}</td>
+          <td class="advanced-details">{{ score.created|date:"F jS, Y" }}</td>
           <td><a href="{% url 'whpf:results' score.code %}">View details</a></td>
         </tr>
         {% endwith %}
