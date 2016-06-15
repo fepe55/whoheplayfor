@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from .managers import PlayerManager
 
 
+class Options(models.Model):
+    last_roster_update = models.DateTimeField()
+
+
 class ModelWithDates(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

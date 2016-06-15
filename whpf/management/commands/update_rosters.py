@@ -2,9 +2,10 @@
 import time
 import requests
 
+from django.utils import timezone
 from django.core.management.base import BaseCommand
 
-from whpf.models import (Player, Team, )
+from whpf.models import (Player, Team, Options)
 from whpf.helpers import get_players_api
 
 """
@@ -80,3 +81,12 @@ class Command(BaseCommand):
 
             # Sleep to avoid a possible anti-throttling from the server
             time.sleep(2)
+
+        # And we update the last_roster_update date
+        options = Options.objects.all()
+        if options.exists():
+            options = options.get()
+        else:
+            options = Options()
+        options.last_roster_update = timezone.now()
+        options.save()

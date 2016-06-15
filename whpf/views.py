@@ -2,10 +2,11 @@
 import json
 
 from django.http import (HttpResponse, Http404, )
+from django.utils import formats
 from django.shortcuts import (render, get_object_or_404, )
 from django.core.urlresolvers import reverse
 
-from .models import (Result, Player, Team, )
+from .models import (Result, Player, Team, Options)
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
 from .helpers import (parse_code, get_score,
@@ -100,6 +101,13 @@ def tv(request):
 
 def faq(request):
     tv_url = reverse("whpf:tv")
+    options = Options.objects.all()
+    if options.exists():
+        last_roster_update = formats.date_format(
+            options.get().last_roster_update, "F jS, Y"
+        )
+    else:
+        last_roster_update = ""
     questions = [
         {
             'id': 'whoareyou',
@@ -147,7 +155,7 @@ def faq(request):
         {
             'id': 'roster',
             'question': "How updated are the rosters?",
-            'answer': "They are updated as of April 25th, 2016."
+            'answer': "They are updated as of " + last_roster_update
         },
         {
             'id': 'shoutouts',
@@ -166,6 +174,15 @@ def faq(request):
             "<i class='fa fa-twitter'></i> @fepe55</a>."
         },
     ]
+
+    # If, for some reason, we don't have a last_roster_update date, we delete
+    # the question entirely
+    if not last_roster_update:
+        for q in questions:
+            if q['id'] == 'roster':
+                questions.remove(q)
+                break
+
     return render(request, "faq.html", {'questions': questions, })
 
 
