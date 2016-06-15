@@ -1,10 +1,7 @@
 # -*- encoding: utf-8 -*-
 import requests
-import json
-import os.path
 from .teams import (ALL_TEAMS, PLAYOFF_TEAMS, EAST_TEAMS, WEST_TEAMS, )
 from .models import (Player, Team, )
-from datetime import (datetime, timedelta, )
 
 
 def team_to_dict(team):
@@ -164,6 +161,19 @@ def get_guesses(code):
 
 
 def get_difficulty(code):
+    parsed_code = parse_code(code)
+    difficulty = 0
+    show_player_name = parsed_code['show_player_name']
+    shuffle_teams = parsed_code['shuffle_teams']
+    time_limit = parsed_code['time_limit']
+    limit_teams = parsed_code['limit_teams']
+    total_rounds = parsed_code['total_rounds']
+    if time_limit == 60 and total_rounds == 20 and limit_teams == 0 \
+            and not shuffle_teams and show_player_name:
+        difficulty = 1
+    return difficulty
+
+    # OLD Code
     difficulty = 1
     parsed_code = parse_code(code)
     show_player_name = parsed_code['show_player_name']

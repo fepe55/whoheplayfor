@@ -28,18 +28,26 @@ def home(request):
     SPN_DEFAULT = True
     SF_DEFAULT = False
 
-    time = request.session.get('time', TIME_DEFAULT)
-    rounds = request.session.get('rounds', ROUNDS_DEFAULT)
-    limit_teams = request.session.get('limit_teams', LT_DEFAULT)
-    shuffle_teams = request.session.get('shuffle_teams', SF_DEFAULT)
-    show_player_name = request.session.get('show_player_name', SPN_DEFAULT)
+    # time = request.session.get('time', TIME_DEFAULT)
+    # rounds = request.session.get('rounds', ROUNDS_DEFAULT)
+    # limit_teams = request.session.get('limit_teams', LT_DEFAULT)
+    # shuffle_teams = request.session.get('shuffle_teams', SF_DEFAULT)
+    # show_player_name = request.session.get('show_player_name', SPN_DEFAULT)
+
+    # form = GameForm(initial={
+    #     'time': time,
+    #     'rounds': rounds,
+    #     'limit_teams': limit_teams,
+    #     'shuffle_teams': shuffle_teams,
+    #     'show_player_name': show_player_name,
+    # })
 
     form = GameForm(initial={
-        'time': time,
-        'rounds': rounds,
-        'limit_teams': limit_teams,
-        'shuffle_teams': shuffle_teams,
-        'show_player_name': show_player_name,
+        'time': TIME_DEFAULT,
+        'rounds': ROUNDS_DEFAULT,
+        'limit_teams': LT_DEFAULT,
+        'shuffle_teams': SF_DEFAULT,
+        'show_player_name': SPN_DEFAULT,
     })
 
     if not request.POST:
@@ -61,14 +69,14 @@ def home(request):
         rounds not in [x[0] for x in ROUNDS_CHOICES] or
         limit_teams not in [x[0] for x in LIMIT_TEAMS_CHOICES]
     ):
-        request.session.clear()
+        # request.session.clear()
         raise Http404()
 
-    request.session['time'] = time
-    request.session['rounds'] = rounds
-    request.session['limit_teams'] = limit_teams
-    request.session['shuffle_teams'] = shuffle_teams
-    request.session['show_player_name'] = show_player_name
+    # request.session['time'] = time
+    # request.session['rounds'] = rounds
+    # request.session['limit_teams'] = limit_teams
+    # request.session['shuffle_teams'] = shuffle_teams
+    # request.session['show_player_name'] = show_player_name
 
     game_info = {
         'time': time,

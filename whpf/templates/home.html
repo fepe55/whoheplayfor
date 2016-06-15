@@ -16,6 +16,11 @@
       <form method="POST" class="form" action="{% url 'whpf:home' %}">
         {% csrf_token %}
         <div class="advanced-options">
+          {% if user.is_authenticated %}
+          <div class="alert alert-danger" role="alert">
+            <i class="fa fa-exclamation-triangle"></i> Changing the advanced options <strong>do not</strong> count towards the leaderboard. <a href="{% url 'whpf:home' %}">Reset the options</a>.
+          </div>
+          {% endif %}
 
           <div class="form-group">
             {{ form.time.errors }}
