@@ -119,7 +119,11 @@ def faq(request):
         {
             'id': "scores",
             'question': "How are scores calculated?",
-            'answer': "It's a work in progress, so it can change anytime. "
+            'answer': "<code>(3*correct_guesses - wrong_guesses)</code> "
+            "where <code>wrong_guesses</code> include not only the ones you "
+            "didn't guess right, but also the rounds you did not play.<br />"
+
+            "<strike>It's a work in progress, so it can change anytime. "
             "For now, it's simply "
             "<code>(3*correct_guesses - wrong_guesses) * difficulty</code> "
             "where <code>wrong_guesses</code> include not only the ones you "
@@ -138,7 +142,7 @@ def faq(request):
             "I'll eventually come up with a better way to calculate scores "
             "but for now, this'll have to do."
             "<strong>Important</strong>: If you play without a time limit, "
-            "you'll get a score of 0."
+            "you'll get a score of 0.</strike>"
         },
         {
             'id': 'roster',
