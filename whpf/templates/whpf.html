@@ -216,6 +216,10 @@
       if (player != null){
         past_players_id.push(player.nba_id);
       }
+      // If we've used every player, we start over by resetting the past_players_id list
+      if (players.length == past_players_id.length){
+        past_players_id = [];
+      };
       var repeated = true;
       while(repeated){
         player = players[Math.floor(Math.random() * players.length)];
