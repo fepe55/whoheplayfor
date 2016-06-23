@@ -75,7 +75,7 @@ def get_players_api():
     #     tries_left -= 1
 
     PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers"\
-        "?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
+        "?IsOnlyCurrentSeason=1&LeagueID=00&Season=2016-17"
     r = requests.get(PLAYERS_URL)
 
     try:
@@ -150,15 +150,18 @@ def get_guesses(code):
     code = parsed_code['guesses']
     guesses = []
     for i in xrange(rounds_played):
-        guess_str = code[10*i:10*i+10]
+        guess_str = code[12*i:12*i+12]
         player_id = int(guess_str[:8])
         player = Player.objects.get(nba_id=player_id)
-        team_id = int(guess_str[8:])
+        team_id = int(guess_str[8:10])
         team = Team.objects.get(nba_id__endswith=team_id)
+        correct_team_id = int(guess_str[10:])
+        correct_team = Team.objects.get(nba_id__endswith=correct_team_id)
         guess = {
             'round': i+1,
             'player': player,
             'team': team,
+            'correct_team': correct_team,
         }
         guesses.append(guess)
     return guesses
@@ -203,7 +206,7 @@ def get_score(code):
     difficulty = get_difficulty(code)
     guesses = get_guesses(code)
     for guess in guesses:
-        if guess['player'].team.id == guess['team'].id:
+        if guess['correct_team'].id == guess['team'].id:
             correct_guesses += 1
         else:
             wrong_guesses += 1
@@ -219,7 +222,7 @@ def parse_code(code):
     # code: show_player_name(1) + shuffle_teams(1) + limit_teams(2) +
     # time_left(3) + time_limit(3) +
     # rounds_played(3) + total_rounds(3) +
-    # n times (player_id(8), guess_id(2))
+    # n times (player_id(8), guess_id(2), correct_team_id(2))
     show_player_name = code[:1] == '1'
     shuffle_teams = code[1:2] == '1'
     limit_teams = int(code[2:4])

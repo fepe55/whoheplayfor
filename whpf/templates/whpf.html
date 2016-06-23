@@ -242,7 +242,7 @@
       game_status['round'] += 1;
       game_status['code'] += pad(player.nba_id.toString(), 8);
       game_status['code'] += team.nba_id.toString().slice(-2);
-
+      game_status['code'] += player.team.nba_id.toString().slice(-2);
       callback();
       start_round();
     };

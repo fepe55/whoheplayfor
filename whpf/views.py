@@ -6,10 +6,10 @@ from django.utils import formats
 from django.shortcuts import (render, get_object_or_404, )
 from django.core.urlresolvers import reverse
 
-from .models import (Result, Player, Team, Options)
+from .models import (Result, Player, Options)
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
-from .helpers import (parse_code, get_score,
+from .helpers import (parse_code, get_score, get_guesses,
                       get_teams_and_players_database,
                       get_teams_and_players_api, )
 
@@ -207,21 +207,7 @@ def results(request, code):
     else:
         result = None
 
-    rounds_played = parsed_code['rounds_played']
-    code = parsed_code['guesses']
-    guesses = []
-    for i in xrange(rounds_played):
-        guess_str = code[10*i:10*i+10]
-        player_id = int(guess_str[:8])
-        team_id = int(guess_str[8:])
-        p = get_object_or_404(Player, nba_id=player_id)
-        t = get_object_or_404(Team, nba_id__endswith=team_id)
-        guess = {
-            'round': i+1,
-            'player': p,
-            'team': t,
-        }
-        guesses.append(guess)
+    guesses = get_guesses(code)
 
     return render(request, 'results.html', {
         'guesses': guesses, 'score': score, 'result': result,

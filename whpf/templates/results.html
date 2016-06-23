@@ -45,7 +45,7 @@
         </thead>
         <tbody>
           {% for guess in guesses %}
-          {% if guess.team.nba_id == guess.player.team.nba_id %}
+          {% if guess.team.nba_id == guess.correct_team.nba_id %}
           <tr class="success">
           {% else %}
           <tr class="danger">
@@ -58,7 +58,7 @@
             </th>
             <td><img src="{{ guess.player.picture }}" title="{{ guess.player.name }}" /></td>
             <td><img src="{{ guess.team.picture }}" title="{{ guess.team.city }} {{ guess.team.name }}" /></td>
-            <td><img src="{{ guess.player.team.picture }}" title="{{ guess.player.team.city }} {{ guess.player.team.name }}" /></td>
+            <td><img src="{{ guess.correct_team.picture }}" title="{{ guess.correct_team.city }} {{ guess.correct_team.name }}" /></td>
           </tr>
           {% endfor %}
         </tbody>
