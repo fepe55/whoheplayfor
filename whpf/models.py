@@ -79,8 +79,12 @@ class Player(ModelWithDates):
 
     @property
     def picture(self):
+        DEFAULT = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/"\
+            "statscube/players/large/default_nba_headshot_v2.png"
         PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/"\
             "img/2.0/sect/statscube/players/large/%s.png"
+        if self.faceless:
+            return DEFAULT
         return PLAYER_PICTURE_URL % self.code
 
     def __unicode__(self):
