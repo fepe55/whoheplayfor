@@ -18,7 +18,7 @@
         <div class="advanced-options">
           {% if user.is_authenticated %}
           <div class="alert alert-danger" role="alert">
-            <i class="fa fa-exclamation-triangle"></i> Changing the advanced options <strong>do not</strong> count towards the leaderboard. <a href="{% url 'whpf:home' %}">Reset the options</a>.
+            <i class="fa fa-exclamation-triangle"></i> If you change the advanced options, your score <strong>will not</strong> count towards the leaderboard. <a href="{% url 'whpf:home' %}">Reset the options</a>.
           </div>
           {% endif %}
 
