@@ -216,19 +216,26 @@ def results(request, code):
 
 
 def scoreboard(request):
-    # results = Result.objects.all()[:15]
-    from django.conf import settings
-    print settings.DATABASES['default']['ENGINE']
-    if 'postgres' in settings.DATABASES['default']['ENGINE']:
-        results = Result.objects.all().order_by(
-            'user', 'score').distinct('user')[:15]
-    else:
-        results = Result.objects.all()[:15]
+    # The limit to search players for score
+    SOFT_LIMIT = 20
+    # The limit after being sorted also by time left
+    HARD_LIMIT = 10
+    results_qs = Result.objects.all()[:100]
+
+    results = []
+    users = []
+
+    for r in results_qs:
+        if r.user not in users:
+            users.append(r.user)
+            results.append(r)
+        if len(results) > SOFT_LIMIT:
+            break
 
     results = sorted(results, key=lambda x: x.parsed_code['time_left'],
                      reverse=True)
     results = sorted(results, key=lambda x: x.score, reverse=True)
-    results = results[:10]
+    results = results[:HARD_LIMIT]
     return render(request, 'scoreboard.html', {'scores': results, })
 
 
