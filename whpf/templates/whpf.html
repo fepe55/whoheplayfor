@@ -31,12 +31,33 @@
     <div class="row">
       <div class="col-md-12 text-center">
         <h3 class="your-guess">Your guess</h3>
-        <div id="teams">
-        {% for team in teams %}
-          <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
-            <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
-          </a>
-        {% endfor %}
+        <div id="teams" class="row">
+        {% if game_info.limit_teams == '0' %}
+
+          <div class="col-md-6">
+          {% for team in east %}
+            <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
+              <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+            </a>
+          {% endfor %}
+          </div>
+          <div class="col-md-6">
+          {% for team in west %}
+            <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
+              <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+            </a>
+          {% endfor %}
+          </div>
+
+        {% else %}
+          <div class="col-md-12">
+          {% for team in teams %}
+            <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
+              <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+            </a>
+          {% endfor %}
+          </div>
+        {% endif %}
         </div>
       </div>
     </div> <!-- row -->

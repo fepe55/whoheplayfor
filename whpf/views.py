@@ -91,6 +91,7 @@ def home(request):
 
     return render(request, 'whpf.html', {
         'players': players, 'teams': teams, 'game_info': game_info,
+        'east': teams[:15], 'west': teams[15:],
     })
 
 
