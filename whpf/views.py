@@ -216,7 +216,15 @@ def results(request, code):
 
 
 def scoreboard(request):
-    results = Result.objects.all()[:15]
+    # results = Result.objects.all()[:15]
+    from django.conf import settings
+    print settings.DATABASES['default']['ENGINE']
+    if 'postgres' in settings.DATABASES['default']['ENGINE']:
+        results = Result.objects.all().order_by(
+            'user', 'score').distinct('user')[:15]
+    else:
+        results = Result.objects.all()[:15]
+
     results = sorted(results, key=lambda x: x.parsed_code['time_left'],
                      reverse=True)
     results = sorted(results, key=lambda x: x.score, reverse=True)
