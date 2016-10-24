@@ -152,18 +152,20 @@ def get_guesses(code):
     for i in xrange(rounds_played):
         guess_str = code[12*i:12*i+12]
         player_id = int(guess_str[:8])
-        player = Player.all_players.get(nba_id=player_id)
-        team_id = int(guess_str[8:10])
-        team = Team.objects.get(nba_id__endswith=team_id)
-        correct_team_id = int(guess_str[10:])
-        correct_team = Team.objects.get(nba_id__endswith=correct_team_id)
-        guess = {
-            'round': i+1,
-            'player': player,
-            'team': team,
-            'correct_team': correct_team,
-        }
-        guesses.append(guess)
+        if Player.all_players.filter(nba_id=player_id).exists():
+
+            player = Player.all_players.get(nba_id=player_id)
+            team_id = int(guess_str[8:10])
+            team = Team.objects.get(nba_id__endswith=team_id)
+            correct_team_id = int(guess_str[10:])
+            correct_team = Team.objects.get(nba_id__endswith=correct_team_id)
+            guess = {
+                'round': i+1,
+                'player': player,
+                'team': team,
+                'correct_team': correct_team,
+            }
+            guesses.append(guess)
     return guesses
 
 
