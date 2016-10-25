@@ -30,6 +30,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Player.all_players.update(active=False)
+        start_time = timezone.now()
         Player.all_players.update(being_updated=True)
         nba_players = get_players_api()
         if not nba_players:
@@ -70,7 +71,11 @@ class Command(BaseCommand):
         errors = []
         faceless = []
 
+        total = Player.all_players.count()
+        current = 1
         for p in Player.all_players.all():
+            print "[" + str(current) + "/" + str(total) + "]",
+            current += 1
             try:
                 r = requests.get(p.picture)
                 if r.status_code == 200:
@@ -91,7 +96,6 @@ class Command(BaseCommand):
             # Sleep to avoid a possible anti-throttling from the server
             time.sleep(2)
 
-
         # If your being_updated flag wasn't changed to False, it means you
         # weren't modified or added, so you disappeared. We set you as
         # inactive
@@ -106,10 +110,17 @@ class Command(BaseCommand):
         options.last_roster_update = timezone.now()
         options.save()
 
-        print "ERRORS"
-        for player in errors:
-            print player
-        print
-        print "FACELESS"
-        for player in faceless:
-            print player
+        if errors:
+            print "ERRORS"
+            for player in errors:
+                print player
+            print
+        if faceless:
+            print "FACELESS"
+            for player in faceless:
+                print player
+
+        end_time = timezone.now()
+        print "Started", start_time
+        print "Ended", end_time
+        print "Elapsed", str(end_time - start_time)
