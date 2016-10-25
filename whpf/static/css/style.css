@@ -159,7 +159,11 @@ input[type="checkbox"]#advanced{
   margin-right: -100%;
 }
 
-.team-picture{
+#teams .all-together .team-picture{
+  width: 9%;
+}
+
+#teams .conference .team-picture{
   width: 18%;
 }
 

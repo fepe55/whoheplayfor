@@ -32,17 +32,17 @@
       <div class="col-md-12 text-center">
         <h3 class="your-guess">Your guess</h3>
         <div id="teams" class="row">
-        {% if game_info.limit_teams == '0' %}
+        {% if west and east %}
 
-          <div class="col-md-6">
-          {% for team in east %}
+          <div class="col-sm-6 conference">
+          {% for team in west %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
               <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
           {% endfor %}
           </div>
-          <div class="col-md-6">
-          {% for team in west %}
+          <div class="col-sm-6 conference">
+          {% for team in east %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
               <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
@@ -50,7 +50,7 @@
           </div>
 
         {% else %}
-          <div class="col-md-12">
+          <div class="col-md-12 all-together">
           {% for team in teams %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
               <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />

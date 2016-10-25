@@ -89,10 +89,17 @@ def home(request):
 
     (teams, players) = get_teams_and_players(limit_teams)
 
-    return render(request, 'whpf.html', {
-        'players': players, 'teams': teams, 'game_info': game_info,
-        'east': teams[:15], 'west': teams[15:],
-    })
+    data = {
+        'game_info': game_info,
+        'players': players,
+        'teams': teams,
+    }
+
+    if limit_teams == '0':
+        data['west'] = teams[15:]
+        data['east'] = teams[:15]
+
+    return render(request, 'whpf.html', data)
 
 
 def tv(request):

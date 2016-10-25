@@ -61,7 +61,7 @@ class Team(ModelWithDates):
         return "%s %s" % (self.city, self.name, )
 
     class Meta:
-        ordering = ['division__conference__name', 'code', ]
+        ordering = ['division__conference__name', 'city', 'name', ]
 
 
 class Player(ModelWithDates):
