@@ -29,7 +29,9 @@ class Command(BaseCommand):
     help = 'Updates players'
 
     def handle(self, *args, **kwargs):
-        Player.all_players.update(active=False)
+        # Player.all_players.update(active=False)
+        start_time = timezone.now()
+        Player.all_players.update(being_updated=True)
         nba_players = get_players_api()
         if not nba_players:
             print "Error with NBA.com"
@@ -50,7 +52,7 @@ class Command(BaseCommand):
                     name=p[2],
                     team=team,
                     code=p[6],
-                    active=True,
+                    being_updated=False,
                 )
 
             # If there isn't a player with that ID, we create it
@@ -60,28 +62,45 @@ class Command(BaseCommand):
                     name=p[2],
                     team=team,
                     code=p[6],
-                    active=True,
+                    being_updated=False,
                 )
                 print "create", p[2]
 
         # Lastly, we find the faceless-ones
 
+        errors = []
+        faceless = []
+
+        total = Player.all_players.count()
+        current = 1
         for p in Player.all_players.all():
-            r = requests.get(p.picture)
-            if r.status_code == 200:
-                p.faceless = False
-                p.save()
-                print p, 'has a face!'
-            elif r.status_code == 404:
-                print p, 'has no face ------------------------------'
-                p.faceless = True
-                p.save()
-            else:
-                print 'error with', p, '++++++++++++++++++++++++++++'
+            print "[" + str(current) + "/" + str(total) + "]",
+            current += 1
+            try:
+                r = requests.get(p.picture)
+                if r.status_code == 200:
+                    p.faceless = False
+                    p.save()
+                    print p, 'has a face!'
+                elif r.status_code == 404:
+                    print p, 'has no face ------------------------------'
+                    faceless.append(p)
+                    p.faceless = True
+                    p.save()
+                else:
+                    print 'error with', p, '++++++++++++++++++++++++++++'
+            except requests.exceptions.RequestException as e:
+                print e
+                errors.apend(p)
 
             # Sleep to avoid a possible anti-throttling from the server
             time.sleep(2)
 
+        # If your being_updated flag wasn't changed to False, it means you
+        # weren't modified or added, so you disappeared. We set you as
+        # inactive
+        Player.all_players.filter(being_updated=True).update(
+            being_updated=False, active=False)
         # And we update the last_roster_update date
         options = Options.objects.all()
         if options.exists():
@@ -90,3 +109,18 @@ class Command(BaseCommand):
             options = Options()
         options.last_roster_update = timezone.now()
         options.save()
+
+        if errors:
+            print "ERRORS"
+            for player in errors:
+                print player
+            print
+        if faceless:
+            print "FACELESS"
+            for player in faceless:
+                print player
+
+        end_time = timezone.now()
+        print "Started", start_time
+        print "Ended", end_time
+        print "Elapsed", str(end_time - start_time)

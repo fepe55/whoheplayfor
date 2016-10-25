@@ -66,6 +66,7 @@ class Team(ModelWithDates):
 
 class Player(ModelWithDates):
     active = models.BooleanField(default=True)
+    being_updated = models.BooleanField(default=False)
     nba_id = models.IntegerField()
     name = models.CharField(max_length=255)
     team = models.ForeignKey(Team)
@@ -81,11 +82,13 @@ class Player(ModelWithDates):
     def picture(self):
         DEFAULT = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/"\
             "statscube/players/large/default_nba_headshot_v2.png"
-        PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/"\
-            "img/2.0/sect/statscube/players/large/%s.png"
+        # PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/"\
+        #     "img/2.0/sect/statscube/players/large/%s.png"
+        PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
+            "uploads/headshots/nba/latest/260x190/%s.png"
         if self.faceless:
             return DEFAULT
-        return PLAYER_PICTURE_URL % self.code
+        return PLAYER_PICTURE_URL % str(self.nba_id)
 
     def __unicode__(self):
         return "%s" % (self.name, )

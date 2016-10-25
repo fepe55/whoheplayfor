@@ -76,7 +76,11 @@ def get_players_api():
 
     PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers"\
         "?IsOnlyCurrentSeason=1&LeagueID=00&Season=2016-17"
-    r = requests.get(PLAYERS_URL)
+    try:
+        r = requests.get(PLAYERS_URL)
+    except requests.exceptions.RequestException as e:
+        print e
+        return
 
     try:
         j = r.json()
@@ -101,8 +105,11 @@ def get_teams_and_players_api(limit_teams):
         '4': FINALS_TEAMS_2016,
     }
 
-    PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/"\
-        "2.0/sect/statscube/players/large/%s.png"
+    # PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/"\
+    #     "2.0/sect/statscube/players/large/%s.png"
+    PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
+        "uploads/headshots/nba/latest/260x190/%s.png"
+
     TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
 
     nba_players = get_players_api()
@@ -152,18 +159,20 @@ def get_guesses(code):
     for i in xrange(rounds_played):
         guess_str = code[12*i:12*i+12]
         player_id = int(guess_str[:8])
-        player = Player.all_players.get(nba_id=player_id)
-        team_id = int(guess_str[8:10])
-        team = Team.objects.get(nba_id__endswith=team_id)
-        correct_team_id = int(guess_str[10:])
-        correct_team = Team.objects.get(nba_id__endswith=correct_team_id)
-        guess = {
-            'round': i+1,
-            'player': player,
-            'team': team,
-            'correct_team': correct_team,
-        }
-        guesses.append(guess)
+        if Player.all_players.filter(nba_id=player_id).exists():
+
+            player = Player.all_players.get(nba_id=player_id)
+            team_id = int(guess_str[8:10])
+            team = Team.objects.get(nba_id__endswith=team_id)
+            correct_team_id = int(guess_str[10:])
+            correct_team = Team.objects.get(nba_id__endswith=correct_team_id)
+            guess = {
+                'round': i+1,
+                'player': player,
+                'team': team,
+                'correct_team': correct_team,
+            }
+            guesses.append(guess)
     return guesses
 
 
