@@ -66,6 +66,7 @@ class Team(ModelWithDates):
 
 class Player(ModelWithDates):
     active = models.BooleanField(default=True)
+    being_updated = models.BooleanField(default=False)
     nba_id = models.IntegerField()
     name = models.CharField(max_length=255)
     team = models.ForeignKey(Team)
