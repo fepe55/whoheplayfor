@@ -6,7 +6,9 @@ from whpf.views import get_players
 
 
 def get_faceless():
-    PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/statscube/players/large/%s.png"
+    PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
+        "uploads/headshots/nba/latest/260x190/%s.png"
+
     players = get_players()
     f = open('faceless.txt', 'w')
     for p in players[300:]:
