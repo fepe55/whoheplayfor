@@ -258,18 +258,22 @@ def get_scoreboard(qs):
 
 
 def scoreboard(request):
-    results = Result.objects.all()[:100]
-    scoreboard_global = get_scoreboard(results)
-
-    last7 = Result.objects.filter(
+    last24h = Result.objects.filter(
+        created__gte=timezone.now() - timedelta(hours=24)
+    )
+    last7d = Result.objects.filter(
         created__gte=timezone.now() - timedelta(days=7)
     )
+    results = Result.objects.all()[:100]
 
-    scoreboard_last7 = get_scoreboard(last7)
+    scoreboard_last24h = get_scoreboard(last24h)
+    scoreboard_last7d = get_scoreboard(last7d)
+    scoreboard_global = get_scoreboard(results)
 
     return render(request, 'scoreboard.html', {
+        'scoreboard_last24h': scoreboard_last24h,
+        'scoreboard_last7d': scoreboard_last7d,
         'scoreboard_global': scoreboard_global,
-        'scoreboard_last7': scoreboard_last7,
     })
 
 

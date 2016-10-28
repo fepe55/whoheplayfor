@@ -1,15 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
-  {% if scoreboard_last7 %}
-  <div class="row">
-    <h2>Last 7 days</h2>
-    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last7 %}
+  {% if scoreboard_last24h or scoreboard_last7h %}
+  <ul class="list-inline scoreboards">
+    {% if scoreboard_last24h %}
+      <li><a href="#last24h">Last 24 hours</a></li> |
+    {% endif %}
+    {% if scoreboard_last7d %}
+      <li><a href="#last7d">Last 7 days</a></li> |
+    {% endif %}
+    <li><a href="#global">All time</a></li>
+  </ul>
+  {% endif %}
+
+  {% if scoreboard_last24h %}
+  <div class="row" id="last24h">
+    <h2>Last 24 hours</h2>
+    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last24h %}
   </div>
   {% endif %}
 
-  <div class="row">
+  {% if scoreboard_last7d %}
+  <div class="row" id="last7d">
+    <h2>Last 7 days</h2>
+    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last7d %}
+  </div>
+  {% endif %}
+
+  <div class="row" id="global">
     <h2>All time</h2>
     {% include "scoreboard_aux.html" with scoreboard=scoreboard_global %}
   </div>
 
+{% endblock %}
+
+{% block js %}
+  <script>
+    function goto_hash(hash){
+      if (hash != ""){
+
+        id = hash.substring(hash.indexOf("#")+1);
+        console.log(id);
+
+        $('html, body').animate({
+          scrollTop: $("#"+id).offset().top - 55
+        }, 1000);
+
+      };
+    };
+
+    window.location.hash = "";
+
+    $("ul.scoreboards a").click(function(e){
+      e.preventDefault();
+      hash = $(this).attr('href');
+      goto_hash(hash);
+    });
+  </script>
 {% endblock %}
