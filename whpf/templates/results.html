@@ -37,8 +37,8 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Round</th>
-            <th>Player</th>
+            <th></th>
+            <th></th>
             <th>Your guess</th>
             <th>Correct guess</th>
           </tr>
@@ -56,7 +56,7 @@
                 <strong class="fa-stack-1x" style="color: white;">{{ forloop.counter }}</strong>
               </span>
             </th>
-            <td><img src="{{ guess.player.picture }}" title="{{ guess.player.name }}" /></td>
+            <td><div class="text-center"><img src="{{ guess.player.picture }}" title="{{ guess.player.name }}" /><br />{{ guess.player.name }}</div></td>
             <td><img src="{{ guess.team.picture }}" title="{{ guess.team.city }} {{ guess.team.name }}" /></td>
             <td><img src="{{ guess.correct_team.picture }}" title="{{ guess.correct_team.city }} {{ guess.correct_team.name }}" /></td>
           </tr>
