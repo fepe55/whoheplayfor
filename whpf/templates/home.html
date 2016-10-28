@@ -59,6 +59,9 @@
         <a class="show-advanced-options" href="#">Show advanced options</a>
 
       </form>
+      {% if last_roster_update %}
+        <p class="muted text-right">Rosters updated as of {{ last_roster_update }}</p>
+      {% endif %}
     </div>
   </div>
 
