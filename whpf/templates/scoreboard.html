@@ -1,50 +1,15 @@
 {% extends "base.html" %}
-{% load filters %}
 {% block content %}
+  {% if scoreboard_last7 %}
   <div class="row">
-    <h1>Scoreboard</h1>
-    <table class="table table-hover scoreboard">
-      <thead>
-        <tr>
-          <th></th>
-          <th>User</th>
-          <th>Score</th>
-          <th style="width: 9%" class="advanced-details">Time left (seconds)</th>
-          <th style="width: 9%" class="advanced-details">Rounds played</th>
-          <th class="advanced-details">Date</th>
-          <th>Result</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for score in scores %}
-        {% with parsed_code=score.parsed_code %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <th class="score pos{{ forloop.counter}}">
-            {% with user_info=score.user|get_user_info %}
-              {% if user_info.url %}
-                <a title="View user profile" href="{{ user_info.url }}">
-                  <i class="{{ user_info.icon_class }}"></i>
-                </a>
-              {% else %}
-                <i class="{{ user_info.icon_class }}"></i>
-              {% endif %}
-              {{ score.user.get_full_name|default:score.user.username }}
-            {% endwith %}
-            <span class="fa-stack fa-lg trophy-stack">
-              <i class="fa fa-circle fa-stack-2x"></i>
-              <i class="fa fa-trophy trophy fa-stack-1x"></i>
-            </span>
-          </th>
-          <th>{{ score.score }}</th>
-          <td class="advanced-details">{{ parsed_code.time_left }}</td>
-          <td class="advanced-details">{{ parsed_code.rounds_played }} / {{ parsed_code.total_rounds }}</td>
-          <td class="advanced-details">{{ score.created|date:"F jS, Y" }}</td>
-          <td><a href="{% url 'whpf:results' score.code %}">View details</a></td>
-        </tr>
-        {% endwith %}
-        {% endfor %}
-      </tbody>
-    </table>
+    <h2>Last 7 days</h2>
+    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last7 %}
   </div>
+  {% endif %}
+
+  <div class="row">
+    <h2>All time</h2>
+    {% include "scoreboard_aux.html" with scoreboard=scoreboard_global %}
+  </div>
+
 {% endblock %}

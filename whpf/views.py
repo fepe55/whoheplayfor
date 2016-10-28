@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
 import json
+from datetime import timedelta
 
 from django.http import (HttpResponse, Http404, )
-from django.utils import formats
+from django.utils import (formats, timezone, )
 from django.shortcuts import (render, get_object_or_404, )
 from django.core.urlresolvers import reverse
 
@@ -223,17 +224,18 @@ def results(request, code):
     })
 
 
-def scoreboard(request):
+def get_scoreboard(qs):
+    if not qs:
+        return []
     # The limit to search players for score
     SOFT_LIMIT = 20
     # The limit after being sorted also by time left
     HARD_LIMIT = 10
-    results_qs = Result.objects.all()[:100]
 
     results = []
     users = []
 
-    for r in results_qs:
+    for r in qs:
         if r.user not in users:
             users.append(r.user)
             results.append(r)
@@ -244,7 +246,23 @@ def scoreboard(request):
                      reverse=True)
     results = sorted(results, key=lambda x: x.score, reverse=True)
     results = results[:HARD_LIMIT]
-    return render(request, 'scoreboard.html', {'scores': results, })
+    return results
+
+
+def scoreboard(request):
+    results = Result.objects.all()[:100]
+    scoreboard_global = get_scoreboard(results)
+
+    last7 = Result.objects.filter(
+        created__gte=timezone.now() - timedelta(days=7)
+    )
+
+    scoreboard_last7 = get_scoreboard(last7)
+
+    return render(request, 'scoreboard.html', {
+        'scoreboard_global': scoreboard_global,
+        'scoreboard_last7': scoreboard_last7,
+    })
 
 
 def score(request, code):
