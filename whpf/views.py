@@ -127,11 +127,19 @@ def faq(request):
             'id': 'idea',
             'question': "Where did you get the idea to do this?",
             'answer': "<strong>Who He Play For?</strong> is a recurrent game "
-            "on <a href='"+tv_url+"' %}'>Inside the NBA</a>, where Ernie asks "
+            "on <a href='"+tv_url+"'>Inside the NBA</a>, where Ernie asks "
             "Chuck to guess where certain players play. And I've always "
             "found the idea fun to play. So I made it into a web game, so I "
             "(and you) can play it."
 
+        },
+        {
+            'id': 'players',
+            'question': "Which players are there?",
+            'answer': "Even though on <a href='"+tv_url+"'>Inside the NBA</a> "
+            "they usually use lesser known players, here you have all of "
+            "them. I'm thinking about adding a <em>hard mode</em> with only "
+            "the weird ones for those looking for a challenge."
         },
         {
             'id': "scores",
