@@ -236,9 +236,9 @@ def get_scoreboard(qs):
     if not qs:
         return []
     # The limit to search players for score
-    SOFT_LIMIT = 20
+    SOFT_LIMIT = 50
     # The limit after being sorted also by time left
-    HARD_LIMIT = 10
+    HARD_LIMIT = 25
 
     results = []
     users = []
