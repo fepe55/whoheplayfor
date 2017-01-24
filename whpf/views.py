@@ -308,9 +308,12 @@ def guess(player_id, type_of_guess):
     player = get_object_or_404(Player, nba_id=player_id)
     if type_of_guess == 'right':
         player.times_guessed_right += 1
+        player.team.times_guessed_right += 1
     if type_of_guess == 'wrong':
         player.times_guessed_wrong += 1
+        player.team.times_guessed_wrong += 1
     player.times_guessed += 1
+    player.team.times_guessed += 1
     player.save()
     return
 

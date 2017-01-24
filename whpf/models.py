@@ -48,6 +48,7 @@ class Team(ModelWithDates):
     abbreviation = models.CharField(max_length=255)
     code = models.CharField(max_length=255)
     division = models.ForeignKey(Division, related_name="teams")
+    times_guessed = models.IntegerField(default=0)
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
 
