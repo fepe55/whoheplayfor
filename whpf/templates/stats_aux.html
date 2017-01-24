@@ -1,0 +1,23 @@
+<div class="row">
+  {% for player in players %}
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="{{ player.picture }}" alt="{{ player.name }}">
+      <div class="caption">
+        <h3 style="white-space:nowrap; overflow:hidden;">{{ player.name }} <small>{% widthratio player.times_guessed_right player.times_guessed 100 %}%</small></h3>
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" style="width: {% widthratio player.times_guessed_right player.times_guessed 100 %}%">
+            {{ player.times_guessed_right }}
+            <span class="sr-only">{{ player.times_guessed_right }} times guessed right</span>
+          </div>
+          <div class="progress-bar progress-bar-danger" style="width: {% widthratio player.times_guessed_wrong player.times_guessed 100 %}%">
+            {{ player.times_guessed_wrong }}
+            <span class="sr-only">{{ player.times_guessed_wrong }} times guessed wrong</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <ul class="list-inline menu">
+    <li><a href="#right">Top 10 guessed right</a></li> |
+    <li><a href="#wrong">Top 10 guessed wrong</a></li> |
+    <li><a href="#total">Top 10 appearances</a></li>
+  </ul>
+
+<h2 id="right">Top 10 guessed right</h2>
+{% include 'stats_aux.html' with players=players_guessed_right %}
+
+<h2 id="wrong">Top 10 guessed wrong</h2>
+{% include 'stats_aux.html' with players=players_guessed_wrong %}
+
+<h2 id="total">Top 10 appearances</h2>
+{% include 'stats_aux.html' with players=players %}
+
+{% endblock %}
+
+{% block js %}
+  <script>
+    function goto_hash(hash){
+      if (hash != ""){
+
+        id = hash.substring(hash.indexOf("#")+1);
+        console.log(id);
+
+        $('html, body').animate({
+          scrollTop: $("#"+id).offset().top - 55
+        }, 1000);
+
+      };
+    };
+
+    window.location.hash = "";
+
+    $("ul.menu a").click(function(e){
+      e.preventDefault();
+      hash = $(this).attr('href');
+      goto_hash(hash);
+    });
+  </script>
+{% endblock %}

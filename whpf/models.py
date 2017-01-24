@@ -74,6 +74,7 @@ class Player(ModelWithDates):
     team = models.ForeignKey(Team)
     code = models.CharField(max_length=255)
     faceless = models.BooleanField(default=False)
+    times_guessed = models.IntegerField(default=0)
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
 

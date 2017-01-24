@@ -277,6 +277,23 @@ def scoreboard(request):
     })
 
 
+def stats(request):
+    players = Player.objects.exclude(times_guessed=0).\
+        order_by('-times_guessed')[:12]
+
+    players_guessed_right = Player.objects.exclude(times_guessed=0).\
+        order_by('-times_guessed_right', 'times_guessed_wrong')[:12]
+
+    players_guessed_wrong = Player.objects.exclude(times_guessed=0).\
+        order_by('-times_guessed_wrong', 'times_guessed_right')[:12]
+
+    return render(request, 'stats.html', {
+        'players': players,
+        'players_guessed_right': players_guessed_right,
+        'players_guessed_wrong': players_guessed_wrong,
+    })
+
+
 def score(request, code):
     if request.is_ajax():
         to_json = {'score': get_score(code), }
@@ -293,6 +310,7 @@ def guess(player_id, type_of_guess):
         player.times_guessed_right += 1
     if type_of_guess == 'wrong':
         player.times_guessed_wrong += 1
+    player.times_guessed += 1
     player.save()
     return
 

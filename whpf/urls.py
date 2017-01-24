@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^results/(?P<code>\d+)/$', views.results, name='results'),
     url(r'^scoreboard/$', views.scoreboard, name='scoreboard'),
     url(r'^score/(?P<code>\w+)/$', views.score, name='score'),
+    url(r'^stats/$', views.stats, name='stats'),
     url(r'^right_guess/(?P<pid>\w+)/$', views.right_guess, name='right_guess'),
     url(r'^wrong_guess/(?P<pid>\w+)/$', views.wrong_guess, name='wrong_guess'),
 ]
