@@ -110,7 +110,10 @@ def get_teams_and_players_api(limit_teams):
     PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
         "uploads/headshots/nba/latest/260x190/%s.png"
 
-    TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/%s_logo.svg"
+    # TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/logos/"\
+    #     "%s_logo.svg"
+    TEAM_PICTURE_URL = "https://i.cdn.turner.com/nba/nba/assets/logos/"\
+        "teams/primary/web/%s.svg"
 
     nba_players = get_players_api()
     players = []

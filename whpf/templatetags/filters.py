@@ -23,17 +23,17 @@ def get_user_info(user):
     icon_class = ''
     if backend == 'twitter':
         screen_name = social.extra_data['access_token']['screen_name']
-        url = "http://www.twitter.com/%s" % screen_name
+        url = "https://www.twitter.com/%s" % screen_name
         icon_class = 'fa fa-twitter'
 
     if backend == 'facebook':
         fid = social.extra_data['id']
-        url = "http://www.facebook.com/%s" % fid
+        url = "https://www.facebook.com/%s" % fid
         icon_class = 'fa fa-facebook'
 
     if backend == 'reddit':
         username = social.extra_data['username']
-        url = "http://www.reddit.com/u/%s" % username
+        url = "https://www.reddit.com/u/%s" % username
         icon_class = 'fa fa-reddit-alien'
 
     if backend == 'google-oauth2':

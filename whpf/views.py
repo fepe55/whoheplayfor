@@ -185,9 +185,9 @@ def faq(request):
             'question': "I have a question/suggestion/complaint, how can I "
             "contact you?",
             'answer': "If what you want is not covered in this FAQ, you can "
-            "find me at <a href='http://reddit.com/u/fepe55'>"
+            "find me at <a href='https://reddit.com/u/fepe55'>"
             "<i class='fa fa-reddit-alien'></i> /u/fepe55</a> and "
-            "at <a href='http://twitter.com/fepe55/'>"
+            "at <a href='https://twitter.com/fepe55/'>"
             "<i class='fa fa-twitter'></i> @fepe55</a>."
         },
     ]
