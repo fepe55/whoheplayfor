@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
   <ul class="list-inline menu">
-    <li><a href="#right">Top 10 guessed right</a></li> |
     <li><a href="#wrong">Top 10 guessed wrong</a></li> |
+    <li><a href="#right">Top 10 guessed right</a></li> |
     <li><a href="#total">Top 10 appearances</a></li>
   </ul>
 
-<h2 id="right">Top 10 guessed right</h2>
-{% include 'stats_aux.html' with players=players_guessed_right %}
-
 <h2 id="wrong">Top 10 guessed wrong</h2>
 {% include 'stats_aux.html' with players=players_guessed_wrong %}
+
+<h2 id="right">Top 10 guessed right</h2>
+{% include 'stats_aux.html' with players=players_guessed_right %}
 
 <h2 id="total">Top 10 appearances</h2>
 {% include 'stats_aux.html' with players=players %}
