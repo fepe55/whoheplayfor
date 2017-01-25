@@ -281,17 +281,27 @@ def stats(request):
     west_teams = Team.objects.filter(division__conference__name='West')
     east_teams = Team.objects.filter(division__conference__name='East')
 
-    players = Player.objects.exclude(times_guessed=0).\
-        order_by('-times_guessed')[:15]
+    players_guessed_right = Player.objects.exclude(times_guessed=0).extra(
+        select={'percentage': 'times_guessed_right::decimal / times_guessed'},
+        order_by=('-percentage',)
+    )[:15]
 
-    players_guessed_right = Player.objects.exclude(times_guessed=0).\
-        order_by('-times_guessed_right', 'times_guessed_wrong')[:15]
+    players_guessed_wrong = Player.objects.exclude(times_guessed=0).extra(
+        select={'percentage': 'times_guessed_right::decimal / times_guessed'},
+        order_by=('percentage',)
+    )[:15]
 
-    players_guessed_wrong = Player.objects.exclude(times_guessed=0).\
-        order_by('-times_guessed_wrong', 'times_guessed_right')[:15]
+    # players = Player.objects.exclude(times_guessed=0).\
+    #     order_by('-times_guessed')[:15]
+
+    # players_guessed_right = Player.objects.exclude(times_guessed=0).\
+    #     order_by('-times_guessed_right', 'times_guessed_wrong')[:15]
+
+    # players_guessed_wrong = Player.objects.exclude(times_guessed=0).\
+    #     order_by('-times_guessed_wrong', 'times_guessed_right')[:15]
 
     return render(request, 'stats.html', {
-        'players': players,
+        # 'players': players,
         'players_guessed_right': players_guessed_right,
         'players_guessed_wrong': players_guessed_wrong,
         'west_teams': west_teams,
