@@ -1,23 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-  <ul class="list-inline menu">
-    <li><a href="#wrong">Top 12 guessed wrong</a></li> |
-    <li><a href="#right">Top 12 guessed right</a></li> |
-    <li><a href="#total">Top 12 appearances</a></li>
-  </ul>
 
-<h2 id="wrong">Top 12 guessed wrong</h2>
-{% include 'stats_aux.html' with players=players_guessed_wrong %}
+  <div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+    <h3 id="wrong">Guessed wrong</h2>
+    {% include 'stats_aux.html' with list=players_guessed_wrong %}
+    </div>
 
-<h2 id="right">Top 12 guessed right</h2>
-{% include 'stats_aux.html' with players=players_guessed_right %}
+    <div class="col-md-3 col-sm-6 col-xs-12">
+    <h3 id="right">Guessed right</h2>
+    {% include 'stats_aux.html' with list=players_guessed_right %}
+    </div>
 
-<h2 id="total">Top 12 appearances</h2>
-{% include 'stats_aux.html' with players=players %}
+    <div class="col-md-3 col-sm-6 col-xs-12">
+    <h3 id="west">West</h3>
+    {% include 'stats_aux.html' with list=west_teams %}
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+    <h3 id="east">East</h3>
+    {% include 'stats_aux.html' with list=east_teams %}
+    </div>
+
+  </div>
+
+  {% comment %}
+  <div class="col-md-6">
+  <h2 id="total">Top 12 appearances</h2>
+  {% include 'stats_aux.html' with list=players %}
+  </div>
+  {% endcomment %}
 
 {% endblock %}
 
 {% block js %}
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
   <script>
     function goto_hash(hash){
       if (hash != ""){

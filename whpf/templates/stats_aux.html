@@ -1,18 +1,42 @@
+{% for item in list %}
+<div class="row" style="margin-bottom: 20px;">
+  <div class="col-xs-6 vcenter">
+    <div class="text-center">
+      <img src="{{ item.picture }}" alt="{{ item.city }} {{ item.name }}" style="height: 50px;" data-toggle="tooltip" data-placement="right" title="{{ item.city }} {{ item.name }}" />
+    </div>
+  </div><!--
+  --><div class="col-xs-6 vcenter">
+    <div class="progress" style="margin-bottom: 0px;">
+      <div class="progress-bar progress-bar-success" style="width: {% widthratio item.times_guessed_right item.times_guessed 100 %}%">
+        {{ item.times_guessed_right }}
+        <span class="sr-only">{{ item.times_guessed_right }} times guessed right</span>
+      </div>
+      <div class="progress-bar progress-bar-danger" style="width: {% widthratio item.times_guessed_wrong item.times_guessed 100 %}%">
+        {{ item.times_guessed_wrong }}
+        <span class="sr-only">{{ item.times_guessed_wrong }} times guessed wrong</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% comment %}
+
 <div class="row">
-  {% for player in players %}
+  {% for item in list %}
   <div class="col-sm-6 col-md-4">
     <div class="thumbnail">
-      <img src="{{ player.picture }}" alt="{{ player.name }}">
+      <img src="{{ item.picture }}" alt="{{ item.city }} {{ item.name }}" />
       <div class="caption">
-        <h3 style="white-space:nowrap; overflow:hidden;">{{ player.name }} <small>{% widthratio player.times_guessed_right player.times_guessed 100 %}%</small></h3>
+        <h3 style="white-space:nowrap; overflow:hidden;">{{ item.city }} {{ item.name }} <small>{% widthratio item.times_guessed_right item.times_guessed 100 %}%</small></h3>
         <div class="progress">
-          <div class="progress-bar progress-bar-success" style="width: {% widthratio player.times_guessed_right player.times_guessed 100 %}%">
-            {{ player.times_guessed_right }}
-            <span class="sr-only">{{ player.times_guessed_right }} times guessed right</span>
+          <div class="progress-bar progress-bar-success" style="width: {% widthratio item.times_guessed_right item.times_guessed 100 %}%">
+            {{ item.times_guessed_right }}
+            <span class="sr-only">{{ item.times_guessed_right }} times guessed right</span>
           </div>
-          <div class="progress-bar progress-bar-danger" style="width: {% widthratio player.times_guessed_wrong player.times_guessed 100 %}%">
-            {{ player.times_guessed_wrong }}
-            <span class="sr-only">{{ player.times_guessed_wrong }} times guessed wrong</span>
+          <div class="progress-bar progress-bar-danger" style="width: {% widthratio item.times_guessed_wrong item.times_guessed 100 %}%">
+            {{ item.times_guessed_wrong }}
+            <span class="sr-only">{{ item.times_guessed_wrong }} times guessed wrong</span>
           </div>
         </div>
 
@@ -21,3 +45,4 @@
   </div>
   {% endfor %}
 </div>
+{% endcomment %}

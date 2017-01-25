@@ -7,7 +7,7 @@ from django.utils import (formats, timezone, )
 from django.shortcuts import (render, get_object_or_404, )
 from django.core.urlresolvers import reverse
 
-from .models import (Result, Player, Options)
+from .models import (Result, Player, Team, Options)
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
 from .helpers import (parse_code, get_score, get_guesses,
@@ -278,19 +278,24 @@ def scoreboard(request):
 
 
 def stats(request):
+    west_teams = Team.objects.filter(division__conference__name='West')
+    east_teams = Team.objects.filter(division__conference__name='East')
+
     players = Player.objects.exclude(times_guessed=0).\
-        order_by('-times_guessed')[:12]
+        order_by('-times_guessed')[:15]
 
     players_guessed_right = Player.objects.exclude(times_guessed=0).\
-        order_by('-times_guessed_right', 'times_guessed_wrong')[:12]
+        order_by('-times_guessed_right', 'times_guessed_wrong')[:15]
 
     players_guessed_wrong = Player.objects.exclude(times_guessed=0).\
-        order_by('-times_guessed_wrong', 'times_guessed_right')[:12]
+        order_by('-times_guessed_wrong', 'times_guessed_right')[:15]
 
     return render(request, 'stats.html', {
         'players': players,
         'players_guessed_right': players_guessed_right,
         'players_guessed_wrong': players_guessed_wrong,
+        'west_teams': west_teams,
+        'east_teams': east_teams,
     })
 
 
