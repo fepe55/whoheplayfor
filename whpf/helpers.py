@@ -58,7 +58,7 @@ def get_teams_and_players_database(game_info):
 
     # 50 hardest players
     if hard_mode:
-        players_qs.order_by('times_guessed_pct')[:50]
+        players_qs = players_qs.order_by('times_guessed_pct')[:50]
 
     for player in players_qs:
         p = player_to_dict(player)
