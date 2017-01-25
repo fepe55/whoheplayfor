@@ -14,6 +14,7 @@
         <span class="sr-only">{{ item.times_guessed_wrong }} times guessed wrong</span>
       </div>
     </div>
+    <p class="text-center" style="margin: -20px 0 0 0; color:white;"><small>{% widthratio item.times_guessed_right item.times_guessed 100 %}%</small></p>
   </div>
 </div>
 {% endfor %}
