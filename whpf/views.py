@@ -282,12 +282,18 @@ def stats(request):
     east_teams = Team.objects.filter(division__conference__name='East')
 
     players_guessed_right = Player.objects.exclude(times_guessed=0).extra(
-        select={'percentage': 'times_guessed_right::decimal / times_guessed'},
+        select={
+            'percentage':
+            'cast(times_guessed_right as decimal) / times_guessed'
+        },
         order_by=('-percentage',)
     )[:15]
 
     players_guessed_wrong = Player.objects.exclude(times_guessed=0).extra(
-        select={'percentage': 'times_guessed_right::decimal / times_guessed'},
+        select={
+            'percentage':
+            'cast(times_guessed_right as decimal) / times_guessed'
+        },
         order_by=('percentage',)
     )[:15]
 
