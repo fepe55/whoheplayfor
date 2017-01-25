@@ -2,17 +2,15 @@
 <div class="row" style="margin-bottom: 20px;">
   <div class="col-xs-6 vcenter">
     <div class="text-center">
-      <img src="{{ item.picture }}" alt="{{ item.city }} {{ item.name }}" style="height: 50px;" data-toggle="tooltip" data-placement="right" title="{{ item.city }} {{ item.name }}" />
+      <img src="{{ item.picture }}" alt="{{ item.city }} {{ item.name }}" style="height: 50px;" data-toggle="tooltip" data-placement="bottom" title="{{ item.city }} {{ item.name }}" />
     </div>
   </div><!--
   --><div class="col-xs-6 vcenter">
-    <div class="progress" style="margin-bottom: 0px;">
+    <div class="progress" style="margin-bottom: 0px;" data-toggle="tooltip" data-placement="bottom" title="Right: {{ item.times_guessed_right }}. Wrong: {{ item.times_guessed_wrong }}">
       <div class="progress-bar progress-bar-success" style="width: {% widthratio item.times_guessed_right item.times_guessed 100 %}%">
-        {{ item.times_guessed_right }}
         <span class="sr-only">{{ item.times_guessed_right }} times guessed right</span>
       </div>
       <div class="progress-bar progress-bar-danger" style="width: {% widthratio item.times_guessed_wrong item.times_guessed 100 %}%">
-        {{ item.times_guessed_wrong }}
         <span class="sr-only">{{ item.times_guessed_wrong }} times guessed wrong</span>
       </div>
     </div>
