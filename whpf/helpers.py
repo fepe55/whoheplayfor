@@ -55,15 +55,10 @@ def get_teams_and_players_database(game_info):
         teams.append(t)
 
     players_qs = LIMIT_PLAYERS[limit_teams]
+
     # 50 hardest players
     if hard_mode:
-        players_qs = players_qs.extra(
-            select={
-                'percentage':
-                'cast(times_guessed_right as decimal) / times_guessed'
-            },
-            order_by=('percentage',)
-        )[:50]
+        players_qs.order_by('times_guessed_pct')[:50]
 
     for player in players_qs:
         p = player_to_dict(player)

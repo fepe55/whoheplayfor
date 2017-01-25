@@ -7,41 +7,14 @@
   </div><!--
   --><div class="col-xs-6 vcenter" data-toggle="tooltip" data-placement="bottom" title="Right: {{ item.times_guessed_right }}. Wrong: {{ item.times_guessed_wrong }}">
     <div class="progress" style="margin-bottom: 0px;">
-      <div class="progress-bar progress-bar-success" style="width: {% widthratio item.times_guessed_right item.times_guessed 100 %}%">
+      <div class="progress-bar progress-bar-success" style="width: {{ item.times_guessed_pct }}%">
         <span class="sr-only">{{ item.times_guessed_right }} times guessed right</span>
       </div>
-      <div class="progress-bar progress-bar-danger" style="width: {% widthratio item.times_guessed_wrong item.times_guessed 100 %}%">
+      <div class="progress-bar progress-bar-danger" style="width: {{ item.times_guessed_wrong_pct }}%">
         <span class="sr-only">{{ item.times_guessed_wrong }} times guessed wrong</span>
       </div>
     </div>
-    <p class="text-center" style="margin: -20px 0 0 0; color:white;"><small>{% widthratio item.times_guessed_right item.times_guessed 100 %}%</small></p>
+    <p class="text-center" style="margin: -20px 0 0 0; color:white;"><small>{{ item.times_guessed_pct }}%</small></p>
   </div>
 </div>
 {% endfor %}
-
-{% comment %}
-
-<div class="row">
-  {% for item in list %}
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img src="{{ item.picture }}" alt="{{ item.city }} {{ item.name }}" />
-      <div class="caption">
-        <h3 style="white-space:nowrap; overflow:hidden;">{{ item.city }} {{ item.name }} <small>{% widthratio item.times_guessed_right item.times_guessed 100 %}%</small></h3>
-        <div class="progress">
-          <div class="progress-bar progress-bar-success" style="width: {% widthratio item.times_guessed_right item.times_guessed 100 %}%">
-            {{ item.times_guessed_right }}
-            <span class="sr-only">{{ item.times_guessed_right }} times guessed right</span>
-          </div>
-          <div class="progress-bar progress-bar-danger" style="width: {% widthratio item.times_guessed_wrong item.times_guessed 100 %}%">
-            {{ item.times_guessed_wrong }}
-            <span class="sr-only">{{ item.times_guessed_wrong }} times guessed wrong</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-{% endcomment %}

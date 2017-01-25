@@ -51,6 +51,11 @@ class Team(ModelWithDates):
     times_guessed = models.IntegerField(default=0)
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
+    times_guessed_pct = models.IntegerField(default=0)
+
+    @property
+    def times_guessed_wrong_pct(self):
+        return 100 - self.times_guessed_pct
 
     @property
     def picture(self):
@@ -78,9 +83,14 @@ class Player(ModelWithDates):
     times_guessed = models.IntegerField(default=0)
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
+    times_guessed_pct = models.IntegerField(default=0)
 
     all_players = models.Manager()
     objects = PlayerManager()
+
+    @property
+    def times_guessed_wrong_pct(self):
+        return 100 - self.times_guessed_pct
 
     @property
     def picture(self):

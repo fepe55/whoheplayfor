@@ -286,33 +286,15 @@ def stats(request):
     west_teams = Team.objects.filter(division__conference__name='West')
     east_teams = Team.objects.filter(division__conference__name='East')
 
-    players_guessed_right = Player.objects.exclude(times_guessed=0).extra(
-        select={
-            'percentage':
-            'cast(times_guessed_right as decimal) / times_guessed'
-        },
-        order_by=('-percentage',)
+    players_guessed_right = Player.objects.exclude(times_guessed=0).order_by(
+        '-times_guessed_pct'
     )[:15]
 
-    players_guessed_wrong = Player.objects.exclude(times_guessed=0).extra(
-        select={
-            'percentage':
-            'cast(times_guessed_right as decimal) / times_guessed'
-        },
-        order_by=('percentage',)
+    players_guessed_wrong = Player.objects.exclude(times_guessed=0).order_by(
+        'times_guessed_pct'
     )[:15]
-
-    # players = Player.objects.exclude(times_guessed=0).\
-    #     order_by('-times_guessed')[:15]
-
-    # players_guessed_right = Player.objects.exclude(times_guessed=0).\
-    #     order_by('-times_guessed_right', 'times_guessed_wrong')[:15]
-
-    # players_guessed_wrong = Player.objects.exclude(times_guessed=0).\
-    #     order_by('-times_guessed_wrong', 'times_guessed_right')[:15]
 
     return render(request, 'stats.html', {
-        # 'players': players,
         'players_guessed_right': players_guessed_right,
         'players_guessed_wrong': players_guessed_wrong,
         'west_teams': west_teams,
@@ -339,7 +321,13 @@ def guess(player_id, type_of_guess):
         player.times_guessed_wrong += 1
         player.team.times_guessed_wrong += 1
     player.times_guessed += 1
+    player.times_guessed_pct = int(round(
+        100.0 * player.times_guessed_right / player.times_guessed
+    ))
     player.team.times_guessed += 1
+    player.team.times_guessed_pct = int(round(
+        100.0 * player.team.times_guessed_right / player.team.times_guessed
+    ))
     player.save()
     return
 
