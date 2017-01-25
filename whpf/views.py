@@ -15,12 +15,12 @@ from .helpers import (parse_code, get_score, get_guesses,
                       get_teams_and_players_api, )
 
 
-def get_teams_and_players(limit_teams):
+def get_teams_and_players(game_info):
     database = True
     if database:
-        return get_teams_and_players_database(limit_teams)
+        return get_teams_and_players_database(game_info)
     else:
-        return get_teams_and_players_api(limit_teams)
+        return get_teams_and_players_api(game_info)
 
 
 def home(request):
@@ -29,6 +29,7 @@ def home(request):
     LT_DEFAULT = LIMIT_TEAMS_CHOICES[0][0]  # 'all'
     SPN_DEFAULT = True
     SF_DEFAULT = False
+    HM_DEFAULT = False
 
     # time = request.session.get('time', TIME_DEFAULT)
     # rounds = request.session.get('rounds', ROUNDS_DEFAULT)
@@ -50,6 +51,7 @@ def home(request):
         'limit_teams': LT_DEFAULT,
         'shuffle_teams': SF_DEFAULT,
         'show_player_name': SPN_DEFAULT,
+        'hard_mode': HM_DEFAULT,
     })
 
     if not request.POST:
@@ -65,6 +67,7 @@ def home(request):
     limit_teams = form.cleaned_data['limit_teams']
     shuffle_teams = form.cleaned_data['shuffle_teams']
     show_player_name = form.cleaned_data['show_player_name']
+    hard_mode = form.cleaned_data['hard_mode']
 
     if (
         time not in [x[0] for x in TIME_CHOICES] or
@@ -86,9 +89,10 @@ def home(request):
         'limit_teams': limit_teams,
         'shuffle_teams': shuffle_teams,
         'show_player_name': show_player_name,
+        'hard_mode': hard_mode,
     }
 
-    (teams, players) = get_teams_and_players(limit_teams)
+    (teams, players) = get_teams_and_players(game_info)
 
     data = {
         'game_info': game_info,
@@ -138,8 +142,9 @@ def faq(request):
             'question': "Which players are there?",
             'answer': "Even though on <a href='"+tv_url+"'>Inside the NBA</a> "
             "they usually use lesser known players, here you have all of "
-            "them. I'm thinking about adding a <em>hard mode</em> with only "
-            "the weird ones for those looking for a challenge."
+            "them. Alternatively you can try playing in <em>hard mode</em> by "
+            "selecting it in the advanced options when you start. That way, "
+            "you'll only get the 50 least guessed players. It's a challenge."
         },
         {
             'id': "scores",

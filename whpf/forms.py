@@ -19,3 +19,4 @@ class GameForm(forms.Form):
     limit_teams = forms.ChoiceField(choices=LIMIT_TEAMS_CHOICES)
     shuffle_teams = forms.BooleanField(required=False)
     show_player_name = forms.BooleanField(required=False)
+    hard_mode = forms.BooleanField(required=False)

@@ -52,6 +52,12 @@
             {{ form.show_player_name }}
           </div>
 
+          <div class="form-group">
+            {{ form.hard_mode.errors }}
+            <label for="{{ form.hard_mode.id_for_label }}">Hard mode</label>
+            {{ form.hard_mode }}
+          </div>
+
           <input type="checkbox" id="advanced" name="advanced" />
         </div>
 

@@ -25,9 +25,12 @@ def player_to_dict(player):
     }
 
 
-def get_teams_and_players_database(limit_teams):
+def get_teams_and_players_database(game_info):
     players = []
     teams = []
+    limit_teams = game_info['limit_teams']
+    hard_mode = game_info['hard_mode']
+
     LIMIT_TEAMS = {
         '0': Team.objects.all(),
         '1': Team.objects.filter(division__conference__name='East'),
@@ -51,7 +54,18 @@ def get_teams_and_players_database(limit_teams):
         t = team_to_dict(team)
         teams.append(t)
 
-    for player in LIMIT_PLAYERS[limit_teams]:
+    players_qs = LIMIT_PLAYERS[limit_teams]
+    # 50 hardest players
+    if hard_mode:
+        players_qs = players_qs.extra(
+            select={
+                'percentage':
+                'cast(times_guessed_right as decimal) / times_guessed'
+            },
+            order_by=('percentage',)
+        )[:50]
+
+    for player in players_qs:
         p = player_to_dict(player)
         players.append(p)
 
@@ -96,7 +110,7 @@ def get_players_api():
     return j['resultSets'][0]['rowSet']
 
 
-def get_teams_and_players_api(limit_teams):
+def get_teams_and_players_api(game_info):
     LIMIT_TEAMS = {
         '0': ALL_TEAMS,
         '1': EAST_TEAMS,
@@ -116,6 +130,7 @@ def get_teams_and_players_api(limit_teams):
         "teams/primary/web/%s.svg"
 
     nba_players = get_players_api()
+    limit_teams = game_info['limit_teams']
     players = []
     teams = []
 
