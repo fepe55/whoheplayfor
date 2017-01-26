@@ -33,6 +33,38 @@
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"></script>
+    <script>
+      $('.clipboard').tooltip({
+        trigger: 'click',
+        placement: 'bottom'
+      });
+
+      function setTooltip(message) {
+        $('.clipboard').tooltip('hide')
+          .attr('data-original-title', message)
+          .tooltip('show');
+      }
+
+      function hideTooltip() {
+        setTimeout(function() {
+          $('.clipboard').tooltip('hide');
+        }, 1000);
+      }
+
+      var clipboard = new Clipboard('.clipboard');
+
+      clipboard.on('success', function(e) {
+        setTooltip('Copied!');
+        hideTooltip();
+      });
+
+      clipboard.on('error', function(e) {
+        setTooltip('Failed!');
+        hideTooltip();
+      });
+    </script>
+
 
     {% block js %}{% endblock %}
 
