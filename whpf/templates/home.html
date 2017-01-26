@@ -13,7 +13,7 @@
         <p>Based on the game <a href="{% url 'whpf:tv' %}">played on Inside The NBA</a>, comes the web version of <strong>Who He Play For?</strong></p>
         <p>Don't know how to play? Hit Start and I think you'll figure it out</p>
       </div>
-      <form method="POST" class="form" action="{% url 'whpf:home' %}">
+      <form method="POST" class="form" id="mainform" action="{% url 'whpf:home' %}">
         {% csrf_token %}
         <div class="advanced-options">
           {% if user.is_authenticated %}
@@ -52,7 +52,7 @@
             {{ form.show_player_name }}
           </div>
 
-          <div class="form-group">
+          <div class="form-group hide">
             {{ form.hard_mode.errors }}
             <label for="{{ form.hard_mode.id_for_label }}">Hard mode</label>
             {{ form.hard_mode }}
@@ -61,7 +61,14 @@
           <input type="checkbox" id="advanced" name="advanced" />
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg btn-block start-game">Start</button>
+        <div class="btn-group btn-group-justified start_game_buttons" role="group" aria-label="start game">
+          <div class="btn-group" role="group">
+            <button id="normal" class="btn btn-primary btn-lg start-game">Normal mode</button>
+          </div>
+          <div class="btn-group" role="group">
+            <button id="hard" class="btn btn-danger btn-lg start-game">Hard mode</button>
+          </div>
+        </div>
         <a class="show-advanced-options" href="#">Show advanced options</a>
 
       </form>
@@ -76,6 +83,19 @@
 {% block js %}
   <script>
     $("select").addClass("form-control");
+  </script>
+
+  <script>
+  $(".start_game_buttons button").click(function(e){
+    e.preventDefault();
+    if ($(this).prop('id') == 'hard'){
+      $("#id_hard_mode").prop("checked", true);
+    }
+    if ($(this).prop('id') == 'normal'){
+      $("#id_hard_mode").prop("checked", false);
+    }
+    $("#mainform").submit();
+  });
   </script>
 
   <script>
