@@ -192,14 +192,19 @@ def get_guesses(code):
 def get_difficulty(code):
     parsed_code = parse_code(code)
     difficulty = 0
+    hard_mode = parsed_code['hard_mode']
     show_player_name = parsed_code['show_player_name']
     shuffle_teams = parsed_code['shuffle_teams']
     time_limit = parsed_code['time_limit']
     limit_teams = parsed_code['limit_teams']
     total_rounds = parsed_code['total_rounds']
+    # Defaults
     if time_limit == 60 and total_rounds == 20 and limit_teams == 0 \
             and not shuffle_teams and show_player_name:
-        difficulty = 1
+        if hard_mode:
+            difficulty = 1.5
+        else:
+            difficulty = 1
     return difficulty
 
     # OLD Code
@@ -235,26 +240,50 @@ def get_score(code):
 
     parsed_code = parse_code(code)
     wrong_guesses += parsed_code['total_rounds'] - parsed_code['rounds_played']
-    score = (3*correct_guesses - wrong_guesses) * difficulty
+    score = int(round(difficulty * 3 * correct_guesses - wrong_guesses))
     # score = score*100 + parsed_code['time_left']
     return score
 
 
 def parse_code(code):
-    # code: show_player_name(1) + shuffle_teams(1) + limit_teams(2) +
-    # time_left(3) + time_limit(3) +
-    # rounds_played(3) + total_rounds(3) +
-    # n times (player_id(8), guess_id(2), correct_team_id(2))
-    show_player_name = code[:1] == '1'
-    shuffle_teams = code[1:2] == '1'
-    limit_teams = int(code[2:4])
-    time_left = int(code[4:7])
-    time_limit = int(code[7:10])
-    rounds_played = int(code[10:13])
-    total_rounds = int(code[13:16])
-    guesses = code[16:]
+    if code[0] == 'v':
+        # code: 'v' + version_number (3) + code
+        version = code[1:4]
+        if version == '001':
+            # code: hard_mode(1) + show_player_name(1) + shuffle_teams(1) +
+            # limit_teams(2) + time_left(3) + time_limit(3) +
+            # rounds_played(3) + total_rounds(3) +
+            # n times (player_id(8), guess_id(2), correct_team_id(2))
+            code = code[4:]
+
+            hard_mode = code[:1] == '1'
+            show_player_name = code[1:2] == '1'
+            shuffle_teams = code[2:3] == '1'
+            limit_teams = int(code[3:5])
+            time_left = int(code[5:8])
+            time_limit = int(code[8:11])
+            rounds_played = int(code[11:14])
+            total_rounds = int(code[14:17])
+            guesses = code[17:]
+
+    # LEGACY
+    else:
+        # LEGACY code: show_player_name(1) + shuffle_teams(1) +
+        # limit_teams(2) + time_left(3) + time_limit(3) +
+        # rounds_played(3) + total_rounds(3) +
+        # n times (player_id(8), guess_id(2), correct_team_id(2))
+        hard_mode = False
+        show_player_name = code[:1] == '1'
+        shuffle_teams = code[1:2] == '1'
+        limit_teams = int(code[2:4])
+        time_left = int(code[4:7])
+        time_limit = int(code[7:10])
+        rounds_played = int(code[10:13])
+        total_rounds = int(code[13:16])
+        guesses = code[16:]
 
     return {
+        'hard_mode': hard_mode,
         'show_player_name': show_player_name,
         'shuffle_teams': shuffle_teams,
         'time_left': time_left,

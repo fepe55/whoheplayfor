@@ -192,6 +192,7 @@
         'total_rounds': {{ game_info.rounds }},
         'round': 1,
         'guessed': 0,
+        'hard_mode': {% if game_info.hard_mode %} true {% else %} false {% endif %},
         'show_player_name': {% if game_info.show_player_name %} true {% else %} false {% endif %},
         'shuffle_teams': {% if game_info.shuffle_teams %} true {% else %} false {% endif %},
         'code': "",
@@ -257,8 +258,6 @@
       }
     };
 
-
-
     function advance_round(team, callback){
       game_status['round'] += 1;
       game_status['code'] += pad(player.nba_id.toString(), 8);
@@ -321,6 +320,12 @@
         game_status['code'] = '0' + game_status['code'];
       };
 
+      if (game_status['hard_mode']){
+        game_status['code'] = '1' + game_status['code'];
+      } else {
+        game_status['code'] = '0' + game_status['code'];
+      };
+
 
       // Random garbage
       var random_number = Math.floor(1+Math.random()*20);
@@ -328,14 +333,17 @@
         game_status['code'] += Math.floor(1+Math.random()*9).toString();
       };
 
-      //TODO: Obfuscate?
-      var code = game_status['code'];
-      var new_code = "";
-      var N = 10;
-      for (var i=0; i < code.length; i+=N){
-        slice = code.slice(i, i + N);
-        new_code += parseInt(slice).toString(16);
-      };
+      // Version number
+        game_status['code'] = 'v001' + game_status['code'];
+
+      // TODO: Obfuscate?
+      // var code = game_status['code'];
+      // var new_code = "";
+      // var N = 10;
+      // for (var i=0; i < code.length; i+=N){
+      //   slice = code.slice(i, i + N);
+      //   new_code += parseInt(slice).toString(16);
+      // };
 
       // Add an input to share the result
       input = $(".results input").val("{{ request|get_domain_url }}" + "results/" + game_status['code']);

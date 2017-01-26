@@ -142,16 +142,23 @@ def faq(request):
             'question': "Which players are there?",
             'answer': "Even though on <a href='"+tv_url+"'>Inside the NBA</a> "
             "they usually use lesser known players, here you have all of "
-            "them. Alternatively you can try playing in <em>hard mode</em> by "
-            "selecting it in the advanced options when you start. That way, "
-            "you'll only get the 50 least guessed players. It's a challenge."
+            "them.<br />Alternatively you can try <strong>playing in "
+            "<em>hard mode</em></strong> if you are looking for an extra "
+            "challenge. That way, you'll get players from a pool of the 50 "
+            "least guessed.<br />"
+            "As a reward, if you are logged in, your score will be multiplied "
+            "by 1,5 if you play in this mode. For more info, "
+            "<a class='inlinefaq' href='#scores'> check how the scores are "
+            "calculated</a>."
         },
         {
             'id': "scores",
             'question': "How are scores calculated?",
-            'answer': "<code>(3*correct_guesses - wrong_guesses)</code> "
-            "where <code>wrong_guesses</code> include not only the ones you "
-            "didn't guess right, but also the rounds you did not play.<br />"
+            'answer': "<code>(difficulty * 3 * correct_guesses - wrong_guesses"
+            ")</code> (rounded) where <code>wrong_guesses</code> include not "
+            "only the ones you didn't guess right, but also the rounds you "
+            "did not play. And <code>difficulty</code> is 1,5 if playing in "
+            "<em>hard mode</em>, 1 otherwise.<br />"
 
             "<strike>It's a work in progress, so it can change anytime. "
             "For now, it's simply "

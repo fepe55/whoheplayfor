@@ -26,6 +26,7 @@
       <h3>Game info</h3>
       <ul>
         {% if result %}<li>Date: {{ result.created }}</li>{% endif %}
+        <li>Hard mode: {{ parsed_code.hard_mode|yesno:"Enabled,Disabled" }}</li>
         <li>Players named shown: {{ parsed_code.show_player_name|yesno }}</li>
         <li>Shuffled teams: {{ parsed_code.shuffle_teams|yesno }}</li>
         <li>Time limit: {{ parsed_code.time_limit }} seconds</li>
