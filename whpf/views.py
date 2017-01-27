@@ -290,8 +290,12 @@ def scoreboard(request):
 
 
 def stats(request):
-    west_teams = Team.objects.filter(division__conference__name='West')
-    east_teams = Team.objects.filter(division__conference__name='East')
+    west_teams = Team.objects.filter(
+        division__conference__name='West'
+    ).order_by('-times_guessed_pct')
+    east_teams = Team.objects.filter(
+        division__conference__name='East'
+    ).order_by('-times_guessed_pct')
 
     players_guessed_right = Player.objects.exclude(times_guessed=0).order_by(
         '-times_guessed_pct'
