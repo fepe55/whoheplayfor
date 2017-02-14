@@ -86,7 +86,12 @@ def get_players_api():
     PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers"\
         "?IsOnlyCurrentSeason=1&LeagueID=00&Season=2016-17"
     try:
-        r = requests.get(PLAYERS_URL)
+        r = requests.get(PLAYERS_URL, headers={
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) '
+            'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 '
+            'Safari/537.36'
+        })
+
     except requests.exceptions.RequestException as e:
         print e
         return
