@@ -32,11 +32,11 @@ class Command(BaseCommand):
         # Player.all_players.update(active=False)
         start_time = timezone.now()
         print 'Starting at ', start_time
-        print 'Marking all players as being updated... ',
-        Player.all_players.update(being_updated=True)
-        print 'DONE'
         print 'Getting all the players from the API... ',
         nba_players = get_players_api()
+        print 'DONE'
+        print 'Marking all players as being updated... ',
+        Player.all_players.update(being_updated=True)
         print 'DONE'
         if not nba_players:
             print "Error with NBA.com"
