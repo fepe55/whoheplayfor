@@ -1,6 +1,7 @@
 # coding=utf-8
 import time
 import requests
+from sys import stdout
 
 from django.utils import timezone
 from django.core.management.base import BaseCommand
@@ -31,11 +32,13 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Player.all_players.update(active=False)
         start_time = timezone.now()
-        print 'Starting at ', start_time
+        print 'Starting at', start_time
         print 'Getting all the players from the API... ',
+        stdout.flush()
         nba_players = get_players_api()
         print 'DONE'
         print 'Marking all players as being updated... ',
+        stdout.flush()
         Player.all_players.update(being_updated=True)
         print 'DONE'
         if not nba_players:
@@ -94,9 +97,11 @@ class Command(BaseCommand):
                     p.save()
                 else:
                     print 'error with', p, '++++++++++++++++++++++++++++'
+                    errors.apend({'player': p, 'error': r.status_code})
+
             except requests.exceptions.RequestException as e:
                 print e
-                errors.apend(p)
+                errors.apend({'player': p, 'error': e})
 
             # Sleep to avoid a possible anti-throttling from the server
             time.sleep(2)
@@ -117,8 +122,8 @@ class Command(BaseCommand):
 
         if errors:
             print "ERRORS"
-            for player in errors:
-                print player
+            for error in errors:
+                print error['player'], error['error']
             print
         if faceless:
             print "FACELESS"
