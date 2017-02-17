@@ -7,7 +7,7 @@ from django.utils import (formats, timezone, )
 from django.shortcuts import (render, get_object_or_404, )
 from django.core.urlresolvers import reverse
 
-from .models import (Result, Player, Team, Options)
+from .models import (Result, Player, Team, Options, Play, PlaySetting)
 from .forms import (GameForm,
                     TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES, )
 from .helpers import (parse_code, get_score, get_guesses,
@@ -104,6 +104,16 @@ def home(request):
         data['west'] = teams[15:]
         data['east'] = teams[:15]
 
+    p = Play()
+    if request.user.is_authenticated():
+        p.player = request.user
+    p.save()
+
+    for item in game_info:
+        PlaySetting.objects.create(
+            play=p, name=item, value=str(game_info[item])
+        )
+    request.session['play_id'] = p.id
     return render(request, 'whpf.html', data)
 
 
@@ -315,7 +325,16 @@ def stats(request):
 
 def score(request, code):
     if request.is_ajax():
-        to_json = {'score': get_score(code), }
+
+        score = get_score(code)
+        play_id = request.session['play_id']
+        if Play.objects.filter(id=play_id).exists():
+            p = Play.objects.get(id=play_id)
+            p.code = code
+            p.score = score
+            p.finished = True
+            p.save()
+        to_json = {'score': score, }
         return HttpResponse(json.dumps(to_json),
                             content_type='application/json')
     else:

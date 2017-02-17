@@ -143,3 +143,17 @@ class Result(ModelWithDates):
 
     class Meta:
         ordering = ['-score', ]
+
+
+class Play(ModelWithDates):
+    player = models.ForeignKey(User, blank=True, null=True)
+    code = models.TextField()
+    score = models.IntegerField(default=0)
+    finished = models.BooleanField(default=False)
+    legacy = models.BooleanField(default=False)
+
+
+class PlaySetting(models.Model):
+    name = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+    play = models.ForeignKey(Play)
