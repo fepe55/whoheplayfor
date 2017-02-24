@@ -54,8 +54,15 @@ def home(request):
         'hard_mode': HM_DEFAULT,
     })
 
+    players_guessed_wrong = Player.objects.exclude(times_guessed=0).order_by(
+        'times_guessed_pct'
+    )[:3]
+
     if not request.POST:
-        return render(request, "home.html", {'form': form, })
+        return render(request, "home.html", {
+            'form': form,
+            'players_guessed_wrong': players_guessed_wrong,
+        })
 
     form = GameForm(request.POST)
 

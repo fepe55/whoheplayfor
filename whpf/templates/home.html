@@ -9,7 +9,7 @@
       {% endif %}
       <h1>Start a new game</h1>
       <div class="intro">
-        <p>Do you know where does Tony Wroten play? And Willie Green? Chase Budinger?</p>
+        <p>Do you know where does {{ players_guessed_wrong.0 }} play? And {{ players_guessed_wrong.1 }}? {{ players_guessed_wrong.2 }}?</p>
         <p>Based on the game <a href="{% url 'whpf:tv' %}">played on Inside The NBA</a>, comes the web version of <strong>Who He Play For?</strong></p>
         <p>Don't know how to play? Hit Start and I think you'll figure it out</p>
       </div>
