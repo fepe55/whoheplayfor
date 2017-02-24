@@ -73,7 +73,7 @@
 
       </form>
       {% if last_roster_update %}
-        <p class="muted text-right">Rosters updated as of <strong>{{ last_roster_update }}</strong></p>
+      <p class="muted text-right">Rosters updated as of <strong>{{ last_roster_update }}</strong><br /><a href="{% url 'whpf:home' %}"><strong>Who He Play For?</strong></a> has been played <strong>{{ total_plays }}</strong> times</p>
       {% endif %}
     </div>
   </div>

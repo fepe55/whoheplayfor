@@ -57,17 +57,23 @@ def home(request):
     players_guessed_wrong = Player.objects.exclude(times_guessed=0).order_by(
         'times_guessed_pct'
     )[:3]
+    total_plays = Play.objects.count()
 
     if not request.POST:
         return render(request, "home.html", {
             'form': form,
             'players_guessed_wrong': players_guessed_wrong,
+            'total_plays': total_plays,
         })
 
     form = GameForm(request.POST)
 
     if not form.is_valid():
-        return render(request, "home.html", {'form': form, })
+        return render(request, "home.html", {
+            'form': form,
+            'players_guessed_wrong': players_guessed_wrong,
+            'total_plays': total_plays,
+        })
 
     time = int(form.cleaned_data['time'])
     rounds = int(form.cleaned_data['rounds'])
