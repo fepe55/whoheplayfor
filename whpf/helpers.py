@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import requests
+import json
 from .teams import (ALL_TEAMS, EAST_TEAMS, WEST_TEAMS,
                     PLAYOFF_TEAMS_2016, FINALS_TEAMS_2016)
 from .models import (Player, Team, )
@@ -96,23 +97,32 @@ def get_players_api():
         'referer': 'http://stats.nba.com/scores/'
     }
 
-    try:
-        r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS)
+    import os.path
+    import os
+    filename = 'players.json'
+    if os.path.isfile(filename):
+        with open(filename) as players_file:
+            j = json.load(players_file)
+        # We delete it so we don't use it again by mistake
+        os.remove(filename)
+    else:
+        try:
+            r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS)
 
-    except requests.exceptions.RequestException as e:
-        print e
-        return
+        except requests.exceptions.RequestException as e:
+            print e
+            return
 
-    try:
-        j = r.json()
-        # dt = datetime.today().date()
-        # filename = dt.strftime("%Y%m%d") + ".json"
-        # with open(filename, 'w') as f:
-        #     f.write(r.text)
-    except ValueError:
-        print "There's been a problem fetching info from NBA.com"
-        return
-        # raise Http404("There's been a problem fetching info from NBA.com")
+        try:
+            j = r.json()
+            # dt = datetime.today().date()
+            # filename = dt.strftime("%Y%m%d") + ".json"
+            # with open(filename, 'w') as f:
+            #     f.write(r.text)
+        except ValueError:
+            print "There's been a problem fetching info from NBA.com"
+            return
+            # raise Http404("There's been a problem getting info from NBA.com")
 
     return j['resultSets'][0]['rowSet']
 
