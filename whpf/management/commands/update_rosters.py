@@ -97,11 +97,11 @@ class Command(BaseCommand):
                     p.save()
                 else:
                     print 'error with', p, '++++++++++++++++++++++++++++'
-                    errors.apend({'player': p, 'error': r.status_code})
+                    errors.append({'player': p, 'error': r.status_code})
 
             except requests.exceptions.RequestException as e:
                 print e
-                errors.apend({'player': p, 'error': e})
+                errors.append({'player': p, 'error': e})
 
             # Sleep to avoid a possible anti-throttling from the server
             time.sleep(2)
