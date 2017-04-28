@@ -24,7 +24,17 @@ PLAYOFF_TEAMS_2016 = [
     'raptors', 'pacers',
 ]
 
-
 FINALS_TEAMS_2016 = [
     'warriors', 'cavaliers',
+]
+
+PLAYOFF_TEAMS_2017 = [
+    'warriors', 'blazers',
+    'clippers', 'jazz',
+    'rockets', 'thunder',
+    'spurs', 'grizzlies',
+    'celtics', 'bulls',
+    'wizards', 'hawks',
+    'raptors', 'bucks',
+    'cavaliers', 'pacers',
 ]

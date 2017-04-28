@@ -2,7 +2,8 @@
 import requests
 import json
 from .teams import (ALL_TEAMS, EAST_TEAMS, WEST_TEAMS,
-                    PLAYOFF_TEAMS_2016, FINALS_TEAMS_2016)
+                    PLAYOFF_TEAMS_2016, FINALS_TEAMS_2016,
+                    PLAYOFF_TEAMS_2017, )
 from .models import (Player, Team, )
 
 
@@ -38,6 +39,7 @@ def get_teams_and_players_database(game_info):
         '2': Team.objects.filter(division__conference__name='West'),
         '3': Team.objects.filter(code__in=PLAYOFF_TEAMS_2016),
         '4': Team.objects.filter(code__in=FINALS_TEAMS_2016),
+        '5': Team.objects.filter(code__in=PLAYOFF_TEAMS_2017),
     }
     LIMIT_PLAYERS = {
         '0': Player.objects.all(),
@@ -49,6 +51,7 @@ def get_teams_and_players_database(game_info):
         ),
         '3': Player.objects.filter(team__code__in=PLAYOFF_TEAMS_2016),
         '4': Player.objects.filter(team__code__in=FINALS_TEAMS_2016),
+        '5': Player.objects.filter(team__code__in=PLAYOFF_TEAMS_2017),
     }
 
     for team in LIMIT_TEAMS[limit_teams]:
@@ -134,6 +137,7 @@ def get_teams_and_players_api(game_info):
         '2': WEST_TEAMS,
         '3': PLAYOFF_TEAMS_2016,
         '4': FINALS_TEAMS_2016,
+        '5': PLAYOFF_TEAMS_2017,
     }
 
     # PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/img/"\
