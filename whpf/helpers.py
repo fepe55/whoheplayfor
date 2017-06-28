@@ -91,7 +91,7 @@ def get_players_api():
     PARAMS = {
         'IsOnlyCurrentSeason': 1,
         'LeagueID': "00",
-        'Season': "2016-17"
+        'Season': "2017-18"
     }
     HEADERS = {
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) '
