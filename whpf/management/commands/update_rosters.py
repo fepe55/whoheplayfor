@@ -39,11 +39,11 @@ class Command(BaseCommand):
         print 'DONE'
         print 'Marking all players as being updated... ',
         stdout.flush()
-        Player.all_players.update(being_updated=True)
-        print 'DONE'
         if not nba_players:
             print "Error with NBA.com"
             return
+        Player.all_players.update(being_updated=True)
+        print 'DONE'
         for p in nba_players:
             # I'm guessing teams never change. if they do, all hell breaks
             # loose... or I just change a thing or two
@@ -97,6 +97,8 @@ class Command(BaseCommand):
                     p.save()
                 else:
                     print 'error with', p, '++++++++++++++++++++++++++++'
+                    p.faceless = True
+                    p.save()
                     errors.append({'player': p, 'error': r.status_code})
 
             except requests.exceptions.RequestException as e:
