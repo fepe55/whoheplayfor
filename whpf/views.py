@@ -57,6 +57,10 @@ def home(request):
     players_guessed_wrong = Player.objects.exclude(times_guessed=0).order_by(
         'times_guessed_pct'
     )[:3]
+
+    # Weird behaviour of the Django ORM otherwise
+    # players_guessed_wrong[0] returns the same as players_guessed_wrong[1]
+    players_guessed_wrong = list(players_guessed_wrong)
     total_plays = Play.objects.count()
 
     if not request.POST:
