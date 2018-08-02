@@ -44,35 +44,70 @@ class Command(BaseCommand):
             return
         Player.all_players.update(being_updated=True)
         print 'DONE'
+        # for p in nba_players:
+        #     # I'm guessing teams never change. if they do, all hell breaks
+        #     # loose... or I just change a thing or two
+        #     if not p[7]:
+        #         continue
+        #     team = Team.objects.get(nba_id=p[7])
+        #     player_qs = Player.all_players.filter(nba_id=p[0])
+        #     # If there is a player with that ID, we update it
+        #     if player_qs.exists():
+        #         # There SHOULD only be one.
+        #         # player = player_qs.get()
+        #         print "update", p[2]
+        #         player_qs.update(
+        #             name=p[2],
+        #             team=team,
+        #             code=p[6],
+        #             being_updated=False,
+        #         )
+
+        #     # If there isn't a player with that ID, we create it
+        #     else:
+        #         Player.all_players.create(
+        #             nba_id=p[0],
+        #             name=p[2],
+        #             team=team,
+        #             code=p[6],
+        #             being_updated=False,
+        #         )
+        #         print "create", p[2]
+
         for p in nba_players:
             # I'm guessing teams never change. if they do, all hell breaks
             # loose... or I just change a thing or two
-            if not p[7]:
-                continue
-            team = Team.objects.get(nba_id=p[7])
-            player_qs = Player.all_players.filter(nba_id=p[0])
+            # IF NOT TEAM?
+            # if not p[7]:
+            #     continue
+            team = Team.objects.get(code=p['teamData']['urlName'])
+            nba_id = int(p['personId'])
+            name = '{} {}'.format(p['firstName'], p['lastName'])
+            code = name.replace(' ', '_').lower()
+            player_qs = Player.all_players.filter(nba_id=nba_id)
             # If there is a player with that ID, we update it
             if player_qs.exists():
                 # There SHOULD only be one.
                 # player = player_qs.get()
-                print "update", p[2]
+                print 'updating {}'.format(name)
+
                 player_qs.update(
-                    name=p[2],
+                    name=name,
                     team=team,
-                    code=p[6],
+                    code=code,
                     being_updated=False,
                 )
 
             # If there isn't a player with that ID, we create it
             else:
                 Player.all_players.create(
-                    nba_id=p[0],
-                    name=p[2],
+                    nba_id=nba_id,
+                    name=name,
                     team=team,
-                    code=p[6],
+                    code=code,
                     being_updated=False,
                 )
-                print "create", p[2]
+                print 'created {}'.format(name)
 
         # Lastly, we find the faceless-ones
 
@@ -89,14 +124,14 @@ class Command(BaseCommand):
                 if r.status_code == 200:
                     p.faceless = False
                     p.save()
-                    print p, 'has a face!'
+                    print('{} has a face'.format(p))
                 elif r.status_code == 404:
-                    print p, 'has no face ------------------------------'
+                    print('{} has no face -------------------------'.format(p))
                     faceless.append(p)
                     p.faceless = True
                     p.save()
                 else:
-                    print 'error with', p, '++++++++++++++++++++++++++++'
+                    print('error with {} ({}) ++++++'.format(p, r.status_code))
                     p.faceless = True
                     p.save()
                     errors.append({'player': p, 'error': r.status_code})

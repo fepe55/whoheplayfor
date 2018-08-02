@@ -87,12 +87,14 @@ def get_players_api():
     #     dt = dt - timedelta(days=1)
     #     tries_left -= 1
 
-    PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers/"
-    PARAMS = {
-        'IsOnlyCurrentSeason': 1,
-        'LeagueID': "00",
-        'Season': "2017-18"
-    }
+    # PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers/"
+    # PARAMS = {
+    #     'IsOnlyCurrentSeason': 1,
+    #     'LeagueID': "00",
+    #     'Season': "2017-18"
+    # }
+    PARAMS = {}
+    PLAYERS_URL = "http://www.nba.com/players/active_players.json"
     HEADERS = {
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) '
         'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 '
@@ -127,9 +129,11 @@ def get_players_api():
             return
             # raise Http404("There's been a problem getting info from NBA.com")
 
-    return j['resultSets'][0]['rowSet']
+    # return j['resultSets'][0]['rowSet']
+    return j
 
 
+# Deprecated
 def get_teams_and_players_api(game_info):
     LIMIT_TEAMS = {
         '0': ALL_TEAMS,
