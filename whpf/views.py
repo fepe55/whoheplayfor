@@ -135,7 +135,11 @@ def home(request):
 
 
 def tv(request):
-    videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
+    # videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
+    videos = [
+        '5RbwsW_xDhE', 'kFt9M1ZzsEg', 'cRoHd1EIexs', 'zzfkvmobsoc',
+        'nvZt5d8RFr0', 'KbatKgTdRkM',
+    ]
     return render(request, "tv.html", {'videos': videos})
 
 
