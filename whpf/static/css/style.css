@@ -216,6 +216,13 @@ input#name-search::placeholder {
   height: 80px;
 }
 
+@media(max-width:550px) {
+  .past-guesses img,
+  .result-guesses img{
+    height: 60px;
+  }
+}
+
 .results,
 .fail_results{
   display: none;
