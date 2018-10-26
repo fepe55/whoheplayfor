@@ -7,6 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
+    <meta name="description" content="Based on the game played on Inside The NBA, comes the web version of Who He Play For?">
+
+    <meta property="og:title" content="Who He Play For?" />
+    <meta property="og:description" content="Based on the game played on Inside The NBA, comes the web version of Who He Play For?">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}">
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+
+
     {% include "favicons.html" %}
 
     <title>Who He Play For?</title>
