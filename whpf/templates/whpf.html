@@ -31,20 +31,29 @@
     <div class="row">
       <div class="col-md-12 text-center">
         <h3 class="your-guess">Your guess</h3>
+
+        <div class="col-md-6 col-md-offset-3 visible-lg visible-md name-search-div">
+          <div class="input-group">
+            <input type="text" id="name-search" class="form-control input-lg" placeholder="Type and hit Enter when there's one team left"/>
+            <span class="input-group-addon remaining-teams">30</span>
+
+          </div>
+        </div>
+
         <div id="teams" class="row">
         {% if west and east %}
 
           <div class="col-sm-6 conference">
           {% for team in west %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
-              <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+              <img data-toggle="tooltip" data-title="{{ team.city|lower }} {{ team.name|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
           {% endfor %}
           </div>
           <div class="col-sm-6 conference">
           {% for team in east %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
-              <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+              <img data-toggle="tooltip" data-title="{{ team.city|lower }} {{ team.name|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
           {% endfor %}
           </div>
@@ -53,7 +62,7 @@
           <div class="col-md-12 all-together">
           {% for team in teams %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
-              <img data-toggle="tooltip" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+              <img data-toggle="tooltip" data-title="{{ team.city|lower }} {{ team.name|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
           {% endfor %}
           </div>
@@ -260,6 +269,12 @@
       $(".player-name").html(player.name);
       $(".player-picture").css("background-image", "url('" + player.picture + "')");
 
+      // Reset the filter
+      $("span.remaining-teams").text(30);
+      $("#name-search").val("");
+      $("#name-search").focus();
+      $("img.team-picture").css("opacity", 1);
+
       if (total == game_status['total_rounds']){
         end_game();
       }
@@ -465,6 +480,43 @@
         xhr.setRequestHeader("X-CSRFToken", csrftoken);
       }
     }
+  });
+  </script>
+
+  <script>
+  $("#name-search").on("keyup", function(e){
+    var val = $(this).val().toLowerCase();
+    var all_teams = $("img.team-picture");
+    var remaining_teams_span = $("span.remaining-teams");
+
+    if (!val){
+      all_teams.css("opacity", 1);
+      remaining_teams_span.text(30);
+    } else {
+      var teams_matching = all_teams.filter('[data-title*="' + val + '"]');
+      var remaining_teams = teams_matching.length;
+      remaining_teams_span.text(remaining_teams);
+
+      all_teams.not(teams_matching).css("opacity", 0.2);
+      teams_matching.css("opacity", 1);
+
+      if (e.keyCode == 13){
+        if (remaining_teams == 1){
+          teams_matching.click();
+          remaining_teams_span.text(30);
+          $(this).val("");
+          $(this).focus();
+        } else {
+          remaining_teams_span.animate({opacity:0}, 100, "linear", function(){
+            $(this).animate({opacity:1}, 100, "linear", function(){
+              $(this).animate({opacity:0}, 100, "linear", function(){
+                $(this).animate({opacity:1}, 100)
+              })
+            });
+          });
+        }
+      };
+    };
   });
   </script>
 
