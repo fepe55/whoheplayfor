@@ -270,6 +270,7 @@
       $(".player-picture").css("background-image", "url('" + player.picture + "')");
 
       // Reset the filter
+      $("span.remaining-teams").removeClass("success");
       $("span.remaining-teams").text(30);
       $("#name-search").val("");
       $("#name-search").focus();
@@ -499,18 +500,24 @@
 
       all_teams.not(teams_matching).css("opacity", 0.2);
       teams_matching.css("opacity", 1);
+      if (remaining_teams == 1){
+        remaining_teams_span.addClass("success");
+      } else {
+        remaining_teams_span.removeClass("success");
+      }
+
 
       if (e.keyCode == 13){
         if (remaining_teams == 1){
           teams_matching.click();
-          remaining_teams_span.text(30);
-          $(this).val("");
-          $(this).focus();
         } else {
-          remaining_teams_span.animate({opacity:0}, 100, "linear", function(){
+          remaining_teams_span.addClass("danger");
+          remaining_teams_span.stop(true, false).animate({opacity:0}, 100, "linear", function(){
             $(this).animate({opacity:1}, 100, "linear", function(){
               $(this).animate({opacity:0}, 100, "linear", function(){
-                $(this).animate({opacity:1}, 100)
+                $(this).animate({opacity:1}, 100, "linear", function(){
+                  remaining_teams_span.removeClass("danger");
+                })
               })
             });
           });
