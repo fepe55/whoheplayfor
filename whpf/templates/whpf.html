@@ -501,14 +501,30 @@
       all_teams.not(teams_matching).css("opacity", 0.2);
       teams_matching.css("opacity", 1);
       if (remaining_teams == 1){
+        all_teams.not(teams_matching).hide();
+        teams_matching.css({
+          "position": "fixed",
+          "width": "20%",
+          "left": "40%",
+        });
         remaining_teams_span.addClass("success");
       } else {
+        all_teams.css({
+          "position": "static",
+          "width": "18%",
+        });
+        all_teams.show();
         remaining_teams_span.removeClass("success");
       }
 
 
       if (e.keyCode == 13){
         if (remaining_teams == 1){
+          all_teams.css({
+            "position": "static",
+            "width": "18%",
+          });
+          all_teams.show();
           teams_matching.click();
         } else {
           remaining_teams_span.addClass("danger");
