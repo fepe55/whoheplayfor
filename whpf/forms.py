@@ -8,9 +8,9 @@ LIMIT_TEAMS_CHOICES = [
     ('0', 'All teams'),
     ('1', 'East teams'),
     ('2', 'West teams'),
-    ('3', '2016 Playoff teams'),
-    ('4', '2016 Finals'),
-    ('5', '2017 Playoff teams'),
+    ('3', '2016 Playoff teams (Current rosters)'),
+    ('4', '2016 Finals (Current rosters)'),
+    ('5', '2017 Playoff teams (Current rosters)'),
 ]
 
 
