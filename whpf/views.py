@@ -307,15 +307,21 @@ def scoreboard(request):
     last7d = Result.objects.filter(
         created__gte=timezone.now() - timedelta(days=7)
     )
+    last365d = Result.objects.filter(
+        created__gte=timezone.now() - timedelta(days=365)
+    )
+
     results = Result.objects.all()[:100]
 
     scoreboard_last24h = get_scoreboard(last24h)
     scoreboard_last7d = get_scoreboard(last7d)
+    scoreboard_last365d = get_scoreboard(last365d)
     scoreboard_global = get_scoreboard(results)
 
     return render(request, 'scoreboard.html', {
         'scoreboard_last24h': scoreboard_last24h,
         'scoreboard_last7d': scoreboard_last7d,
+        'scoreboard_last365d': scoreboard_last365d,
         'scoreboard_global': scoreboard_global,
     })
 

@@ -26,6 +26,13 @@
   </div>
   {% endif %}
 
+  {% if scoreboard_last365d %}
+  <div class="row" id="global">
+    <h2>Last 365 days</h2>
+    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last365d %}
+  </div>
+  {% endif %}
+
   <div class="row" id="global">
     <h2>All time</h2>
     {% include "scoreboard_aux.html" with scoreboard=scoreboard_global %}
