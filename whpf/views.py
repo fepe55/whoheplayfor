@@ -234,13 +234,18 @@ def faq(request):
         },
         {
             'id': 'contact',
-            'question': "I have a question/suggestion/complaint, how can I "
-            "contact you?",
+            'question': "I have a question / suggestion / complaint, how can "
+            "I contact you?",
             'answer': "If what you want is not covered in this FAQ, you can "
             "find me at <a href='https://reddit.com/u/fepe55'>"
             "<i class='fa fa-reddit-alien'></i> /u/fepe55</a> and "
             "<a href='https://twitter.com/fepe55/'>"
-            "<i class='fa fa-twitter'></i> fepe55</a>."
+            "<i class='fa fa-twitter'></i> fepe55</a>.<br/>"
+            "If you want to know something about the code behind this, you "
+            "can take a look at this project on "
+            "<a href='https://github.com/fepe55/whoheplayfor'> "
+            "<i class='fa fa-github'></i> GitHub</a>. And feel free to open "
+            "an issue there if you see something wrong."
         },
     ]
 
