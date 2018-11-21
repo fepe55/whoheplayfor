@@ -218,10 +218,19 @@ def faq(request):
             'answer': "They are updated as of " + last_roster_update
         },
         {
+            'id': 'sourcecode',
+            'question': 'What technology did you use to build this?',
+            'answer': "It's mainly built with Python and JavaScript, running "
+            "on <a href='https://www.djangoproject.com/'>Django Framework</a>."
+            "<br/>If you want more info, the whole source-code is released "
+            "open source on <a href='https://github.com/fepe55/whoheplayfor'>"
+            "<i class='fa fa-github'></i> GitHub</a>."
+        },
+        {
             'id': 'shoutouts',
             'question': "Shout-outs",
             'answer': "For helping me with tips, testing, and more, "
-            "shout-outs to Jess, SR, Alex Ntale, German, Duckie and Mora"
+            "shout-outs to Jess, SR, Alex Ntale, German, Duckie and Mora."
         },
         {
             'id': 'contact',
@@ -230,8 +239,8 @@ def faq(request):
             'answer': "If what you want is not covered in this FAQ, you can "
             "find me at <a href='https://reddit.com/u/fepe55'>"
             "<i class='fa fa-reddit-alien'></i> /u/fepe55</a> and "
-            "at <a href='https://twitter.com/fepe55/'>"
-            "<i class='fa fa-twitter'></i> @fepe55</a>."
+            "<a href='https://twitter.com/fepe55/'>"
+            "<i class='fa fa-twitter'></i> fepe55</a>."
         },
     ]
 
