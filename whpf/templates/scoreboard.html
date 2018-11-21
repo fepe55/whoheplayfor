@@ -8,6 +8,10 @@
     {% if scoreboard_last7d %}
       <li><a href="#last7d">Last 7 days</a></li> |
     {% endif %}
+    {% if scoreboard_last365d %}
+      <li><a href="#last365d">Last 365 days</a></li> |
+    {% endif %}
+
     <li><a href="#global">All time</a></li>
   </ul>
   {% endif %}
@@ -27,7 +31,7 @@
   {% endif %}
 
   {% if scoreboard_last365d %}
-  <div class="row" id="global">
+  <div class="row" id="last365d">
     <h2>Last 365 days</h2>
     {% include "scoreboard_aux.html" with scoreboard=scoreboard_last365d %}
   </div>
