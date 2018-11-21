@@ -17,9 +17,6 @@ body{
   background-repeat: repeat-x;
   border-color: #080808;
   background-color: #222;
-}
-
-.footer .social{
   line-height: 40px;
   color: #999;
 }
@@ -29,8 +26,16 @@ body{
 }
 
 .footer .social a{
-  color: #999;
   padding: 0 5px;
+}
+
+.footer a{
+  color: #999;
+  opacity: 0.8;
+}
+
+.footer a:hover{
+  opacity: 1;
 }
 
 @media(max-width:767px){
