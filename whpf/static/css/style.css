@@ -10,6 +10,13 @@ body{
   padding-bottom: 50px;  /* to account for the footer */
 }
 
+@media(max-width:550px) {
+  .rosters-usage-info{
+    margin-top: 20px;
+    text-align: left;
+  }
+}
+
 .footer {
   height: 40px;
   width: 100%;
@@ -310,7 +317,6 @@ input#name-search::placeholder {
   }
 }
 
-
 .faq, .home{
   background-color: rgba(255, 255, 255, 0.6);
   padding: 15px;
@@ -319,4 +325,3 @@ input#name-search::placeholder {
 #faq .question p{
   line-height: 1.8;
 }
-
