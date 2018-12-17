@@ -73,8 +73,27 @@
 
       </form>
       {% if last_roster_update %}
-      <p class="muted text-right rosters-usage-info">Rosters updated as of <strong>{{ last_roster_update }}</strong><br /><a href="{% url 'whpf:home' %}"><strong>Who He Play For?</strong></a> has been played <strong>{{ total_plays }}</strong> times</p>
+        <p class="muted text-right rosters-usage-info">Rosters updated as of <strong>{{ last_roster_update }}</strong><br /><a href="{% url 'whpf:home' %}"><strong>Who He Play For?</strong></a> has been played <strong>{{ total_plays }}</strong> times</p>
       {% endif %}
+    </div>
+  </div>
+  <div class="row home" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <div id="disqus_thread"></div>
+      <script>
+
+       var disqus_config = function () {
+         this.page.url = "{{ request.build_absolute_uri }}";
+         this.page.identifier = "home";
+       };
+      (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://whoheplayfor.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
   </div>
 
