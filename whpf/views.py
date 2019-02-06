@@ -292,26 +292,27 @@ def results(request, code):
 def get_scoreboard(qs):
     if not qs:
         return []
-    # The limit to search players for score
-    SOFT_LIMIT = 50
     # The limit after being sorted also by time left
     HARD_LIMIT = 25
 
-    results = []
+    results = list(qs)
+    results = sorted(
+        results, key=lambda x: x.parsed_code['time_left'], reverse=True
+    )
+    results = sorted(results, key=lambda x: x.score, reverse=True)
+
+    final_results = []
     users = []
 
-    for r in qs:
+    # From every result, we only leave one per user. And since it's already
+    # sorted by score, we'll only leave their best one
+    for r in results:
         if r.user not in users:
             users.append(r.user)
-            results.append(r)
-        if len(results) > SOFT_LIMIT:
-            break
+            final_results.append(r)
 
-    results = sorted(results, key=lambda x: x.parsed_code['time_left'],
-                     reverse=True)
-    results = sorted(results, key=lambda x: x.score, reverse=True)
-    results = results[:HARD_LIMIT]
-    return results
+    final_results = final_results[:HARD_LIMIT]
+    return final_results
 
 
 def scoreboard(request):
