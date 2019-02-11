@@ -2,7 +2,14 @@
 <div class="row" style="margin-bottom: 20px;">
   <div class="col-xs-6 vcenter">
     <div class="text-center">
+      {% if item.stats_url %}
+      <a href="{{ item.stats_url }}">
+      {% endif %}
       <img src="{{ item.picture }}" alt="{{ item.city }} {{ item.name }}" style="height: 50px;" data-toggle="tooltip" data-placement="bottom" title="{{ item.city }} {{ item.name }}" />
+      {% if item.stats_url %}
+      </a>
+      {% endif %}
+
     </div>
   </div><!--
   --><div class="col-xs-6 vcenter" data-toggle="tooltip" data-placement="bottom" title="Right: {{ item.times_guessed_right }}. Wrong: {{ item.times_guessed_wrong }}">

@@ -365,6 +365,25 @@ def stats(request):
     })
 
 
+def stats_team(request, team_code):
+    team = get_object_or_404(Team, code=team_code)
+
+    team_players = Player.objects.filter(team=team)
+    players_guessed_right = team_players.exclude(times_guessed=0).order_by(
+        '-times_guessed_pct'
+    )[:15]
+
+    players_guessed_wrong = team_players.exclude(times_guessed=0).order_by(
+        'times_guessed_pct'
+    )[:15]
+
+    return render(request, 'stats_team.html', {
+        'team': team,
+        'players_guessed_right': players_guessed_right,
+        'players_guessed_wrong': players_guessed_wrong,
+    })
+
+
 def score(request, code):
     if request.is_ajax():
 

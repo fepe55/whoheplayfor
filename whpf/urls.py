@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^scoreboard/$', views.scoreboard, name='scoreboard'),
     url(r'^score/(?P<code>\w+)/$', views.score, name='score'),
     url(r'^stats/$', views.stats, name='stats'),
+    url(r'^stats/(?P<team_code>\w+)/$', views.stats_team, name='stats_team'),
     url(r'^right_guess/(?P<pid>\w+)/$', views.right_guess, name='right_guess'),
     url(r'^wrong_guess/(?P<pid>\w+)/$', views.wrong_guess, name='wrong_guess'),
 ]

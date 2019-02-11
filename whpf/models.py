@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import uuid
 
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from .managers import PlayerManager
@@ -64,6 +65,9 @@ class Team(ModelWithDates):
         TEAM_PICTURE_URL = "https://i.cdn.turner.com/nba/nba/assets/logos/"\
             "teams/primary/web/%s.svg"
         return TEAM_PICTURE_URL % self.abbreviation
+
+    def stats_url(self):
+        return reverse('whpf:stats_team', kwargs={'team_code': self.code, })
 
     def __unicode__(self):
         return "%s %s" % (self.city, self.name, )

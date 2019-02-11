@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <h1><img src="{{ team.picture }}" style="height: 70px;" />{{ team }}</h1>
+  <div class="row">
+    <div class="col-md-6 col-sm-6 col-xs-12">
+    <h3 id="wrong">Least guessed</h2>
+    {% include 'stats_aux.html' with list=players_guessed_wrong %}
+    </div>
+
+    <div class="col-md-6 col-sm-6 col-xs-12">
+    <h3 id="right">Most guessed</h2>
+    {% include 'stats_aux.html' with list=players_guessed_right %}
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+{% endblock %}
