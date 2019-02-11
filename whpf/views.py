@@ -372,7 +372,7 @@ def stats_team(request, team_code):
         times_guessed=0
     ).order_by('-times_guessed_pct')
     players_count = team_players.count()
-    half_point = (players_count + 1) / 2
+    half_point = players_count / 2
 
     # The first half are guessed right
     players_guessed_right = team_players[:half_point]
