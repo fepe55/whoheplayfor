@@ -368,14 +368,16 @@ def stats(request):
 def stats_team(request, team_code):
     team = get_object_or_404(Team, code=team_code)
 
-    team_players = Player.objects.filter(team=team)
-    players_guessed_right = team_players.exclude(times_guessed=0).order_by(
-        '-times_guessed_pct'
-    )[:15]
+    team_players = Player.objects.filter(team=team).exclude(
+        times_guessed=0
+    ).order_by('-times_guessed_pct')
+    players_count = team_players.count()
+    half_point = (players_count + 1) / 2
 
-    players_guessed_wrong = team_players.exclude(times_guessed=0).order_by(
-        'times_guessed_pct'
-    )[:15]
+    # The first half are guessed right
+    players_guessed_right = team_players[:half_point]
+    # The second half, guessed wrong, but reversed
+    players_guessed_wrong = team_players[half_point:][::-1]
 
     return render(request, 'stats_team.html', {
         'team': team,
