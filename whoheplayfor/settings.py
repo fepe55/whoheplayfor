@@ -122,6 +122,6 @@ LOGIN_REDIRECT_URL = reverse_lazy("whpf:home")
 
 
 try:
-    from .local_settings import *
-except:
+    from .local_settings import *  # noqa
+except ModuleNotFoundError:  # noqa
     pass
