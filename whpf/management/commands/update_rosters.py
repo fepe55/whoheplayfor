@@ -109,15 +109,21 @@ class Command(BaseCommand):
                 )
                 print('created {}'.format(name))
 
-        # Lastly, we find the faceless-ones
+        # If your being_updated flag wasn't changed to False, it means you
+        # weren't modified or added, so you disappeared. We set you as
+        # inactive
+        Player.all_players.filter(being_updated=True).update(
+            being_updated=False, active=False
+        )
 
+        # Lastly, we find the faceless-ones
         errors = []
         faceless = []
 
-        total = Player.all_players.count()
+        active_players = Player.all_players.filter(active=True)
         current = 1
-        for p in Player.all_players.all():
-            print("[" + str(current) + "/" + str(total) + "]")
+        for p in active_players:
+            print("[" + str(current) + "/" + str(active_players.count()) + "]")
             current += 1
             try:
                 r = requests.get(p.picture)
@@ -143,11 +149,6 @@ class Command(BaseCommand):
             # Sleep to avoid a possible throttling or ban from the server
             time.sleep(2)
 
-        # If your being_updated flag wasn't changed to False, it means you
-        # weren't modified or added, so you disappeared. We set you as
-        # inactive
-        Player.all_players.filter(being_updated=True).update(
-            being_updated=False, active=False)
         # And we update the last_roster_update date
         options = Options.objects.all()
         if options.exists():
