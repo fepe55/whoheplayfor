@@ -349,12 +349,28 @@ def stats(request):
         division__conference__name='East'
     ).order_by('-times_guessed_pct')
 
-    players_guessed_right = Player.objects.exclude(times_guessed=0).order_by(
-        '-times_guessed_pct'
+    total_plays = Play.objects.count()
+    total_number_of_players = Player.all_players.count()
+    active_players = Player.objects.count()
+
+    # We use an average between the active players and the total number of
+    # players (including faceless and inactives).
+    # If we were to use only the active players, the cutoff could be too high
+    # If we were to use only the total players, the cutoff could be too low
+    number_of_players = (total_number_of_players + active_players) / 2
+
+    cutoff = total_plays / number_of_players
+
+    players_guessed_right = Player.objects.exclude(
+        times_guessed__lte=cutoff
+    ).order_by(
+        '-times_guessed_pct', '-times_guessed_right',
     )[:15]
 
-    players_guessed_wrong = Player.objects.exclude(times_guessed=0).order_by(
-        'times_guessed_pct'
+    players_guessed_wrong = Player.objects.exclude(
+        times_guessed__lte=cutoff
+    ).order_by(
+        'times_guessed_pct', '-times_guessed_wrong',
     )[:15]
 
     return render(request, 'stats.html', {
