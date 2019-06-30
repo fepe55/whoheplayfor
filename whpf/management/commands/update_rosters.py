@@ -32,18 +32,18 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Player.all_players.update(active=False)
         start_time = timezone.now()
-        print 'Starting at', start_time
-        print 'Getting all the players from the API... ',
+        print('Starting at {}'.format(start_time))
+        print('Getting all the players from the API... ')
         stdout.flush()
         nba_players = get_players_api()
-        print 'DONE'
-        print 'Marking all players as being updated... ',
+        print('DONE')
+        print('Marking all players as being updated... ')
         stdout.flush()
         if not nba_players:
-            print "Error with NBA.com"
+            print("Error with NBA.com")
             return
         Player.all_players.update(being_updated=True)
-        print 'DONE'
+        print('DONE')
         # for p in nba_players:
         #     # I'm guessing teams never change. if they do, all hell breaks
         #     # loose... or I just change a thing or two
@@ -89,7 +89,7 @@ class Command(BaseCommand):
             if player_qs.exists():
                 # There SHOULD only be one.
                 # player = player_qs.get()
-                print 'updating {}'.format(name)
+                print('updating {}'.format(name))
 
                 player_qs.update(
                     name=name,
@@ -107,7 +107,7 @@ class Command(BaseCommand):
                     code=code,
                     being_updated=False,
                 )
-                print 'created {}'.format(name)
+                print('created {}'.format(name))
 
         # Lastly, we find the faceless-ones
 
@@ -117,7 +117,7 @@ class Command(BaseCommand):
         total = Player.all_players.count()
         current = 1
         for p in Player.all_players.all():
-            print "[" + str(current) + "/" + str(total) + "]",
+            print("[" + str(current) + "/" + str(total) + "]")
             current += 1
             try:
                 r = requests.get(p.picture)
@@ -137,7 +137,7 @@ class Command(BaseCommand):
                     errors.append({'player': p, 'error': r.status_code})
 
             except requests.exceptions.RequestException as e:
-                print e
+                print(e)
                 errors.append({'player': p, 'error': e})
 
             # Sleep to avoid a possible anti-throttling from the server
@@ -158,16 +158,19 @@ class Command(BaseCommand):
         options.save()
 
         if errors:
-            print "ERRORS"
+            print("ERRORS")
             for error in errors:
-                print error['player'], error['error']
-            print
+                print(error['player'], error['error'])
+            print()
         if faceless:
-            print "FACELESS"
+            print("FACELESS")
             for player in faceless:
-                print player
+                print(player)
 
         end_time = timezone.now()
-        print "Started", start_time
-        print "Ended", end_time
-        print "Elapsed", str(end_time - start_time)
+        print("Started")
+        print(start_time)
+        print("Ended")
+        print(end_time)
+        print("Elapsed")
+        print(str(end_time - start_time))
