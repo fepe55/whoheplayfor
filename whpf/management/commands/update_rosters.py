@@ -140,7 +140,7 @@ class Command(BaseCommand):
                 print(e)
                 errors.append({'player': p, 'error': e})
 
-            # Sleep to avoid a possible anti-throttling from the server
+            # Sleep to avoid a possible throttling or ban from the server
             time.sleep(2)
 
         # If your being_updated flag wasn't changed to False, it means you
