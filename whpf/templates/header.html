@@ -1,4 +1,3 @@
-{% load filters %}
 {% load static %}
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -32,9 +31,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if user and not user.is_anonymous %}
-        {% with user_info=user|get_user_info %}
-          <li class="navbar-text"><i class="{{ user_info.icon_class }}"></i> <span>{{ user.get_full_name|default:user.username }} (<a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>)</span></li>
-        {% endwith %}
+          <li class="navbar-text"><span>{{ user.get_full_name|default:user.username }} (<a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>)</span></li>
         {% else %}
           <li>
             <p class="navbar-text loginwith">Login using:</p>
