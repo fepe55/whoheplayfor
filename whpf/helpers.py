@@ -115,7 +115,7 @@ def get_players_api():
             r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS)
 
         except requests.exceptions.RequestException as e:
-            print e
+            print(e)
             return
 
         try:
@@ -125,7 +125,7 @@ def get_players_api():
             # with open(filename, 'w') as f:
             #     f.write(r.text)
         except ValueError:
-            print "There's been a problem fetching info from NBA.com"
+            print("There's been a problem fetching info from NBA.com")
             return
             # raise Http404("There's been a problem getting info from NBA.com")
 
@@ -199,7 +199,7 @@ def get_guesses(code):
     rounds_played = parsed_code['rounds_played']
     code = parsed_code['guesses']
     guesses = []
-    for i in xrange(rounds_played):
+    for i in range(rounds_played):
         guess_str = code[12*i:12*i+12]
         player_id = int(guess_str[:8])
         if Player.all_players.filter(nba_id=player_id).exists():

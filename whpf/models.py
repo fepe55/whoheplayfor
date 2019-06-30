@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import uuid
 
 from django.db import models
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 from .managers import PlayerManager
@@ -25,20 +25,22 @@ class Conference(models.Model):
     name = models.CharField(max_length=255)
 
     def get_teams(self):
-        teams = Team.objects.None()
+        teams = Team.objects.none()
         for division in self.divisions.all():
             teams |= division.teams.all()
         return teams
 
-    def __unicode__(self):
+    def __str__(self):
         return "%sern conference" % (self.name, )
 
 
 class Division(models.Model):
     name = models.CharField(max_length=255)
-    conference = models.ForeignKey(Conference, related_name="divisions")
+    conference = models.ForeignKey(
+        Conference, related_name="divisions", on_delete=models.CASCADE
+    )
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s division" % (self.name, )
 
 
@@ -48,7 +50,9 @@ class Team(ModelWithDates):
     name = models.CharField(max_length=255)
     abbreviation = models.CharField(max_length=255)
     code = models.CharField(max_length=255)
-    division = models.ForeignKey(Division, related_name="teams")
+    division = models.ForeignKey(
+        Division, related_name="teams", on_delete=models.CASCADE
+    )
     times_guessed = models.IntegerField(default=0)
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
@@ -69,7 +73,7 @@ class Team(ModelWithDates):
     def stats_url(self):
         return reverse('whpf:stats_team', kwargs={'team_code': self.code, })
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s" % (self.city, self.name, )
 
     class Meta:
@@ -81,7 +85,7 @@ class Player(ModelWithDates):
     being_updated = models.BooleanField(default=False)
     nba_id = models.IntegerField()
     name = models.CharField(max_length=255)
-    team = models.ForeignKey(Team)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     code = models.CharField(max_length=255)
     faceless = models.BooleanField(default=False)
     times_guessed = models.IntegerField(default=0)
@@ -108,13 +112,13 @@ class Player(ModelWithDates):
             return DEFAULT
         return PLAYER_PICTURE_URL % str(self.nba_id)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s" % (self.name, )
 
 
 class Result(ModelWithDates):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     code = models.TextField()
     score = models.IntegerField(default=0)
 
@@ -150,7 +154,9 @@ class Result(ModelWithDates):
 
 
 class Play(ModelWithDates):
-    player = models.ForeignKey(User, blank=True, null=True)
+    player = models.ForeignKey(
+        User, blank=True, null=True, on_delete=models.SET_NULL
+    )
     code = models.TextField()
     score = models.IntegerField(default=0)
     finished = models.BooleanField(default=False)
@@ -160,4 +166,4 @@ class Play(ModelWithDates):
 class PlaySetting(models.Model):
     name = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
-    play = models.ForeignKey(Play)
+    play = models.ForeignKey(Play, on_delete=models.CASCADE)

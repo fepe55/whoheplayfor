@@ -1,17 +1,19 @@
 # coding=utf-8
-from django.conf.urls import url
+from django.urls import path
 from . import views
 
+app_name = 'whpf'
+
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
-    url(r'^tv/$', views.tv, name='tv'),
-    url(r'^faq/$', views.faq, name='faq'),
-    url(r'^save/(?P<code>\w+)/$', views.save, name='save'),
-    url(r'^results/(?P<code>\w+)/$', views.results, name='results'),
-    url(r'^scoreboard/$', views.scoreboard, name='scoreboard'),
-    url(r'^score/(?P<code>\w+)/$', views.score, name='score'),
-    url(r'^stats/$', views.stats, name='stats'),
-    url(r'^stats/(?P<team_code>\w+)/$', views.stats_team, name='stats_team'),
-    url(r'^right_guess/(?P<pid>\w+)/$', views.right_guess, name='right_guess'),
-    url(r'^wrong_guess/(?P<pid>\w+)/$', views.wrong_guess, name='wrong_guess'),
+    path('', views.home, name='home'),
+    path('tv/', views.tv, name='tv'),
+    path('faq/', views.faq, name='faq'),
+    path('save/<str:code>/', views.save, name='save'),
+    path('results/<str:code>/', views.results, name='results'),
+    path('scoreboard/', views.scoreboard, name='scoreboard'),
+    path('score/<str:code>/', views.score, name='score'),
+    path('stats/', views.stats, name='stats'),
+    path('stats/<str:team_code>/', views.stats_team, name='stats_team'),
+    path('right_guess/<int:pid>/', views.right_guess, name='right_guess'),
+    path('wrong_guess/<int:pid>/', views.wrong_guess, name='wrong_guess'),
 ]

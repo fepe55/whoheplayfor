@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.http import (HttpResponse, Http404, )
 from django.utils import (formats, timezone, )
 from django.shortcuts import (render, get_object_or_404, )
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .models import (Result, Player, Team, Options, Play, PlaySetting)
 from .forms import (GameForm,
@@ -122,7 +122,7 @@ def home(request):
         data['east'] = teams[:15]
 
     p = Play()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         p.player = request.user
     p.save()
 
