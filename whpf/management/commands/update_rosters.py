@@ -120,7 +120,9 @@ class Command(BaseCommand):
         errors = []
         faceless = []
 
-        active_players = Player.all_players.filter(active=True)
+        active_players = Player.all_players.filter(
+            active=True
+        ).order_by('name')
         current = 1
         for p in active_players:
             print("[" + str(current) + "/" + str(active_players.count()) + "]")
