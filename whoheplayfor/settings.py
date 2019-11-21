@@ -117,7 +117,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 
-LOGIN_URL = reverse_lazy("login")
+# LOGIN_URL = reverse_lazy("login")
+LOGIN_URL = reverse_lazy("whpf:home")
 LOGIN_REDIRECT_URL = reverse_lazy("whpf:home")
 
 
