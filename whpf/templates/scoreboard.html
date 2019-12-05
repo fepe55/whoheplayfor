@@ -1,44 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
   {% if scoreboard_last24h or scoreboard_last7h or scoreboard_last365d %}
-    <ul class="list-inline scoreboards">
+    <ul class="list-inline scoreboards" id="scoreboard-menu">
       {% if scoreboard_last24h %}
-        <li><a href="#last24h">Last 24 hours</a></li> |
+        <li><a class="goto-hash" href="#last24h">Last 24 hours</a></li> |
       {% endif %}
       {% if scoreboard_last7d %}
-        <li><a href="#last7d">Last 7 days</a></li> |
+        <li><a class="goto-hash" href="#last7d">Last 7 days</a></li> |
       {% endif %}
       {% if scoreboard_last365d %}
-        <li><a href="#last365d">Last 365 days</a></li> |
+        <li><a class="goto-hash" href="#last365d">Last 365 days</a></li> |
       {% endif %}
 
-      <li><a href="#global">All time</a></li>
+      <li><a class="goto-hash" href="#global">All time</a></li>
     </ul>
   {% endif %}
 
   {% if scoreboard_last24h %}
-  <div class="row" id="last24h">
-    <h2>Last 24 hours</h2>
-    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last24h %}
-  </div>
+    <div class="row" id="last24h">
+      <h2>Last 24 hours <small><a class="goto-hash" href="#scoreboard-menu">Go up</a></small></h2>
+      {% include "scoreboard_aux.html" with scoreboard=scoreboard_last24h %}
+    </div>
   {% endif %}
 
   {% if scoreboard_last7d %}
-  <div class="row" id="last7d">
-    <h2>Last 7 days</h2>
-    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last7d %}
-  </div>
+    <div class="row" id="last7d">
+      <h2>Last 7 days <small><a class="goto-hash" href="#scoreboard-menu">Go up</a></small></h2>
+      {% include "scoreboard_aux.html" with scoreboard=scoreboard_last7d %}
+    </div>
   {% endif %}
 
   {% if scoreboard_last365d %}
-  <div class="row" id="last365d">
-    <h2>Last 365 days</h2>
-    {% include "scoreboard_aux.html" with scoreboard=scoreboard_last365d %}
-  </div>
+    <div class="row" id="last365d">
+      <h2>Last 365 days <small><a class="goto-hash" href="#scoreboard-menu">Go up</a></small></h2>
+      {% include "scoreboard_aux.html" with scoreboard=scoreboard_last365d %}
+    </div>
   {% endif %}
 
   <div class="row" id="global">
-    <h2>All time</h2>
+    <h2>All time{% if scoreboard_last24h or scoreboard_last7h or scoreboard_last365d %} <small><a class="goto-hash" href="#scoreboard-menu">Go up</a></small>{% endif %}</h2>
     {% include "scoreboard_aux.html" with scoreboard=scoreboard_global %}
   </div>
 
@@ -50,7 +50,7 @@
       if (hash != ""){
 
         id = hash.substring(hash.indexOf("#")+1);
-        console.log(id);
+        // console.log(id);
 
         $('html, body').animate({
           scrollTop: $("#"+id).offset().top - 55
@@ -61,7 +61,7 @@
 
     window.location.hash = "";
 
-    $("ul.scoreboards a").click(function(e){
+    $("a.goto-hash").click(function(e){
       e.preventDefault();
       hash = $(this).attr('href');
       goto_hash(hash);
