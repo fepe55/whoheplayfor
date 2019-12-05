@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-  {% if scoreboard_last24h or scoreboard_last7h %}
-  <ul class="list-inline scoreboards">
-    {% if scoreboard_last24h %}
-      <li><a href="#last24h">Last 24 hours</a></li> |
-    {% endif %}
-    {% if scoreboard_last7d %}
-      <li><a href="#last7d">Last 7 days</a></li> |
-    {% endif %}
-    {% if scoreboard_last365d %}
-      <li><a href="#last365d">Last 365 days</a></li> |
-    {% endif %}
+  {% if scoreboard_last24h or scoreboard_last7h or scoreboard_last365d %}
+    <ul class="list-inline scoreboards">
+      {% if scoreboard_last24h %}
+        <li><a href="#last24h">Last 24 hours</a></li> |
+      {% endif %}
+      {% if scoreboard_last7d %}
+        <li><a href="#last7d">Last 7 days</a></li> |
+      {% endif %}
+      {% if scoreboard_last365d %}
+        <li><a href="#last365d">Last 365 days</a></li> |
+      {% endif %}
 
-    <li><a href="#global">All time</a></li>
-  </ul>
+      <li><a href="#global">All time</a></li>
+    </ul>
   {% endif %}
 
   {% if scoreboard_last24h %}
