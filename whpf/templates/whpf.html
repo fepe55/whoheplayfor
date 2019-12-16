@@ -301,6 +301,14 @@
 
 
     function end_game(){
+      if (game_status['code'][0] == 'v'){
+        // Sometimes it gets here twice (because the timer ends just as a
+        // player answers the last question and we have a race condition?)
+        // So we check if the first character of the code is a 'v', if it is,
+        // then we've already "ended" the game
+        return;
+      };
+
       // Hide the game
       clearInterval(game_status['timer']);
       var total = game_status['round'] - 1;
