@@ -237,24 +237,24 @@ def get_difficulty(code):
             difficulty = 1
     return difficulty
 
-    # OLD Code
-    difficulty = 1
-    parsed_code = parse_code(code)
-    show_player_name = parsed_code['show_player_name']
-    shuffle_teams = parsed_code['shuffle_teams']
-    time_limit = parsed_code['time_limit']
-    limit_teams = parsed_code['limit_teams']
-    if not show_player_name:
-        difficulty += 2
-    if shuffle_teams:
-        difficulty += 1
-    if limit_teams == 0:  # All teams
-        difficulty += 1
-    if time_limit:
-        difficulty += (4 - time_limit/30)
-    else:
-        difficulty = 0
-    return difficulty
+    # # OLD Code
+    # difficulty = 1
+    # parsed_code = parse_code(code)
+    # show_player_name = parsed_code['show_player_name']
+    # shuffle_teams = parsed_code['shuffle_teams']
+    # time_limit = parsed_code['time_limit']
+    # limit_teams = parsed_code['limit_teams']
+    # if not show_player_name:
+    #     difficulty += 2
+    # if shuffle_teams:
+    #     difficulty += 1
+    # if limit_teams == 0:  # All teams
+    #     difficulty += 1
+    # if time_limit:
+    #     difficulty += (4 - time_limit/30)
+    # else:
+    #     difficulty = 0
+    # return difficulty
 
 
 def get_score(code):
