@@ -30,7 +30,7 @@ def get_players():
                     data = f.read()
                     j = json.loads(data)
                 return j['resultSets'][0]['rowSet']
-            except:
+            except Exception:
                 os.remove(filename)
         dt = dt - timedelta(days=1)
         tries_left -= 1
