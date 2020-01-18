@@ -6,5 +6,5 @@ enabled = true
 runtime_version = "3.x.x"
 
 exclude_patterns = [
-  "migrations/**",
+  "**migrations/**",
 ]
