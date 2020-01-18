@@ -29,6 +29,7 @@ def get_faceless():
 
     f.close()
 
+
 # meant to be run from the project root as `python -m utils.find_faceless`
 if __name__ == '__main__':
     get_faceless()
