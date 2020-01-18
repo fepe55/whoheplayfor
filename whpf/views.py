@@ -19,8 +19,7 @@ def get_teams_and_players(game_info):
     database = True
     if database:
         return get_teams_and_players_database(game_info)
-    else:
-        return get_teams_and_players_api(game_info)
+    return get_teams_and_players_api(game_info)
 
 
 def home(request):
@@ -267,8 +266,7 @@ def save(request, code):
         to_json = {'success': True, }
         return HttpResponse(json.dumps(to_json),
                             content_type='application/json')
-    else:
-        raise Http404
+    raise Http404
 
 
 def results(request, code):
@@ -416,8 +414,7 @@ def score(request, code):
         to_json = {'score': score, }
         return HttpResponse(json.dumps(to_json),
                             content_type='application/json')
-    else:
-        raise Http404
+    raise Http404
 
 
 # types: 'right', 'wrong'
@@ -447,8 +444,7 @@ def right_guess(request, pid):
         to_json = {'success': True, }
         return HttpResponse(json.dumps(to_json),
                             content_type='application/json')
-    else:
-        raise Http404
+    raise Http404
 
 
 def wrong_guess(request, pid):
@@ -457,5 +453,4 @@ def wrong_guess(request, pid):
         to_json = {'success': True, }
         return HttpResponse(json.dumps(to_json),
                             content_type='application/json')
-    else:
-        raise Http404
+    raise Http404
