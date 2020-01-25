@@ -261,13 +261,12 @@ def faq(request):
 
 
 def save(request, code):
-    if request.is_ajax():
-        r = Result.objects.create(user=request.user, code=code, )
-        r.calculate_score()
-        to_json = {'success': True, }
-        return HttpResponse(json.dumps(to_json),
-                            content_type='application/json')
-    raise Http404
+    if not request.is_ajax():
+        raise Http404
+    r = Result.objects.create(user=request.user, code=code, )
+    r.calculate_score()
+    to_json = {'success': True, }
+    return HttpResponse(json.dumps(to_json), content_type='application/json')
 
 
 def results(request, code):
@@ -402,20 +401,19 @@ def stats_team(request, team_code):
 
 
 def score(request, code):
-    if request.is_ajax():
+    if not request.is_ajax():
+        raise Http404
 
-        score = get_score(code)
-        play_id = request.session['play_id']
-        if Play.objects.filter(id=play_id).exists():
-            p = Play.objects.get(id=play_id)
-            p.code = code
-            p.score = score
-            p.finished = True
-            p.save()
-        to_json = {'score': score, }
-        return HttpResponse(json.dumps(to_json),
-                            content_type='application/json')
-    raise Http404
+    score = get_score(code)
+    play_id = request.session['play_id']
+    if Play.objects.filter(id=play_id).exists():
+        p = Play.objects.get(id=play_id)
+        p.code = code
+        p.score = score
+        p.finished = True
+        p.save()
+    to_json = {'score': score, }
+    return HttpResponse(json.dumps(to_json), content_type='application/json')
 
 
 # types: 'right', 'wrong'
@@ -440,18 +438,16 @@ def guess(player_id, type_of_guess):
 
 
 def right_guess(request, pid):
-    if request.is_ajax():
-        guess(pid, 'right')
-        to_json = {'success': True, }
-        return HttpResponse(json.dumps(to_json),
-                            content_type='application/json')
-    raise Http404
+    if not request.is_ajax():
+        raise Http404
+    guess(pid, 'right')
+    to_json = {'success': True, }
+    return HttpResponse(json.dumps(to_json), content_type='application/json')
 
 
 def wrong_guess(request, pid):
-    if request.is_ajax():
-        guess(pid, 'wrong')
-        to_json = {'success': True, }
-        return HttpResponse(json.dumps(to_json),
-                            content_type='application/json')
-    raise Http404
+    if not request.is_ajax():
+        raise Http404
+    guess(pid, 'wrong')
+    to_json = {'success': True, }
+    return HttpResponse(json.dumps(to_json), content_type='application/json')
