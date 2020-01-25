@@ -125,10 +125,11 @@ def home(request):
         p.player = request.user
     p.save()
 
-    for item in game_info:
+    for setting_name, setting_value in game_info.items():
         PlaySetting.objects.create(
-            play=p, name=item, value=str(game_info[item])
+            play=p, name=setting_name, value=str(setting_value)
         )
+
     request.session['play_id'] = p.id
     return render(request, 'whpf.html', data)
 
