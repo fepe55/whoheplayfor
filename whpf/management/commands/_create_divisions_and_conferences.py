@@ -19,4 +19,4 @@ class Command(BaseCommand):
         Division.objects.create(name='Pacific', conference=west)
         Division.objects.create(name='Southwest', conference=west)
 
-        return
+        # return

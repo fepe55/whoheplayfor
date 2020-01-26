@@ -436,7 +436,7 @@ def guess(player_id, type_of_guess):
         100.0 * player.team.times_guessed_right / player.team.times_guessed
     ))
     player.save()
-    return
+    # return
 
 
 def right_guess(request, pid):
