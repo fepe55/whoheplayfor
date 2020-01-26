@@ -273,7 +273,7 @@ def save(request, code):
 
 def results(request, code):
 
-    score = get_score(code)
+    score_value = get_score(code)
     parsed_code = parse_code(code)
     results_qs = Result.objects.filter(code=code)
     if results_qs.count() == 1:
@@ -284,7 +284,7 @@ def results(request, code):
     guesses = get_guesses(code)
 
     return render(request, 'results.html', {
-        'guesses': guesses, 'score': score, 'result': result,
+        'guesses': guesses, 'score': score_value, 'result': result,
         'parsed_code': parsed_code,
     })
 
@@ -406,15 +406,15 @@ def score(request, code):
     if not request.is_ajax():
         raise Http404
 
-    score = get_score(code)
+    score_value = get_score(code)
     play_id = request.session['play_id']
     if Play.objects.filter(id=play_id).exists():
         p = Play.objects.get(id=play_id)
         p.code = code
-        p.score = score
+        p.score = score_value
         p.finished = True
         p.save()
-    to_json = {'score': score, }
+    to_json = {'score': score_value, }
     return HttpResponse(json.dumps(to_json), content_type='application/json')
 
 
