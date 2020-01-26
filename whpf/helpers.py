@@ -116,7 +116,7 @@ def get_players_api():
 
         except requests.exceptions.RequestException as e:
             print(e)
-            return
+            return []
 
         try:
             j = r.json()
@@ -126,7 +126,7 @@ def get_players_api():
             #     f.write(r.text)
         except ValueError:
             print("There's been a problem fetching info from NBA.com")
-            return
+            return []
             # raise Http404("There's been a problem getting info from NBA.com")
 
     # return j['resultSets'][0]['rowSet']
