@@ -273,9 +273,9 @@ def results(request, code):
 
     score = get_score(code)
     parsed_code = parse_code(code)
-    results = Result.objects.filter(code=code)
-    if results.count() == 1:
-        result = results[0]
+    results_qs = Result.objects.filter(code=code)
+    if results_qs.count() == 1:
+        result = results_qs[0]
     else:
         result = None
 
@@ -293,18 +293,18 @@ def get_scoreboard(qs):
     # The limit after being sorted also by time left
     HARD_LIMIT = 25
 
-    results = list(qs)
-    results = sorted(
-        results, key=lambda x: x.parsed_code['time_left'], reverse=True
+    results_list = list(qs)
+    results_list = sorted(
+        results_list, key=lambda x: x.parsed_code['time_left'], reverse=True
     )
-    results = sorted(results, key=lambda x: x.score, reverse=True)
+    results_list = sorted(results_list, key=lambda x: x.score, reverse=True)
 
     final_results = []
     users = []
 
     # From every result, we only leave one per user. And since it's already
     # sorted by score, we'll only leave their best one
-    for r in results:
+    for r in results_list:
         if r.user not in users:
             users.append(r.user)
             final_results.append(r)
@@ -324,12 +324,12 @@ def scoreboard(request):
         created__gte=timezone.now() - timedelta(days=365)
     )
 
-    results = Result.objects.all()[:100]
+    first_hundred_results = Result.objects.all()[:100]
 
     scoreboard_last24h = get_scoreboard(last24h)
     scoreboard_last7d = get_scoreboard(last7d)
     scoreboard_last365d = get_scoreboard(last365d)
-    scoreboard_global = get_scoreboard(results)
+    scoreboard_global = get_scoreboard(first_hundred_results)
 
     return render(request, 'scoreboard.html', {
         'scoreboard_last24h': scoreboard_last24h,
