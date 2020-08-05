@@ -42,7 +42,9 @@ class Command(BaseCommand):
         if not nba_players:
             print("Error with NBA.com")
             return
-        Player.all_players.update(being_updated=True)
+        # We mark every player as being_updated and active true (for cases
+        # where a player was inactive, then became active)
+        Player.all_players.update(being_updated=True, active=True)
         print('DONE')
         # for p in nba_players:
         #     # I'm guessing teams never change. if they do, all hell breaks
