@@ -10,19 +10,32 @@ from whpf.models import (Player, Team, Options)
 from whpf.helpers import get_players_api
 
 """
-00 - "PERSON_ID",
-01 - "DISPLAY_LAST_COMMA_FIRST",
-02 - "DISPLAY_FIRST_LAST",
-03 - "ROSTERSTATUS",
-04 - "FROM_YEAR",
-05 - "TO_YEAR",
-06 - "PLAYERCODE",
-07 - "TEAM_ID",
-08 - "TEAM_CITY",
-09 - "TEAM_NAME",
-10 - "TEAM_ABBREVIATION",
-11 - "TEAM_CODE",
-12 - "GAMES_PLAYED_FLAG"
+00 - "PERSON_ID"
+01 - "PLAYER_LAST_NAME"
+02 - "PLAYER_FIRST_NAME"
+03 - "PLAYER_SLUG"
+04 - "TEAM_ID"
+05 - "TEAM_SLUG"
+06 - "IS_DEFUNCT"
+07 - "TEAM_CITY"
+08 - "TEAM_NAME"
+09 - "TEAM_ABBREVIATION"
+10 - "JERSEY_NUMBER"
+11 - "POSITION"
+12 - "HEIGHT"
+13 - "WEIGHT"
+14 - "COLLEGE"
+15 - "COUNTRY"
+16 - "DRAFT_YEAR"
+17 - "DRAFT_ROUND"
+18 - "DRAFT_NUMBER"
+19 - "ROSTER_STATUS"
+20 - "FROM_YEAR"
+21 - "TO_YEAR"
+22 - "PTS"
+23 - "REB"
+24 - "AST"
+25 - "STATS_TIMEFRAME"
 """
 
 
@@ -80,11 +93,12 @@ class Command(BaseCommand):
             # I'm guessing teams never change. if they do, all hell breaks
             # loose... or I just change a thing or two
             # IF NOT TEAM?
-            # if not p[7]:
-            #     continue
-            team = Team.objects.get(code=p['teamData']['urlName'])
-            nba_id = int(p['personId'])
-            name = '{} {}'.format(p['firstName'], p['lastName'])
+            if p[4] == 0:
+                continue
+            team_code = p[5]
+            team = Team.objects.get(code=team_code)
+            nba_id = int(p[0])
+            name = '{} {}'.format(p[2], p[1])
             code = name.replace(' ', '_').lower()
             player_qs = Player.all_players.filter(nba_id=nba_id)
             # If there is a player with that ID, we update it

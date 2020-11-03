@@ -31,10 +31,16 @@ class Command(BaseCommand):
         # Third, we create the teams
         nba_players = get_players_api()
         for p in nba_players:
-            team_city = p['teamData']['city']
-            team_name = p['teamData']['nickname']
-            team_abbreviation = p['teamData']['tricode']
-            team_code = p['teamData']['urlName']
+            # team_city = p['teamData']['city']
+            # team_name = p['teamData']['nickname']
+            # team_abbreviation = p['teamData']['tricode']
+            # team_code = p['teamData']['urlName']
+            if p[4] == 0:
+                continue
+            team_city = p[7]
+            team_name = p[8]
+            team_abbreviation = p[9]
+            team_code = p[5]
             team_nba_id = TEAMS_ID[team_code]
 
             if not Team.objects.filter(nba_id=team_nba_id).exists():
@@ -65,18 +71,24 @@ class Command(BaseCommand):
         # faceless = [204098, 1626162, 1626210]
         faceless = []
         for p in nba_players:
-            # if p[3] != 0:
-            team_nba_id = TEAMS_ID[p['teamData']['urlName']]
-            nba_id = int(p['personId'])
-            name = '{} {}'.format(p['firstName'], p['lastName'])
+            if p[4] == 0:
+                continue
+
+            team_code = p[5]
+            team_nba_id = TEAMS_ID[team_code]
+
+            nba_id = int(p[0])
+            name = '{} {}'.format(p[2], p[1])
             code = name.replace(' ', '_').lower()
 
             team = Team.objects.get(nba_id=team_nba_id)
             fl = nba_id in faceless
-            Player.objects.create(
-                nba_id=nba_id,
-                name=name,
-                team=team,
-                code=code,
-                faceless=fl,
-            )
+            player_qs = Player.all_players.filter(nba_id=nba_id)
+            if not player_qs.exists():
+                Player.objects.create(
+                    nba_id=nba_id,
+                    name=name,
+                    team=team,
+                    code=code,
+                    faceless=fl,
+                )
