@@ -435,6 +435,7 @@ def guess(player_id, type_of_guess):
     player.team.times_guessed_pct = int(round(
         100.0 * player.team.times_guessed_right / player.team.times_guessed
     ))
+    player.team.save()
     player.save()
     # return
 
