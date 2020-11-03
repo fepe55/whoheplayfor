@@ -5,7 +5,7 @@ from whpf.models import (Conference, Division, )
 
 
 class Command(BaseCommand):
-    help = 'Creates conferences and divisions'
+    help = 'Creates conferences and divisions (DEPRECATED, use startdata)'
 
     def handle(self, *args, **kwargs):
         east = Conference.objects.create(name='East')

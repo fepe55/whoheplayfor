@@ -7,7 +7,7 @@ faceless = [204098, 1626162, 1626210]
 
 
 class Command(BaseCommand):
-    help = 'Create teams'
+    help = 'Create players (DEPRECATED, use startdata)'
 
     def handle(self, *args, **kwargs):
         nba_players = get_players_api()

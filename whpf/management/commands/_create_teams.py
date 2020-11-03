@@ -7,7 +7,7 @@ from whpf.teams import (ATLANTIC_TEAMS, CENTRAL_TEAMS, SOUTHEAST_TEAMS,
 
 
 class Command(BaseCommand):
-    help = 'Create teams'
+    help = 'Create teams (DEPRECATED, use startdata)'
 
     def handle(self, *args, **kwargs):
         nba_players = get_players_api()
