@@ -80,7 +80,13 @@ WSGI_APPLICATION = 'whoheplayfor.wsgi.application'
 
 
 # Database
-DATABASES = {}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+    }
+}
+
 # HEROKU
 # DATABASES['default'] = dj_database_url.config()
 
