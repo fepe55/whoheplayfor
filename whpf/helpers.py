@@ -118,10 +118,14 @@ def get_players_api():
             'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) '
             'Gecko/20100101 Firefox/82.0'
         ),
+        'Accept-Language': 'en-US,en;q=0.5',
         'Referer': 'https://www.nba.com/players',
+        'Origin': 'https://www.nba.com',
+        'Connection': 'keep-alive',
+        'Accept-Encoding': 'compress',
     }
 
-    r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS)
+    # r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS)
 
     import os.path
     import os
