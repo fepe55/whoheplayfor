@@ -111,7 +111,7 @@ def get_players_api():
     PARAMS = {
         'Historical': '0',
         'LeagueID': '00',
-        'Season': '2019-20',
+        'Season': '2020-21',
     }
     HEADERS = {
         'User-Agent': (
