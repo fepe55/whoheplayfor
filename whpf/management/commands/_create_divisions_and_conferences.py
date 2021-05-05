@@ -6,6 +6,7 @@ from whpf.models import (Conference, Division, )
 
 class Command(BaseCommand):
     """Django Management command base class."""
+
     help = 'Creates conferences and divisions (DEPRECATED, use startdata)'
 
     def handle(self, *args, **kwargs):
