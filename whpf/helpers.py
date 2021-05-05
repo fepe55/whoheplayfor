@@ -8,6 +8,9 @@ from .models import (Player, Team, )
 
 
 def team_to_dict(team):
+    """Take a Team object and return a dictionary with the following fields:
+    nba_id, city, name, abbreviation, code, picture
+    """
     return {
         'nba_id': team.nba_id,
         'city': team.city,
@@ -19,6 +22,9 @@ def team_to_dict(team):
 
 
 def player_to_dict(player):
+    """Take a Player object and return a dictionary with the following fields:
+    nba_id, name, team, picture.
+    """
     return {
         'nba_id': player.nba_id,
         'name': player.name,
@@ -28,6 +34,7 @@ def player_to_dict(player):
 
 
 def get_teams_and_players_database(game_info):
+    """Get teams and players from the database."""
     players = []
     teams = []
     limit_teams = game_info['limit_teams']
@@ -72,6 +79,7 @@ def get_teams_and_players_database(game_info):
 
 
 def get_players_api():
+    """Get players from the NBA.com API."""
     # dt = datetime.today().date()
     # tries_left = 3
     # while tries_left > 0:
@@ -160,6 +168,7 @@ def get_players_api():
 
 # Deprecated
 def get_teams_and_players_api(game_info):
+    """(DEPRECATED) Get players and teams from the NBA.com API."""
     LIMIT_TEAMS = {
         '0': ALL_TEAMS,
         '1': EAST_TEAMS,
@@ -220,6 +229,13 @@ def get_teams_and_players_api(game_info):
 # SCORE
 
 def get_guesses(code):
+    """Parse the code to get a list of guesses.
+    Each guess is a dictionary with the following fields:
+        - round: int
+        - player: Player object
+        - team: Team object
+        - correct_team: Team object
+    """
     parsed_code = parse_code(code)
     rounds_played = parsed_code['rounds_played']
     code = parsed_code['guesses']
@@ -245,6 +261,8 @@ def get_guesses(code):
 
 
 def get_difficulty(code):
+    """Parse the code to get game options and calculate the difficulty value.
+    """
     parsed_code = parse_code(code)
     difficulty = 0
     hard_mode = parsed_code['hard_mode']
@@ -283,6 +301,7 @@ def get_difficulty(code):
 
 
 def get_score(code):
+    """Parse the code to obtain the score based on guesses."""
     correct_guesses = 0
     wrong_guesses = 0
     difficulty = get_difficulty(code)
@@ -301,6 +320,7 @@ def get_score(code):
 
 
 def parse_code(code):
+    """Parse code to obtain main options value."""
     if code[0] == 'v':
         # code: 'v' + version_number (3) + code
         version = code[1:4]
