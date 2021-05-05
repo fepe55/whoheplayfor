@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hi-there'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = not os.environ.get('DEBUG', True) == 'False'
 
 ALLOWED_HOSTS = []
 
@@ -82,8 +82,15 @@ WSGI_APPLICATION = 'whoheplayfor.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+        'ENGINE': os.environ.get(
+            'POSTGRES_ENGINE', 'django.db.backends.sqlite3',
+        ),
+        'NAME': os.environ.get(
+            'POSTGRES_DB', os.path.join(BASE_DIR, 'db.sqlite3')
+        ),
+        'USER': os.environ.get('POSTGRES_USER', None),
+        'HOST': os.environ.get('POSTGRES_HOST', None),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None)
     }
 }
 
