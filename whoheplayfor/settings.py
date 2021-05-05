@@ -130,6 +130,6 @@ LOGOUT_REDIRECT_URL = reverse_lazy("whpf:home")
 
 
 try:
-    from .local_settings import *  # noqa
-except ModuleNotFoundError:  # noqa
+    from .local_settings import *  # noqa: F403
+except ModuleNotFoundError:
     pass
