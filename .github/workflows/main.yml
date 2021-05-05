@@ -46,7 +46,7 @@ jobs:
         python -m pip install psycopg2-binary
         pip install -r requirements.txt
         pip install pycodestyle
-    - name: Check Syntax # check code formatting
+    - name: Check code style and formatting
       run: pycodestyle . --statistics --exclude migrations
     - name: Run migrations
       run: python manage.py migrate
