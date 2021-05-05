@@ -43,7 +43,7 @@ class Command(BaseCommand):
     help = 'Updates players'
 
     def handle(self, *args, **kwargs):
-        """ Update players database using data from API.
+        """Update players database using data from API.
         Check if the player's generated face URL exists.
         """
         # Player.all_players.update(active=False)
