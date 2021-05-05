@@ -7,6 +7,7 @@ from whpf.teams import (ATLANTIC_TEAMS, CENTRAL_TEAMS, SOUTHEAST_TEAMS,
 
 
 class Command(BaseCommand):
+    """Django Management command base class."""
     help = 'Create teams (DEPRECATED, use startdata)'
 
     def handle(self, *args, **kwargs):

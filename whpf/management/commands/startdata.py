@@ -11,6 +11,7 @@ from whpf.teams import (
 
 
 class Command(BaseCommand):
+    """Django Management command base class."""
     help = 'Creates conferences, divisions, teams and players'
 
     def handle(self, *args, **kwargs):

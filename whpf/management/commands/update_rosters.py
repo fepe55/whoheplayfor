@@ -38,6 +38,7 @@ from whpf.helpers import get_players_api
 
 
 class Command(BaseCommand):
+    """Django Management command base class."""
     help = 'Updates players'
 
     def handle(self, *args, **kwargs):
