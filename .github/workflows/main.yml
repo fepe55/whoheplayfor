@@ -48,7 +48,7 @@ jobs:
     - name: Check Syntax # check code formatting
       run: |
           pip install pycodestyle
-          pycodestyle --statistics .
+          pycodestyle . --statistics --exclude migrations
     - name: Run migrations
       run: python manage.py migrate
     - name: Run tests
