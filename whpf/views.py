@@ -18,6 +18,7 @@ from .helpers import (
 
 
 def get_teams_and_players(game_info):
+    """Get teams and players from Database or API"""
     database = True
     if database:
         return get_teams_and_players_database(game_info)
@@ -137,6 +138,7 @@ def home(request):
 
 
 def tv(request):
+    """Render a template showing a list of videos."""
     # videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
     videos = [
         '5RbwsW_xDhE', 'kFt9M1ZzsEg', 'cRoHd1EIexs', 'zzfkvmobsoc',
@@ -146,6 +148,7 @@ def tv(request):
 
 
 def faq(request):
+    """Render a template showing a the frequently asked questions."""
     tv_url = reverse("whpf:tv")
     options = Options.objects.all()
     if options.exists():
@@ -263,6 +266,9 @@ def faq(request):
 
 
 def save(request, code):
+    """Ajax view. Upon getting a code, create a Result object.
+    Return json.
+    """
     if not request.is_ajax():
         raise Http404
     r = Result.objects.create(user=request.user, code=code, )
@@ -272,7 +278,7 @@ def save(request, code):
 
 
 def results(request, code):
-
+    """Parse the code and render a template showing the results."""
     score_value = get_score(code)
     parsed_code = parse_code(code)
     results_qs = Result.objects.filter(code=code)
