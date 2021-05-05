@@ -8,7 +8,8 @@ from .models import (Player, Team, )
 
 
 def team_to_dict(team):
-    """Take a Team object and return a dictionary with the following fields:
+    """Take a Team object and return a dictionary with the following
+    fields:
     nba_id, city, name, abbreviation, code, picture
     """
     return {
@@ -22,7 +23,8 @@ def team_to_dict(team):
 
 
 def player_to_dict(player):
-    """Take a Player object and return a dictionary with the following fields:
+    """Take a Player object and return a dictionary with the following
+    fields:
     nba_id, name, team, picture.
     """
     return {
@@ -261,7 +263,8 @@ def get_guesses(code):
 
 
 def get_difficulty(code):
-    """Parse the code to get game options and calculate the difficulty value.
+    """Parse the code to get game options and calculate the difficulty
+    value.
     """
     parsed_code = parse_code(code)
     difficulty = 0
