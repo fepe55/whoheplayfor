@@ -10,6 +10,7 @@ class Command(BaseCommand):
     help = 'Creates conferences and divisions (DEPRECATED, use startdata)'
 
     def handle(self, *args, **kwargs):
+        """Create conferences and divisions (DEPRECATED, use startdata)."""
         east = Conference.objects.create(name='East')
         west = Conference.objects.create(name='West')
 

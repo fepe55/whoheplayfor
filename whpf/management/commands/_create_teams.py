@@ -9,9 +9,10 @@ from whpf.teams import (ATLANTIC_TEAMS, CENTRAL_TEAMS, SOUTHEAST_TEAMS,
 class Command(BaseCommand):
     """Django Management command base class."""
 
-    help = 'Create teams (DEPRECATED, use startdata)'
+    help = 'Creates teams (DEPRECATED, use startdata)'
 
     def handle(self, *args, **kwargs):
+        """Create teams (DEPRECATED, use startdata)."""
         nba_players = get_players_api()
         for p in nba_players:
             if p[7] and not Team.objects.filter(nba_id=p[7]).exists():

@@ -16,6 +16,12 @@ class Command(BaseCommand):
     help = 'Creates conferences, divisions, teams and players'
 
     def handle(self, *args, **kwargs):
+        """Create conferences, divisions, teams and players.
+        Conferences, divisions are hardcoded.
+        Teams id are hardcoded in whpf/teams.py, but they are validated with
+        the API.
+        Players come from the API.
+        """
 
         # First, we create the conferences
         east = Conference.objects.create(name='East')
