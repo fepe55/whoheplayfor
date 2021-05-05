@@ -22,7 +22,6 @@ class Command(BaseCommand):
         the API.
         Players come from the API.
         """
-
         # First, we create the conferences
         east = Conference.objects.create(name='East')
         west = Conference.objects.create(name='West')
