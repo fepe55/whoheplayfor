@@ -26,6 +26,12 @@ def get_teams_and_players(game_info):
 
 
 def home(request):
+    """Main view
+    If there's no POST or there's a POST but an invalid form,
+    render home.html with GameForm with default values.
+    If there's POST and the form is valid render whpf.html with
+    the selected values.
+    """
     TIME_DEFAULT = TIME_CHOICES[2][0]  # 60
     ROUNDS_DEFAULT = ROUNDS_CHOICES[1][0]  # 20
     LT_DEFAULT = LIMIT_TEAMS_CHOICES[0][0]  # 'all'
