@@ -296,6 +296,10 @@ def results(request, code):
 
 
 def get_scoreboard(qs):
+    """Given a queryset of results, order by score, then for time left,
+    filter only one per user and return, at most, the first
+    HARD_LIMIT amount.
+    """
     if not qs:
         return []
     # The limit after being sorted also by time left
@@ -322,6 +326,12 @@ def get_scoreboard(qs):
 
 
 def scoreboard(request):
+    """Render the scoreboard template showing:
+        - Last 24hs
+        - Last 7d
+        - Last 365d
+        - Global (limited to 100 ordered by score)
+    """
     last24h = Result.objects.filter(
         created__gte=timezone.now() - timedelta(hours=24)
     )
@@ -348,6 +358,10 @@ def scoreboard(request):
 
 
 def stats(request):
+    """Render the stats template with:
+        - Least and most guessed players
+        - Every team in the west and east
+    """
     west_teams = Team.objects.filter(
         division__conference__name='West'
     ).order_by('-times_guessed_pct')
@@ -388,6 +402,7 @@ def stats(request):
 
 
 def stats_team(request, team_code):
+    """Render the stats template for a particular team."""
     team = get_object_or_404(Team, code=team_code)
 
     team_players = Player.objects.filter(team=team).exclude(
@@ -409,6 +424,9 @@ def stats_team(request, team_code):
 
 
 def score(request, code):
+    """Ajax view for getting the score from a code.
+    Return a json {'score': score_value}
+    """
     if not request.is_ajax():
         raise Http404
 
@@ -426,6 +444,9 @@ def score(request, code):
 
 # types: 'right', 'wrong'
 def guess(player_id, type_of_guess):
+    """Helper method for a guess. Update player and team amount of
+    right guesses, wrong guesses and guess percentage.
+    """
     player = get_object_or_404(Player, nba_id=player_id)
     if type_of_guess == 'right':
         player.times_guessed_right += 1
@@ -447,6 +468,9 @@ def guess(player_id, type_of_guess):
 
 
 def right_guess(request, pid):
+    """Ajax view for a right guess.
+    Update player and team accordingly.
+    """
     if not request.is_ajax():
         raise Http404
     guess(pid, 'right')
@@ -455,6 +479,9 @@ def right_guess(request, pid):
 
 
 def wrong_guess(request, pid):
+    """Ajax view for a wrong guess.
+    Update player and team accordingly.
+    """
     if not request.is_ajax():
         raise Http404
     guess(pid, 'wrong')
