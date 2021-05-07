@@ -327,10 +327,10 @@ def get_scoreboard(qs):
 
 def scoreboard(request):
     """Render the scoreboard template showing:
-        - Last 24hs
-        - Last 7d
-        - Last 365d
-        - Global (limited to 100 ordered by score)
+    - Last 24hs
+    - Last 7d
+    - Last 365d
+    - Global (limited to 100 ordered by score)
     """
     last24h = Result.objects.filter(
         created__gte=timezone.now() - timedelta(hours=24)
@@ -359,8 +359,8 @@ def scoreboard(request):
 
 def stats(request):
     """Render the stats template with:
-        - Least and most guessed players
-        - Every team in the west and east
+    - Least and most guessed players
+    - Every team in the west and east
     """
     west_teams = Team.objects.filter(
         division__conference__name='West'
