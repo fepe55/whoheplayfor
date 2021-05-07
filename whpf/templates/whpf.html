@@ -46,14 +46,14 @@
           <div class="col-sm-6 conference">
           {% for team in west %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
-              <img data-toggle="tooltip" data-title="{{ team.city|lower }} {{ team.name|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+              <img data-toggle="tooltip" data-title="{{ team.abbreviation|lower }} {{ team.city|lower }} {{ team.name|lower }} {{ team.code|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
           {% endfor %}
           </div>
           <div class="col-sm-6 conference">
           {% for team in east %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
-              <img data-toggle="tooltip" data-title="{{ team.city|lower }} {{ team.name|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+              <img data-toggle="tooltip" data-title="{{ team.abbreviation|lower }} {{ team.city|lower }} {{ team.name|lower }} {{ team.code|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
           {% endfor %}
           </div>
@@ -62,7 +62,7 @@
           <div class="col-md-12 all-together">
           {% for team in teams %}
             <a href="#" class="guess" data-team='{{ team|tojson|safe }}'>
-              <img data-toggle="tooltip" data-title="{{ team.city|lower }} {{ team.name|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
+              <img data-toggle="tooltip" data-title="{{ team.abbreviation|lower }} {{ team.city|lower }} {{ team.name|lower }} {{ team.code|lower }}" title="{{ team.city }} {{ team.name }}" class="team-picture" id="{{ team.code }}" src="{{ team.picture }}" />
             </a>
           {% endfor %}
           </div>
@@ -502,7 +502,11 @@
       all_teams.css("opacity", 1);
       remaining_teams_span.text(30);
     } else {
-      var teams_matching = all_teams.filter('[data-title*="' + val + '"]');
+      // Any word in data-title starts with val
+      var teams_matching = all_teams.filter(function(){
+        var title = $(this).data('title');
+        return title.startsWith(val) || title.includes(" " + val);
+      });
       var remaining_teams = teams_matching.length;
       remaining_teams_span.text(remaining_teams);
 
