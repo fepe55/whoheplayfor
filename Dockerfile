@@ -22,6 +22,7 @@ RUN set -ex \
     && apk add --virtual rundeps $runDeps \
     && apk del .build-deps \
     && /env/bin/python manage.py collectstatic \
+    # This is just for testing with sqlite db inside container
     && /env/bin/python manage.py migrate
 
 
