@@ -42,10 +42,19 @@ class Command(BaseCommand):
 
     help = 'Updates players'
 
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--no-faceless-check',
+            action='store_true',
+            help='Don\'t check faces URLs',
+        )
+
+    def handle(self, *args, **options):
         """Update players database using data from API.
         Check if the player's generated face URL exists.
         """
+        no_faceless_check = options['no_faceless_check']
+
         # Player.all_players.update(active=False)
         start_time = timezone.now()
         print('Starting at {}'.format(start_time))
@@ -139,45 +148,46 @@ class Command(BaseCommand):
         errors = []
         faceless = []
 
-        active_players = Player.all_players.filter(
-            active=True
-        ).order_by('name')
-        current = 1
-        for p in active_players:
-            print("[" + str(current) + "/" + str(active_players.count()) + "]")
-            current += 1
-            try:
-                r = requests.get(p.picture)
-                if r.status_code == 200:
-                    p.faceless = False
-                    p.save()
-                    print('{} has a face'.format(p))
-                elif r.status_code == 404:
-                    print('{} has no face -------------------------'.format(p))
-                    faceless.append(p)
-                    p.faceless = True
-                    p.save()
-                else:
-                    print('error with {} ({}) ++++++'.format(p, r.status_code))
-                    p.faceless = True
-                    p.save()
-                    errors.append({'player': p, 'error': r.status_code})
+        if not no_faceless_check:
+            active_players = Player.all_players.filter(
+                active=True
+            ).order_by('name')
+            current = 1
+            for p in active_players:
+                print(f'[{str(current)}/{str(active_players.count())}]')
+                current += 1
+                try:
+                    r = requests.get(p.picture)
+                    if r.status_code == 200:
+                        p.faceless = False
+                        p.save()
+                        print(f'{p} ({p.id}) has a face')
+                    elif r.status_code == 404:
+                        print(f'{p} ({p.id}) has no face --------------------')
+                        faceless.append(p)
+                        p.faceless = True
+                        p.save()
+                    else:
+                        print(f'error with {p} ({p.id}) (Error code: {r.status_code}) ++++++')  # noqa: E501
+                        p.faceless = True
+                        p.save()
+                        errors.append({'player': p, 'error': r.status_code})
 
-            except requests.exceptions.RequestException as e:
-                print(e)
-                errors.append({'player': p, 'error': e})
+                except requests.exceptions.RequestException as e:
+                    print(e)
+                    errors.append({'player': p, 'error': e})
 
-            # Sleep to avoid a possible throttling or ban from the server
-            time.sleep(2)
+                # Sleep to avoid a possible throttling or ban from the server
+                time.sleep(2)
 
-        # And we update the last_roster_update date
-        options = Options.objects.all()
-        if options.exists():
-            options = options.get()
-        else:
-            options = Options()
-        options.last_roster_update = timezone.now()
-        options.save()
+            # And we update the last_roster_update date
+            options = Options.objects.all()
+            if options.exists():
+                options = options.get()
+            else:
+                options = Options()
+            options.last_roster_update = timezone.now()
+            options.save()
 
         if errors:
             print("ERRORS")
