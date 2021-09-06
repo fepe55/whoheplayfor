@@ -154,7 +154,7 @@ class Command(BaseCommand):
             ).order_by('name')
             current = 1
             for p in active_players:
-                print(f'[{str(current)}/{str(active_players.count())}]')
+                print(f'[{current}/{active_players.count()}]')
                 current += 1
                 try:
                     r = requests.get(p.picture)
