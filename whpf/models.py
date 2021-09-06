@@ -106,14 +106,15 @@ class Player(ModelWithDates):
             "statscube/players/large/default_nba_headshot_v2.png"
         # PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/"\
         #     "img/2.0/sect/statscube/players/large/%s.png"
-        PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
-            "uploads/headshots/nba/latest/260x190/%s.png"
+        # PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
+        #     "uploads/headshots/nba/latest/260x190/%s.png"
+        PLAYER_PICTURE_URL = 'https://cdn.nba.com/headshots/nba/latest/1040x760/{}.png'  # noqa: E501
         if self.faceless:
             return DEFAULT
-        return PLAYER_PICTURE_URL % str(self.nba_id)
+        return PLAYER_PICTURE_URL.format(self.nba_id)
 
     def __str__(self):
-        return "%s" % (self.name, )
+        return self.name
 
 
 class Result(ModelWithDates):
