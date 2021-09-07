@@ -23,17 +23,29 @@ class Command(BaseCommand):
         Players come from the API.
         """
         # First, we create the conferences
-        east = Conference.objects.create(name='East')
-        west = Conference.objects.create(name='West')
+        east, _ = Conference.objects.get_or_create(name='East')
+        west, _ = Conference.objects.get_or_create(name='West')
 
         # Second, we create the divisions
-        atlantic = Division.objects.create(name='Atlantic', conference=east)
-        central = Division.objects.create(name='Central', conference=east)
-        southeast = Division.objects.create(name='Southeast', conference=east)
+        atlantic, _ = Division.objects.get_or_create(
+            name='Atlantic', conference=east
+        )
+        central, _ = Division.objects.get_or_create(
+            name='Central', conference=east
+        )
+        southeast, _ = Division.objects.get_or_create(
+            name='Southeast', conference=east
+        )
 
-        northwest = Division.objects.create(name='Northwest', conference=west)
-        pacific = Division.objects.create(name='Pacific', conference=west)
-        southwest = Division.objects.create(name='Southwest', conference=west)
+        northwest, _ = Division.objects.get_or_create(
+            name='Northwest', conference=west
+        )
+        pacific, _ = Division.objects.get_or_create(
+            name='Pacific', conference=west
+        )
+        southwest, _ = Division.objects.get_or_create(
+            name='Southwest', conference=west
+        )
 
         # Third, we create the teams
         nba_players = get_players_api()
@@ -73,7 +85,7 @@ class Command(BaseCommand):
                     division=division,
                 )
 
-        # And fourth, we create the teams
+        # And fourth, we create the players
         # We loop twice on the nba_players for an easier code to read
         # faceless = [204098, 1626162, 1626210]
         faceless = []
