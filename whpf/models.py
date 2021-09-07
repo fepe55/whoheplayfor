@@ -108,7 +108,7 @@ class Player(ModelWithDates):
         #     "img/2.0/sect/statscube/players/large/%s.png"
         # PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
         #     "uploads/headshots/nba/latest/260x190/%s.png"
-        PLAYER_PICTURE_URL = 'https://cdn.nba.com/headshots/nba/latest/1040x760/{}.png'  # noqa: E501
+        PLAYER_PICTURE_URL = 'https://cdn.nba.com/headshots/nba/latest/260x190/{}.png'  # noqa: E501
         if self.faceless:
             return DEFAULT
         return PLAYER_PICTURE_URL.format(self.nba_id)
