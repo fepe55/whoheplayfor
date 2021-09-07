@@ -5,7 +5,7 @@ https://whoheplayfor.com/
 
 ## Steps to build
 You need an external database, you can run one with Docker in testing, with the following command  
-`$ docker run -e POSTGRES_USER=whpf -e POSTGRES_DB=whpf -e POSTGRES_PASSWORD=whpf -p 5432:5432 postgres:latest`
+`$ docker run -e POSTGRES_USER=whpf -e POSTGRES_DB=whpf -e POSTGRES_PASSWORD=whpf -p 5432:5432 postgres:latest`  
 *Important*: We're not using persistent volumes here because it's only for testing, your data will NOT be saved doing it this way
 
 Then build the whpf Docker image with  
