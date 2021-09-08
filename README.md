@@ -4,26 +4,26 @@ Who He Play For?
 https://whoheplayfor.com/
 
 ## Steps to build
-You need an external database, you can run one with Docker in testing, with the following command:
-`$ docker run -e POSTGRES_USER=whpf -e POSTGRES_DB=whpf -e POSTGRES_PASSWORD=whpf -p 5432:5432 postgres:latest`
+You need an external database, you can run one with Docker in testing, with the following command  
+`$ docker run -e POSTGRES_USER=whpf -e POSTGRES_DB=whpf -e POSTGRES_PASSWORD=whpf -p 5432:5432 postgres:latest`  
 *Important*: We're not using persistent volumes here because it's only for testing, your data will NOT be saved doing it this way
 
-Then build the whpf Docker image with:
+Then build the whpf Docker image with  
 `$ docker build . -t whpf`
 
-Rename `env.example` to `env` and edit it accordingly
+Rename `env.example` to `env` and edit it accordingly  
 `$ cp env.example env`
 
-Run migrations on the container
+Run migrations on the container  
 `$ docker run --env-file env whpf python manage.py migrate`
 
-Then run initial data
+Then run initial data  
 `$ docker run --env-file env whpf python manage.py startdata`
 
-And update rosters
+And update rosters  
 `$ docker run --env-file env whpf python manage.py update_rosters`
 
-Finally, run the container in daemon mode:
+Finally, run the container in daemon mode  
 `$ docker run --env-file env -p 8000:8000 -d whpf`
 
 
