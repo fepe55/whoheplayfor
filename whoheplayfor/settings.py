@@ -145,14 +145,18 @@ LOGIN_URL = reverse_lazy("whpf:home")
 LOGIN_REDIRECT_URL = reverse_lazy("whpf:home")
 LOGOUT_REDIRECT_URL = reverse_lazy("whpf:home")
 
-admin_names = os.environ.get('ADMIN_NAMES').split(',')
-admin_emails = os.environ.get('ADMIN_EMAILS').split(',')
-ADMINS = list(zip(admin_names, admin_emails))
+ADMINS = []
+admin_names = os.environ.get('ADMIN_NAMES')
+admin_emails = os.environ.get('ADMIN_EMAILS')
+if admin_names and admin_emails:
+    admin_names = admin_names.split(',')
+    admin_emails = admin_emails.split(',')
+    ADMINS = list(zip(admin_names, admin_emails))
 
 EMAIL_ENABLED = os.environ.get("EMAIL_ENABLED", 'False').lower() in TRUE_VALUES
 
 if EMAIL_ENABLED:
-    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'False').lower() in TRUE_VALUES
+    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'False').lower() in TRUE_VALUES  # noqa: E501
     EMAIL_HOST = os.environ.get('EMAIL_HOST')
     EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
     EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
