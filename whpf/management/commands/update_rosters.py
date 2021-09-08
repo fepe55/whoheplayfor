@@ -180,14 +180,14 @@ class Command(BaseCommand):
                 # Sleep to avoid a possible throttling or ban from the server
                 time.sleep(2)
 
-            # And we update the last_roster_update date
-            options = Options.objects.all()
-            if options.exists():
-                options = options.get()
-            else:
-                options = Options()
-            options.last_roster_update = timezone.now()
-            options.save()
+        # And we update the last_roster_update date
+        options = Options.objects.all()
+        if options.exists():
+            options = options.get()
+        else:
+            options = Options()
+        options.last_roster_update = timezone.now()
+        options.save()
 
         if errors:
             print("ERRORS")
