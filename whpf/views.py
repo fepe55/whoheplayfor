@@ -147,8 +147,13 @@ def tv(request):
     """Render a template showing a list of videos."""
     # videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
     videos = [
-        '5RbwsW_xDhE', 'kFt9M1ZzsEg', 'cRoHd1EIexs', 'zzfkvmobsoc',
-        'nvZt5d8RFr0', 'KbatKgTdRkM',
+        'xuJGzw8rzSs',  # 2020
+        '5RbwsW_xDhE',  # 2018
+        'kFt9M1ZzsEg',  # 2017
+        'cRoHd1EIexs',  # 2016
+        # 'zzfkvmobsoc',  # taken down
+        'KbatKgTdRkM',  # 2012
+        'nvZt5d8RFr0',  # 2011
     ]
     return render(request, "tv.html", {'videos': videos})
 
