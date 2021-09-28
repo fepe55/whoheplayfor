@@ -1,10 +1,114 @@
 # -*- encoding: utf-8 -*-
 import requests
 import json
-from .teams import (ALL_TEAMS, EAST_TEAMS, WEST_TEAMS,
-                    PLAYOFF_TEAMS_2016, FINALS_TEAMS_2016,
-                    PLAYOFF_TEAMS_2017, )
-from .models import (Player, Team, )
+from .teams import (
+    ALL_TEAMS, EAST_TEAMS, WEST_TEAMS,
+    PLAYOFF_TEAMS_2016, FINALS_TEAMS_2016,
+    PLAYOFF_TEAMS_2017,
+)
+from .models import Team, Player, Division, Conference
+from whpf.teams import (
+    ATLANTIC_TEAMS, CENTRAL_TEAMS, SOUTHEAST_TEAMS,
+    NORTHWEST_TEAMS, PACIFIC_TEAMS, SOUTHWEST_TEAMS,
+    TEAMS_ID,
+)
+
+
+def start_data():
+    """
+    Populates the database with everything for the first time.
+    Conferences, divisiones, teams and players
+    """
+
+    # First, we create the conferences
+    east, _ = Conference.objects.get_or_create(name='East')
+    west, _ = Conference.objects.get_or_create(name='West')
+
+    # Second, we create the divisions
+    atlantic, _ = Division.objects.get_or_create(
+        name='Atlantic', conference=east
+    )
+    central, _ = Division.objects.get_or_create(
+        name='Central', conference=east
+    )
+    southeast, _ = Division.objects.get_or_create(
+        name='Southeast', conference=east
+    )
+
+    northwest, _ = Division.objects.get_or_create(
+        name='Northwest', conference=west
+    )
+    pacific, _ = Division.objects.get_or_create(
+        name='Pacific', conference=west
+    )
+    southwest, _ = Division.objects.get_or_create(
+        name='Southwest', conference=west
+    )
+
+    # Third, we create the teams
+    nba_players = get_players_api()
+    for p in nba_players:
+        # team_city = p['teamData']['city']
+        # team_name = p['teamData']['nickname']
+        # team_abbreviation = p['teamData']['tricode']
+        # team_code = p['teamData']['urlName']
+        if p[4] == 0:
+            continue
+        team_city = p[7]
+        team_name = p[8]
+        team_abbreviation = p[9]
+        team_code = p[5]
+        team_nba_id = TEAMS_ID[team_code]
+
+        if not Team.objects.filter(nba_id=team_nba_id).exists():
+            if team_code in ATLANTIC_TEAMS:
+                division = atlantic
+            if team_code in CENTRAL_TEAMS:
+                division = central
+            if team_code in SOUTHEAST_TEAMS:
+                division = southeast
+            if team_code in NORTHWEST_TEAMS:
+                division = northwest
+            if team_code in PACIFIC_TEAMS:
+                division = pacific
+            if team_code in SOUTHWEST_TEAMS:
+                division = southwest
+
+            Team.objects.create(
+                nba_id=team_nba_id,
+                city=team_city,
+                name=team_name,
+                abbreviation=team_abbreviation,
+                code=team_code,
+                division=division,
+            )
+
+    # And fourth, we create the players
+    # We loop twice on the nba_players for an easier code to read
+    # faceless = [204098, 1626162, 1626210]
+    faceless = []
+    for p in nba_players:
+        if p[4] == 0:
+            continue
+
+        team_code = p[5]
+        team_nba_id = TEAMS_ID[team_code]
+
+        nba_id = int(p[0])
+        name = '{} {}'.format(p[2], p[1])
+        code = name.replace(' ', '_').lower()
+
+        team = Team.objects.get(nba_id=team_nba_id)
+        fl = nba_id in faceless
+        player_qs = Player.all_players.filter(nba_id=nba_id)
+        if not player_qs.exists():
+            Player.objects.create(
+                nba_id=nba_id,
+                name=name,
+                team=team,
+                code=code,
+                faceless=fl,
+            )
 
 
 def team_to_dict(team):
