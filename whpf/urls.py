@@ -1,5 +1,7 @@
 # coding=utf-8
 from django.urls import path
+from graphene_django.views import GraphQLView
+
 from . import views
 
 app_name = 'whpf'
@@ -16,4 +18,6 @@ urlpatterns = [
     path('stats/<str:team_code>/', views.stats_team, name='stats_team'),
     path('right_guess/<int:pid>/', views.right_guess, name='right_guess'),
     path('wrong_guess/<int:pid>/', views.wrong_guess, name='wrong_guess'),
+
+    path("graphql", GraphQLView.as_view(graphiql=True)),
 ]

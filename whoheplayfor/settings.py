@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'social_django',
+    'graphene_django',
     'whpf',
 ]
 
@@ -196,3 +197,9 @@ if SENTRY_SDK_ENABLED:
         dsn=os.environ.get('SENTRY_SDK_DSN'),
         integrations=[DjangoIntegration()]
     )
+
+# GRAPHENE
+
+GRAPHENE = {
+    'SCHEMA': 'whpf.schema.schema',
+}
