@@ -47,6 +47,50 @@ def start_data():
 
     # Third, we create the teams
     nba_players = get_players_api()
+
+    # al_atlantic = False
+    # al_central = False
+    # al_southeast = False
+    # al_northwest = False
+    # al_pacific = False
+    # al_southwest = False
+    # mocked_nba_players = []
+
+    # for p in nba_players:
+    #     team_code = p[5]
+    #     if team_code in ATLANTIC_TEAMS:
+    #         if not al_atlantic:
+    #             mocked_nba_players.append(p)
+    #             al_atlantic = True
+    #     if team_code in CENTRAL_TEAMS:
+    #         if not al_central:
+    #             mocked_nba_players.append(p)
+    #             al_central = True
+    #     if team_code in SOUTHEAST_TEAMS:
+    #         if not al_southeast:
+    #             mocked_nba_players.append(p)
+    #             al_southeast = True
+    #     if team_code in NORTHWEST_TEAMS:
+    #         if not al_northwest:
+    #             mocked_nba_players.append(p)
+    #             al_northwest = True
+    #     if team_code in PACIFIC_TEAMS:
+    #         if not al_pacific:
+    #             mocked_nba_players.append(p)
+    #             al_pacific = True
+    #     if team_code in SOUTHWEST_TEAMS:
+    #         if not al_southwest:
+    #             mocked_nba_players.append(p)
+    #             al_southwest = True
+
+    #     if all([
+    #         al_atlantic, al_central, al_southeast, al_northwest, al_pacific,
+    #         al_southwest
+    #     ]):
+    #         print(mocked_nba_players)
+    #         a = 1/0
+
+    # b = 1 / 0
     for p in nba_players:
         # team_city = p['teamData']['city']
         # team_name = p['teamData']['nickname']
