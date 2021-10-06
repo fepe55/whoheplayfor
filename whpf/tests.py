@@ -1,13 +1,15 @@
 from django.apps import apps
 from django.urls import reverse
 from django.test import TestCase
+from django.core.management import call_command
+from django.contrib.auth.models import User
 
 from django.utils import timezone
 
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from whpf.apps import WhpfConfig
-from whpf.models import Team, Player, Options, Conference
+from whpf.models import Player, Team, Options, Conference, Result
 from whpf.helpers import start_data, get_score, get_teams_and_players_database
 from whpf.context_processors import last_roster_update
 
@@ -37,6 +39,12 @@ class BasicAccessTestCase(TestCaseWithData):
         url = reverse('whpf:faq')
         self._test_url(url)
 
+    def test_faq_with_options(self):
+        """Test FAQ view"""
+        Options.objects.create(last_roster_update=timezone.now())
+        url = reverse('whpf:faq')
+        self._test_url(url)
+
     def test_scoreboard(self):
         """Test scoreboard view"""
         url = reverse('whpf:scoreboard')
@@ -62,7 +70,17 @@ class AppsTestCase(TestCase):
         self.assertEqual(apps.get_app_config('whpf').name, 'whpf')
 
 
+def mocked_requests_get(*args):
+    """Basic requests.get mock"""
+    mock = Mock()
+    mock.status_code = 200
+    return mock
+
+
 def mocked_get_players_api():
+    """Mocked get_players_api with a few examples.
+    Including a wierd one with 0 as the fourth (zero-based) value
+    """
     return [
         [
             1630173, 'Achiuwa', 'Precious', 'precious-achiuwa', 1610612761,
@@ -166,3 +184,43 @@ class TestContextProcessor(TestCase):
     def test_context_processor_with_options(self):
         Options.objects.create(last_roster_update=timezone.now())
         last_roster_update(None)
+
+
+class TestManagementCommands(TestCase):
+    @patch('whpf.helpers.get_players_api', mocked_get_players_api)
+    def test_start_data(self):
+        east_qs = Conference.objects.filter(name='East')
+        self.assertFalse(east_qs.exists())
+        call_command('startdata')
+        east_qs = Conference.objects.filter(name='East')
+        self.assertTrue(east_qs.exists())
+
+
+class TestManagementCommandsWithData(TestCaseWithData):
+    def test_recalculate_scores(self):
+        code = (
+            'v001010000080600200200163052662600020160961610010115037370020347'
+            '1383801629003555501628970666600201949515100202693484801630217636'
+            '3016305434454002039246565016302573953016297266438002034866666016'
+            '2777450500020309552520162773255550020273460530162897342420162963'
+            '1373736326'
+        )
+        user = User.objects.create_user('john', 'lennon@thebeatles.com', 'pwd')
+
+        result = Result.objects.create(code=code, user=user)
+        self.assertEqual(result.score, 0)
+        call_command('recalculate_scores')
+        result.refresh_from_db()
+        self.assertEqual(result.score, 40)
+
+    @patch('whpf.helpers.get_players_api', mocked_get_players_api)
+    @patch('requests.get', mocked_requests_get)
+    @patch('time.sleep', lambda _: ...)
+    def test_update_rosters(self):
+        # TODO: Add data to check for change
+        call_command('update_rosters')
+
+    @patch('whpf.helpers.get_players_api', mocked_get_players_api)
+    def test_update_rosters_without_faceless_check(self):
+        # TODO: Add data to check for change
+        call_command('update_rosters', no_faceless_check=True)
