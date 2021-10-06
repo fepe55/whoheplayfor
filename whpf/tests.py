@@ -3,13 +3,12 @@ from django.urls import reverse
 from django.test import TestCase
 from django.core.management import call_command
 from django.contrib.auth.models import User
-
-from django.utils import timezone
+from django.utils import timezone, formats
 
 from unittest.mock import Mock, patch
 
 from whpf.apps import WhpfConfig
-from whpf.models import Player, Team, Options, Conference, Result
+from whpf.models import Team, Options, Conference, Result
 from whpf.helpers import start_data, get_score, get_teams_and_players_database
 from whpf.context_processors import last_roster_update
 
@@ -134,6 +133,7 @@ class TestHelpers(TestCase):
 class TestHelpersWithData(TestCaseWithData):
 
     def test_get_teams_and_players_database(self):
+        """Test get_teams_and_players_database from helpers.py"""
         game_info = {
             'limit_teams': '0',
             'hard_mode': False,
@@ -150,6 +150,7 @@ class TestHelpersWithData(TestCaseWithData):
         self.assertEqual(players[0]['nba_id'], 1630173)
 
     def test_get_score(self):
+        """Test get_score from helpers.py"""
         code = (
             'v001010000080600200200163052662600020160961610010115037370020347'
             '1383801629003555501628970666600201949515100202693484801630217636'
@@ -161,6 +162,7 @@ class TestHelpersWithData(TestCaseWithData):
         self.assertEqual(score, 40)
 
     def test_get_score_legacy(self):
+        """Test get_score from helpers.py with a legacy code format"""
         code = (
             '1000001060020020016277745757002015634949002015804444002030786464'
             '0162619552520000220762620020232957570020232264640020356061610162'
@@ -172,6 +174,7 @@ class TestHelpersWithData(TestCaseWithData):
         self.assertEqual(score, 30)
 
     def test_get_score_error(self):
+        """Test get_score from helpers.py with an empty code string"""
         code = ''
         with self.assertRaisesMessage(IndexError, 'out of range'):
             get_score(code)
@@ -179,16 +182,25 @@ class TestHelpersWithData(TestCaseWithData):
 
 class TestContextProcessor(TestCase):
     def test_context_processor_without_options(self):
-        last_roster_update(None)
+        """Test context processor without options"""
+        last_update = last_roster_update(None)
+        self.assertEqual(last_update['last_roster_update'], '')
 
     def test_context_processor_with_options(self):
-        Options.objects.create(last_roster_update=timezone.now())
-        last_roster_update(None)
+        """Test context processor with options"""
+        now = timezone.now()
+        Options.objects.create(last_roster_update=now)
+        last_update = last_roster_update(None)
+        self.assertEqual(
+            last_update['last_roster_update'],
+            formats.date_format(now, 'F jS, Y')
+        )
 
 
 class TestManagementCommands(TestCase):
     @patch('whpf.helpers.get_players_api', mocked_get_players_api)
     def test_start_data(self):
+        """Test start_data management command"""
         east_qs = Conference.objects.filter(name='East')
         self.assertFalse(east_qs.exists())
         call_command('startdata')
@@ -198,6 +210,7 @@ class TestManagementCommands(TestCase):
 
 class TestManagementCommandsWithData(TestCaseWithData):
     def test_recalculate_scores(self):
+        """Test recalculate scores management command"""
         code = (
             'v001010000080600200200163052662600020160961610010115037370020347'
             '1383801629003555501628970666600201949515100202693484801630217636'
@@ -217,10 +230,14 @@ class TestManagementCommandsWithData(TestCaseWithData):
     @patch('requests.get', mocked_requests_get)
     @patch('time.sleep', lambda _: ...)
     def test_update_rosters(self):
+        """Test update_rosters management command"""
         # TODO: Add data to check for change
         call_command('update_rosters')
 
     @patch('whpf.helpers.get_players_api', mocked_get_players_api)
     def test_update_rosters_without_faceless_check(self):
+        """Test update_rosters management command without
+        faceless check
+        """
         # TODO: Add data to check for change
         call_command('update_rosters', no_faceless_check=True)
