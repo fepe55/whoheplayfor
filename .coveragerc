@@ -1,0 +1,6 @@
+[run]
+source = .
+branch = True
+omit =
+  manage.py
+  whoheplayfor/wsgi.py
