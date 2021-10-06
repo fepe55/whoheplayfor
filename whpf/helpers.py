@@ -317,7 +317,7 @@ def get_players_api():
 
 
 # Deprecated
-def get_teams_and_players_api(game_info):
+def get_teams_and_players_api(game_info):  # pragma: no cover
     """(DEPRECATED) Get players and teams from the NBA.com API."""
     LIMIT_TEAMS = {
         '0': ALL_TEAMS,
