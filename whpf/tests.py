@@ -2,15 +2,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from whpf.models import Team
-# from whpf.helpers import start_data
 
 
 class BaseTestCase(TestCase):
     fixtures = ['startdata.json']
-    # def setUp(self):
-    #     #  https://docs.djangoproject.com/en/2.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
-    #     #  self.storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'  # noqa:E501
-    #     start_data()
 
 
 class BasicAccessTestCase(BaseTestCase):
