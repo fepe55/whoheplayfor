@@ -29,6 +29,8 @@ Finally, run the container in daemon mode
 
 [![Django CI](https://github.com/fepe55/whoheplayfor/actions/workflows/main.yml/badge.svg)](https://github.com/fepe55/whoheplayfor/actions/workflows/main.yml)
 
+[![Coverage](https://codecov.io/gh/fepe55/whoheplayfor/branch/master/graph/badge.svg?token=BBWNJ62AMD)](https://codecov.io/gh/fepe55/whoheplayfor)
+
 [![DeepSource](https://deepsource.io/gh/fepe55/whoheplayfor.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/fepe55/whoheplayfor/?ref=repository-badge)
 
 [![DeepSource](https://deepsource.io/gh/fepe55/whoheplayfor.svg/?label=resolved+issues&show_trend=true)](https://deepsource.io/gh/fepe55/whoheplayfor/?ref=repository-badge)
