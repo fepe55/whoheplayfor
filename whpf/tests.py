@@ -7,16 +7,16 @@ from django.utils import timezone
 from unittest.mock import patch
 
 from whpf.apps import WhpfConfig
-from whpf.models import Team, Options
-from whpf.helpers import start_data
+from whpf.models import Team, Player, Options, Conference
+from whpf.helpers import start_data, get_score, get_teams_and_players_database
 from whpf.context_processors import last_roster_update
 
 
-class BaseTestCase(TestCase):
+class TestCaseWithData(TestCase):
     fixtures = ['startdata.json']
 
 
-class BasicAccessTestCase(BaseTestCase):
+class BasicAccessTestCase(TestCaseWithData):
     def _test_url(self, url, expected_status_code=200):
         """Helper function for testing url"""
         response = self.client.get(url)
@@ -94,14 +94,69 @@ def mocked_get_players_api():
             'lakers', 0, 'Los Angeles', 'Lakers', 'LAL', '7', 'F', '6-7',
             '238', 'Syracuse', 'USA', 2003, 1, 3, 1.0, '2003', '2021', None,
             None, None, 'Season'
-        ]
+        ], [
+            2546, 'Anthony', 'Carmelo', 'carmelo-anthony', 1610612747,
+            'lakers', 0, 'Los Angeles', 'Lakers', 'LAL', '7', 'F', '6-7',
+            '238', 'Syracuse', 'USA', 2003, 1, 3, 1.0, '2003', '2021', None,
+            None, None, 'Season'
+        ], [
+            None, None, None, None, 0
+        ],
     ]
 
 
-class TestHelperStartData(TestCase):
+class TestHelpers(TestCase):
     @patch('whpf.helpers.get_players_api', mocked_get_players_api)
     def test_start_data(self):
         start_data()
+        east_qs = Conference.objects.filter(name='East')
+        self.assertTrue(east_qs.exists())
+
+
+class TestHelpersWithData(TestCaseWithData):
+
+    def test_get_teams_and_players_database(self):
+        game_info = {
+            'limit_teams': '0',
+            'hard_mode': False,
+        }
+        teams, players = get_teams_and_players_database(game_info)
+
+        self.assertEqual(teams[0]['nba_id'], 1610612737)
+        self.assertEqual(players[0]['nba_id'], 1630173)
+
+        game_info['hard_mode'] = True
+        teams, players = get_teams_and_players_database(game_info)
+
+        # TODO: Add data on times_guessed_pct to test proper sort
+        self.assertEqual(players[0]['nba_id'], 1630173)
+
+    def test_get_score(self):
+        code = (
+            'v001010000080600200200163052662600020160961610010115037370020347'
+            '1383801629003555501628970666600201949515100202693484801630217636'
+            '3016305434454002039246565016302573953016297266438002034866666016'
+            '2777450500020309552520162773255550020273460530162897342420162963'
+            '1373736326'
+        )
+        score = get_score(code)
+        self.assertEqual(score, 40)
+
+    def test_get_score_legacy(self):
+        code = (
+            '1000001060020020016277745757002015634949002015804444002030786464'
+            '0162619552520000220762620020232957570020232264640020356061610162'
+            '6145505000203461515100204001525200202347404000201960616100201609'
+            '4848016277465858002016014646002031076464001011144242000024495151'
+            '58336493855596891144'
+        )
+        score = get_score(code)
+        self.assertEqual(score, 30)
+
+    def test_get_score_error(self):
+        code = ''
+        with self.assertRaisesMessage(IndexError, 'out of range'):
+            get_score(code)
 
 
 class TestContextProcessor(TestCase):
