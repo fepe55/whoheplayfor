@@ -57,20 +57,21 @@ class Command(BaseCommand):
 
         # Player.all_players.update(active=False)
         start_time = timezone.now()
-        print('Starting at {}'.format(start_time))
-        print('Getting all the players from the API... ')
+
+        self.stdout.write('Starting at {}'.format(start_time))
+        self.stdout.write('Getting all the players from the API... ')
         stdout.flush()
         nba_players = get_players_api()
-        print('DONE')
-        print('Marking all players as being updated... ')
+        self.stdout.write('DONE')
+        self.stdout.write('Marking all players as being updated... ')
         stdout.flush()
         if not nba_players:
-            print("Error with NBA.com")
+            self.stdout.write("Error with NBA.com")
             return
         # We mark every player as being_updated and active true (for cases
         # where a player was inactive, then became active)
         Player.all_players.update(being_updated=True, active=True)
-        print('DONE')
+        self.stdout.write('DONE')
         # for p in nba_players:
         #     # I'm guessing teams never change. if they do, all hell breaks
         #     # loose... or I just change a thing or two
@@ -117,7 +118,7 @@ class Command(BaseCommand):
             if player_qs.exists():
                 # There SHOULD only be one.
                 # player = player_qs.get()
-                print('updating {}'.format(name))
+                self.stdout.write('updating {}'.format(name))
 
                 player_qs.update(
                     name=name,
@@ -135,7 +136,7 @@ class Command(BaseCommand):
                     code=code,
                     being_updated=False,
                 )
-                print('created {}'.format(name))
+                self.stdout.write('created {}'.format(name))
 
         # If your being_updated flag wasn't changed to False, it means you
         # weren't modified or added, so you disappeared. We set you as
@@ -154,27 +155,27 @@ class Command(BaseCommand):
             ).order_by('name')
             current = 1
             for p in active_players:
-                print(f'[{current}/{active_players.count()}]')
+                self.stdout.write(f'[{current}/{active_players.count()}]')
                 current += 1
                 try:
                     r = requests.get(p.picture)
                     if r.status_code == 200:
                         p.faceless = False
                         p.save()
-                        print(f'{p} ({p.id}) has a face')
+                        self.stdout.write(f'{p} ({p.id}) has a face')
                     elif r.status_code == 404:
-                        print(f'{p} ({p.id}) has no face --------------------')
+                        self.stdout.write(f'{p} ({p.id}) has no face --------------------')
                         faceless.append(p)
                         p.faceless = True
                         p.save()
                     else:
-                        print(f'error with {p} ({p.id}) (Error code: {r.status_code}) ++++++')  # noqa: E501
+                        self.stdout.write(f'error with {p} ({p.id}) (Error code: {r.status_code}) ++++++')  # noqa: E501
                         p.faceless = True
                         p.save()
                         errors.append({'player': p, 'error': r.status_code})
 
                 except requests.exceptions.RequestException as e:
-                    print(e)
+                    self.stdout.write(str(e))
                     errors.append({'player': p, 'error': e})
 
                 # Sleep to avoid a possible throttling or ban from the server
@@ -190,19 +191,18 @@ class Command(BaseCommand):
         options.save()
 
         if errors:
-            print("ERRORS")
+            self.stdout.write("ERRORS")
             for error in errors:
-                print(error['player'], error['error'])
-            print()
+                self.stdout.write(f"{error['player']}, {error['error']}")
         if faceless:
-            print("FACELESS")
+            self.stdout.write("FACELESS")
             for player in faceless:
-                print(player)
+                self.stdout.write(player)
 
         end_time = timezone.now()
-        print("Started")
-        print(start_time)
-        print("Ended")
-        print(end_time)
-        print("Elapsed")
-        print(str(end_time - start_time))
+        self.stdout.write("Started")
+        self.stdout.write(str(start_time))
+        self.stdout.write("Ended")
+        self.stdout.write(str(end_time))
+        self.stdout.write("Elapsed")
+        self.stdout.write(str(end_time - start_time))
