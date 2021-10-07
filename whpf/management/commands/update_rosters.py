@@ -164,7 +164,9 @@ class Command(BaseCommand):
                         p.save()
                         self.stdout.write(f'{p} ({p.id}) has a face')
                     elif r.status_code == 404:
-                        self.stdout.write(f'{p} ({p.id}) has no face --------------------')
+                        self.stdout.write(
+                            f'{p} ({p.id}) has no face --------------------'
+                        )
                         faceless.append(p)
                         p.faceless = True
                         p.save()
