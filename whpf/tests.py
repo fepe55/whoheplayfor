@@ -1,3 +1,4 @@
+from io import StringIO
 from django.apps import apps
 from django.urls import reverse
 from django.test import TestCase
@@ -128,6 +129,11 @@ def mocked_get_players_api():
     ]
 
 
+def mocked_get_players_api_empty():
+    """Mocked get_players_api with an empty return"""
+    return []
+
+
 class TestHelpers(TestCase):
     """Class for testing helper functions that don't require data."""
 
@@ -211,7 +217,7 @@ class TestContextProcessor(TestCase):
 class TestManagementCommands(TestCase):
     """Class for testing management command that don't require data."""
 
-    @patch('whpf.helpers.get_players_api', mocked_get_players_api)
+    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)  # noqa: E501
     def test_start_data(self):
         """Test start_data management command"""
         east_qs = Conference.objects.filter(name='East')
@@ -220,11 +226,12 @@ class TestManagementCommands(TestCase):
         east_qs = Conference.objects.filter(name='East')
         self.assertTrue(east_qs.exists())
 
-    @patch('whpf.helpers.get_players_api', lambda: [])
+    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api_empty)  # noqa: E501
     def test_update_rosters_without_players(self):
         """Test update_rosters management command"""
         # TODO: Add data to check for change
-        call_command('update_rosters')
+        out = StringIO()
+        call_command('update_rosters', stdout=out)
 
 
 class TestManagementCommandsWithData(TestCaseWithData):
@@ -247,18 +254,20 @@ class TestManagementCommandsWithData(TestCaseWithData):
         result.refresh_from_db()
         self.assertEqual(result.score, 40)
 
-    @patch('whpf.helpers.get_players_api', mocked_get_players_api)
-    @patch('requests.get', mocked_requests_get)
+    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)  # noqa: E501
+    @patch('requests.get', mocked_requests_get)  # noqa: E501
     @patch('time.sleep', lambda _: ...)
     def test_update_rosters(self):
         """Test update_rosters management command"""
         # TODO: Add data to check for change
-        call_command('update_rosters')
+        out = StringIO()
+        call_command('update_rosters', stdout=out)
 
-    @patch('whpf.helpers.get_players_api', mocked_get_players_api)
+    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)  # noqa: E501
     def test_update_rosters_without_faceless_check(self):
         """Test update_rosters management command without
         faceless check
         """
         # TODO: Add data to check for change
-        call_command('update_rosters', no_faceless_check=True)
+        out = StringIO()
+        call_command('update_rosters', no_faceless_check=True, stdout=out)
