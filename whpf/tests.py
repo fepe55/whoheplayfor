@@ -15,6 +15,7 @@ from whpf.context_processors import last_roster_update
 
 class TestCaseWithData(TestCase):
     """Base TestCase class with starting data from fixture."""
+
     fixtures = ['startdata.json']
 
 
