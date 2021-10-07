@@ -14,10 +14,13 @@ from whpf.context_processors import last_roster_update
 
 
 class TestCaseWithData(TestCase):
+    """Base TestCase class with starting data from fixture."""
     fixtures = ['startdata.json']
 
 
 class BasicAccessTestCase(TestCaseWithData):
+    """Class for testing that every url returns a 200 status code."""
+
     def _test_url(self, url, expected_status_code=200):
         """Helper function for testing url"""
         response = self.client.get(url)
@@ -63,6 +66,8 @@ class BasicAccessTestCase(TestCaseWithData):
 
 
 class AppsTestCase(TestCase):
+    """Class for testing apps.py."""
+
     def test_apps(self):
         """Test apps.py"""
         self.assertEqual(WhpfConfig.name, 'whpf')
@@ -123,6 +128,8 @@ def mocked_get_players_api():
 
 
 class TestHelpers(TestCase):
+    """Class for testing helper functions that don't require data."""
+
     @patch('whpf.helpers.get_players_api', mocked_get_players_api)
     def test_start_data(self):
         start_data()
@@ -131,6 +138,7 @@ class TestHelpers(TestCase):
 
 
 class TestHelpersWithData(TestCaseWithData):
+    """Class for testing helper functions that require data."""
 
     def test_get_teams_and_players_database(self):
         """Test get_teams_and_players_database from helpers.py"""
@@ -181,6 +189,8 @@ class TestHelpersWithData(TestCaseWithData):
 
 
 class TestContextProcessor(TestCase):
+    """Class for testing context processors."""
+
     def test_context_processor_without_options(self):
         """Test context processor without options"""
         last_update = last_roster_update(None)
@@ -198,6 +208,8 @@ class TestContextProcessor(TestCase):
 
 
 class TestManagementCommands(TestCase):
+    """Class for testing management command that don't require data."""
+
     @patch('whpf.helpers.get_players_api', mocked_get_players_api)
     def test_start_data(self):
         """Test start_data management command"""
@@ -207,8 +219,16 @@ class TestManagementCommands(TestCase):
         east_qs = Conference.objects.filter(name='East')
         self.assertTrue(east_qs.exists())
 
+    @patch('whpf.helpers.get_players_api', lambda: [])
+    def test_update_rosters_without_players(self):
+        """Test update_rosters management command"""
+        # TODO: Add data to check for change
+        call_command('update_rosters')
+
 
 class TestManagementCommandsWithData(TestCaseWithData):
+    """Class for testing management command that require data."""
+
     def test_recalculate_scores(self):
         """Test recalculate scores management command"""
         code = (
