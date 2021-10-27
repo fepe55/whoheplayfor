@@ -1,7 +1,9 @@
 [run]
+plugins = django_coverage_plugin
 source = .
 branch = True
 omit =
   manage.py
+  requirements.txt
   whoheplayfor/wsgi.py
   whpf/management/commands/_*.py

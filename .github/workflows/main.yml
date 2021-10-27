@@ -48,6 +48,7 @@ jobs:
         python -m pip install -r requirements.txt
         python -m pip install pycodestyle
         python -m pip install coverage
+        python -m pip install django_coverage_plugin
     - name: Check code style and formatting
       run: pycodestyle . --statistics --exclude migrations
     - name: Run migrations
