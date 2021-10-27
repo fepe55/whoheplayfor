@@ -66,6 +66,12 @@ class BasicAccessTestCase(TestCaseWithData):
             url = team.stats_url()
             self._test_url(url)
 
+    def test_results(self):
+        """Test results view"""
+        code = 'v001010000000600020200020270443460162839544449224755947494'
+        url = reverse('whpf:results', args=[code])
+        self._test_url(url)
+
 
 class AppsTestCase(TestCase):
     """Class for testing apps.py."""
