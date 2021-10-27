@@ -217,7 +217,7 @@ class TestContextProcessor(TestCase):
 class TestManagementCommands(TestCase):
     """Class for testing management command that don't require data."""
 
-    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)  # noqa: E501
+    @patch('whpf.helpers.get_players_api', mocked_get_players_api)
     def test_start_data(self):
         """Test start_data management command"""
         east_qs = Conference.objects.filter(name='East')
