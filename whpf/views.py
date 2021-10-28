@@ -147,6 +147,7 @@ def tv(request):
     """Render a template showing a list of videos."""
     # videos = ['6psHr028Hyg', 'nvZt5d8RFr0', 'KbatKgTdRkM', 'cAIPKDBC4Mg', ]
     videos = [
+        '8avNI5Tgzfs',  # 2021
         'xuJGzw8rzSs',  # 2020
         '5RbwsW_xDhE',  # 2018
         'kFt9M1ZzsEg',  # 2017
