@@ -66,9 +66,10 @@ class Team(ModelWithDates):
     def picture(self):
         # TEAM_PICTURE_URL = "http://stats.nba.com/media/img/teams/"\
         #     "logos/%s_logo.svg"
-        TEAM_PICTURE_URL = "https://i.cdn.turner.com/nba/nba/assets/logos/"\
-            "teams/primary/web/%s.svg"
-        return TEAM_PICTURE_URL % self.abbreviation
+        # TEAM_PICTURE_URL = "https://i.cdn.turner.com/nba/nba/assets/logos/"\
+        #     "teams/primary/web/%s.svg"
+        TEAM_PICTURE_URL = "https://cdn.nba.com/logos/nba/{team_id}/global/D/logo.svg"
+        return TEAM_PICTURE_URL.format(team_id=self.nba_id)
 
     def stats_url(self):
         return reverse('whpf:stats_team', kwargs={'team_code': self.code, })
