@@ -62,12 +62,13 @@ class Command(BaseCommand):
         self.stdout.write('Getting all the players from the API... ')
         stdout.flush()
         nba_players = get_players_api()
-        self.stdout.write('DONE')
-        self.stdout.write('Marking all players as being updated... ')
-        stdout.flush()
         if not nba_players:
             self.stdout.write("Error with NBA.com")
             return
+        self.stdout.write('DONE')
+        stdout.flush()
+        self.stdout.write('Marking all players as being updated... ')
+        stdout.flush()
         # We mark every player as being_updated and active true (for cases
         # where a player was inactive, then became active)
         Player.all_players.update(being_updated=True, active=True)
@@ -199,7 +200,7 @@ class Command(BaseCommand):
         if faceless:
             self.stdout.write("FACELESS")
             for player in faceless:
-                self.stdout.write(player)
+                self.stdout.write(player.name)
 
         end_time = timezone.now()
         self.stdout.write("Started")

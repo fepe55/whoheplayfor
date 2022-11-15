@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+import os
+import os.path
 import requests
 import json
 from .teams import (
@@ -285,8 +287,6 @@ def get_players_api():
 
     # r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS)
 
-    import os.path
-    import os
     filename = 'players.json'
     if os.path.isfile(filename):
         with open(filename) as players_file:
