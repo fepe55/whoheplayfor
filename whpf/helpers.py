@@ -2,9 +2,9 @@
 import json
 import os
 import os.path
+from typing import Dict, List, Tuple
 
 import requests
-from typing import Dict, List, Tuple
 
 from whpf.teams import (
     ATLANTIC_TEAMS,
@@ -145,7 +145,7 @@ def start_data() -> None:
         team_nba_id = TEAMS_ID[team_code]
 
         nba_id = int(p[0])
-        name = '{} {}'.format(p[2], p[1])
+        name = f"{p[2]} {p[1]}"
         code = name.replace(' ', '_').lower()
 
         team = Team.objects.get(nba_id=team_nba_id)

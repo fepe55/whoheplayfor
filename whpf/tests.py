@@ -232,7 +232,7 @@ class TestManagementCommands(TestCase):
         east_qs = Conference.objects.filter(name='East')
         self.assertTrue(east_qs.exists())
 
-    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api_empty)  # noqa: E501
+    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api_empty)
     def test_update_rosters_without_players(self):
         """Test update_rosters management command"""
         # TODO: Add data to check for change
@@ -260,8 +260,8 @@ class TestManagementCommandsWithData(BaseTestCaseWithData):
         result.refresh_from_db()
         self.assertEqual(result.score, 40)
 
-    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)  # noqa: E501
-    @patch('requests.get', mocked_requests_get)  # noqa: E501
+    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)
+    @patch('requests.get', mocked_requests_get)
     @patch('time.sleep', lambda _: ...)
     def test_update_rosters(self):
         """Test update_rosters management command"""
@@ -269,7 +269,7 @@ class TestManagementCommandsWithData(BaseTestCaseWithData):
         out = StringIO()
         call_command('update_rosters', stdout=out)
 
-    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)  # noqa: E501
+    @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)
     def test_update_rosters_without_faceless_check(self):
         """Test update_rosters management command without
         faceless check

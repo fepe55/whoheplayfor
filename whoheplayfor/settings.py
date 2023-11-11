@@ -161,7 +161,7 @@ if admin_names and admin_emails:
 EMAIL_ENABLED = os.environ.get("EMAIL_ENABLED", 'False').lower() in TRUE_VALUES
 
 if EMAIL_ENABLED:
-    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'False').lower() in TRUE_VALUES  # noqa: E501
+    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'False').lower() in TRUE_VALUES
     EMAIL_HOST = os.environ.get('EMAIL_HOST')
     EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
     EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
@@ -170,14 +170,14 @@ if EMAIL_ENABLED:
     DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')  # For sendmail
 
 
-SOCIAL_AUTH_ENABLED = os.environ.get("SOCIAL_AUTH_ENABLED", 'False').lower() in TRUE_VALUES  # noqa: E501
+SOCIAL_AUTH_ENABLED = os.environ.get("SOCIAL_AUTH_ENABLED", 'False').lower() in TRUE_VALUES
 
 if SOCIAL_AUTH_ENABLED:
     SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
     SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
 
-    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  # noqa: E501
-    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # noqa: E501
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
     SOCIAL_AUTH_TWITTER_KEY = os.environ.get('SOCIAL_AUTH_TWITTER_KEY')
     SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('SOCIAL_AUTH_TWITTER_SECRET')
@@ -190,7 +190,7 @@ if SOCIAL_AUTH_ENABLED:
 
 
 # SENTRY
-SENTRY_SDK_ENABLED = os.environ.get("SENTRY_SDK_ENABLED", 'False').lower() in TRUE_VALUES  # noqa: E501
+SENTRY_SDK_ENABLED = os.environ.get("SENTRY_SDK_ENABLED", 'False').lower() in TRUE_VALUES
 
 if SENTRY_SDK_ENABLED:
     import sentry_sdk

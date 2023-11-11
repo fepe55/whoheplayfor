@@ -23,10 +23,10 @@ class Query(graphene.ObjectType):
         name=graphene.String(required=True)
     )
 
-    def resolve_all_players(root, info):
+    def resolve_all_players(root, _):
         return Player.objects.select_related('team').all()
 
-    def resolve_team_by_name(root, info, name):
+    def resolve_team_by_name(root, _, name):
         try:
             return Team.objects.get(name=name)
         except Team.DoesNotExist:

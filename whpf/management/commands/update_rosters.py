@@ -59,7 +59,7 @@ class Command(BaseCommand):
         # Player.all_players.update(active=False)
         start_time = timezone.now()
 
-        self.stdout.write('Starting at {}'.format(start_time))
+        self.stdout.write(f"Starting at {start_time}")
         self.stdout.write('Getting all the players from the API... ')
         stdout.flush()
         nba_players = get_players_api()
@@ -113,14 +113,14 @@ class Command(BaseCommand):
             team_code = p[5]
             team = Team.objects.get(code=team_code)
             nba_id = int(p[0])
-            name = '{} {}'.format(p[2], p[1])
+            name = f"{p[2]} {p[1]}"
             code = name.replace(' ', '_').lower()
             player_qs = Player.all_players.filter(nba_id=nba_id)
             # If there is a player with that ID, we update it
             if player_qs.exists():
                 # There SHOULD only be one.
                 # player = player_qs.get()
-                self.stdout.write('updating {}'.format(name))
+                self.stdout.write(f"updating {name}")
 
                 player_qs.update(
                     name=name,
@@ -138,7 +138,7 @@ class Command(BaseCommand):
                     code=code,
                     being_updated=False,
                 )
-                self.stdout.write('created {}'.format(name))
+                self.stdout.write(f"created {name}")
 
         # If your being_updated flag wasn't changed to False, it means you
         # weren't modified or added, so you disappeared. We set you as
@@ -173,7 +173,7 @@ class Command(BaseCommand):
                         p.faceless = True
                         p.save()
                     else:
-                        self.stdout.write(f'error with {p} ({p.id}) (Error code: {r.status_code}) ++++++')  # noqa: E501
+                        self.stdout.write(f'error with {p} ({p.id}) (Error code: {r.status_code}) ++++++')
                         p.faceless = True
                         p.save()
                         errors.append({'player': p, 'error': r.status_code})

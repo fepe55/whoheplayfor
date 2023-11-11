@@ -24,17 +24,17 @@ def get_user_info(user):
     provider = social.provider
     if provider == 'twitter':
         screen_name = social.extra_data['access_token']['screen_name']
-        url = "https://www.twitter.com/%s" % screen_name
+        url = f"https://www.twitter.com/{screen_name}"
         icon_class = 'fa fa-twitter'
 
     if provider == 'facebook':
         fid = social.extra_data['id']
-        url = "https://www.facebook.com/%s" % fid
+        url = f"https://www.facebook.com/{fid}"
         icon_class = 'fa fa-facebook'
 
     if provider == 'reddit':
         username = social.extra_data['username']
-        url = "https://www.reddit.com/u/%s" % username
+        url = f"https://www.reddit.com/u/{username}"
         icon_class = 'fa fa-reddit-alien'
 
     if provider == 'google-oauth2':

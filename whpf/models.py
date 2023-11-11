@@ -32,7 +32,7 @@ class Conference(models.Model):
         return teams
 
     def __str__(self):
-        return "%sern conference" % (self.name, )
+        return f"{self.name}ern conference"
 
 
 class Division(models.Model):
@@ -42,7 +42,7 @@ class Division(models.Model):
     )
 
     def __str__(self):
-        return "%s division" % (self.name, )
+        return f"{self.name} division"
 
 
 class Team(ModelWithDates):
@@ -69,14 +69,14 @@ class Team(ModelWithDates):
         #     "logos/%s_logo.svg"
         # TEAM_PICTURE_URL = "https://i.cdn.turner.com/nba/nba/assets/logos/"\
         #     "teams/primary/web/%s.svg"
-        TEAM_PICTURE_URL = "https://cdn.nba.com/logos/nba/{team_id}/global/D/logo.svg"  # noqa: E501
+        TEAM_PICTURE_URL = "https://cdn.nba.com/logos/nba/{team_id}/global/D/logo.svg"
         return TEAM_PICTURE_URL.format(team_id=self.nba_id)
 
     def stats_url(self):
         return reverse('whpf:stats_team', kwargs={'team_code': self.code, })
 
     def __str__(self):
-        return "%s %s" % (self.city, self.name, )
+        return f"{self.city} {self.name}"
 
     class Meta:
         ordering = ['division__conference__name', 'city', 'name', ]
@@ -110,7 +110,7 @@ class Player(ModelWithDates):
         #     "img/2.0/sect/statscube/players/large/%s.png"
         # PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
         #     "uploads/headshots/nba/latest/260x190/%s.png"
-        PLAYER_PICTURE_URL = 'https://cdn.nba.com/headshots/nba/latest/260x190/{}.png'  # noqa: E501
+        PLAYER_PICTURE_URL = 'https://cdn.nba.com/headshots/nba/latest/260x190/{}.png'
         if self.faceless:
             return DEFAULT
         return PLAYER_PICTURE_URL.format(self.nba_id)
