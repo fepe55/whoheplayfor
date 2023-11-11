@@ -11,7 +11,7 @@ from django.utils import formats, timezone
 from whpf.apps import WhpfConfig
 from whpf.context_processors import last_roster_update
 from whpf.helpers import get_score, get_teams_and_players_database, start_data
-from whpf.models import Conference, Options, Result, Team, Player
+from whpf.models import Conference, Options, Player, Result, Team
 
 
 class BasicAccessTestCase(TestCase):
