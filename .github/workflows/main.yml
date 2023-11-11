@@ -51,7 +51,7 @@ jobs:
         python -m pip install coverage
         python -m pip install django_coverage_plugin
     - name: Check code style and formatting
-      run: pycodestyle . --statistics --exclude migrations
+      run: pycodestyle . --statistics --exclude migrations --max-line-length=119
     - name: Isort
       run: isort . --check
     - name: Run migrations
