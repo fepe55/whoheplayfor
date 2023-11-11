@@ -2,5 +2,5 @@ Django~=2.2
 requests==2.31.0
 # python-social-auth==0.3.6
 social-auth-app-django==3.1.0
-whitenoise==6.6.0
+whitenoise==6.5.0
 graphene-django==2.15.0
