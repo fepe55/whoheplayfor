@@ -4,6 +4,7 @@ import os
 import os.path
 
 import requests
+from typing import Dict, List, Tuple
 
 from whpf.teams import (
     ATLANTIC_TEAMS,
@@ -19,7 +20,7 @@ from .models import Conference, Division, Player, Team
 from .teams import ALL_TEAMS, EAST_TEAMS, FINALS_TEAMS_2016, PLAYOFF_TEAMS_2016, PLAYOFF_TEAMS_2017, WEST_TEAMS
 
 
-def start_data():
+def start_data() -> None:
     """
     Populates the database with everything for the first time.
     Conferences, divisiones, teams and players
@@ -160,7 +161,7 @@ def start_data():
             )
 
 
-def team_to_dict(team):
+def team_to_dict(team: Team) -> Dict:
     """Take a Team object and return a dictionary with the following
     fields:
     nba_id, city, name, abbreviation, code, picture
@@ -175,7 +176,7 @@ def team_to_dict(team):
     }
 
 
-def player_to_dict(player):
+def player_to_dict(player: Player) -> Dict:
     """Take a Player object and return a dictionary with the following
     fields:
     nba_id, name, team, picture.
@@ -188,7 +189,7 @@ def player_to_dict(player):
     }
 
 
-def get_teams_and_players_database(game_info):
+def get_teams_and_players_database(game_info: Dict) -> Tuple[List[Team], List[Player]]:
     """Get teams and players from the database."""
     players = []
     teams = []
@@ -233,7 +234,7 @@ def get_teams_and_players_database(game_info):
     return (teams, players)
 
 
-def get_players_api():
+def get_players_api() -> List:
     """Get players from the NBA.com API."""
     # dt = datetime.today().date()
     # tries_left = 3
@@ -381,7 +382,7 @@ def get_teams_and_players_api(game_info):  # pragma: no cover
 
 # SCORE
 
-def get_guesses(code):
+def get_guesses(code: str) -> List:
     """Parse the code to get a list of guesses.
     Each guess is a dictionary with the following fields:
         - round: int
@@ -413,7 +414,7 @@ def get_guesses(code):
     return guesses
 
 
-def get_difficulty(code):
+def get_difficulty(code: str) -> int:
     """Parse the code to get game options and calculate the difficulty
     value.
     """
@@ -454,7 +455,7 @@ def get_difficulty(code):
     # return difficulty
 
 
-def get_score(code):
+def get_score(code: str) -> int:
     """Parse the code to obtain the score based on guesses."""
     correct_guesses = 0
     wrong_guesses = 0
@@ -473,7 +474,7 @@ def get_score(code):
     return score
 
 
-def parse_code(code):
+def parse_code(code: str) -> Dict:
     """Parse code to obtain main options value."""
     if code[0] == 'v':
         # code: 'v' + version_number (3) + code
