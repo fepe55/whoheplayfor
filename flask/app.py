@@ -29,8 +29,7 @@ def get_players():
         if os.path.isfile(filename):
             try:
                 with open(filename, 'r') as f:
-                    data = f.read()
-                    j = json.loads(data)
+                    j = json.load(f)
                 return j['resultSets'][0]['rowSet']
             except Exception:
                 os.remove(filename)
@@ -77,7 +76,7 @@ def results(code):
     rounds = int(code[:3])
     code = code[3:]
     guesses = []
-    for i in xrange(rounds):
+    for i in range(rounds):
         guess_str = code[10*i:10*i+10]
         guess = {
             'round': i+1,
@@ -92,7 +91,7 @@ def results(code):
 
     nba_players = get_players()
     proper_guesses = {}
-    for i in xrange(rounds):
+    for i in range(rounds):
         proper_guesses[i+1] = {}
 
     for p in nba_players:
@@ -127,7 +126,7 @@ def results(code):
                 proper_guesses[g['round']]['team'] = team
 
         final_guesses = []
-        for i in xrange(rounds):
+        for i in range(rounds):
             final_guesses.append(proper_guesses[i+1])
     return render_template('results.html', guesses=final_guesses,
                            game_info=game_info)
@@ -180,7 +179,7 @@ def home():
     if (
         time not in TIMES or
         rounds not in ROUNDS or
-        limit_teams not in LIMIT_TEAMS.keys()
+        limit_teams not in LIMIT_TEAMS
     ):
         session.clear()
         abort(400)
