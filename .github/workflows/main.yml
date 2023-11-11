@@ -48,6 +48,7 @@ jobs:
         python -m pip install -r requirements.txt
         python -m pip install pycodestyle
         python -m pip install isort
+        python -m pip install pytest-django
         python -m pip install coverage
         python -m pip install django_coverage_plugin
     - name: Check code style and formatting
@@ -58,7 +59,8 @@ jobs:
       run: python manage.py migrate
     - name: Run tests and generate coverage report
       run: |
-        coverage run --source="." manage.py test
+        coverage run -m pytest
+        coverage report
         coverage xml
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v2

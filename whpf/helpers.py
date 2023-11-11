@@ -25,7 +25,6 @@ def start_data() -> None:
     Populates the database with everything for the first time.
     Conferences, divisiones, teams and players
     """
-
     # First, we create the conferences
     east, _ = Conference.objects.get_or_create(name='East')
     west, _ = Conference.objects.get_or_create(name='West')

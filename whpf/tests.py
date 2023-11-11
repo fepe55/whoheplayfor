@@ -11,17 +11,13 @@ from django.utils import formats, timezone
 from whpf.apps import WhpfConfig
 from whpf.context_processors import last_roster_update
 from whpf.helpers import get_score, get_teams_and_players_database, start_data
-from whpf.models import Conference, Options, Result, Team
+from whpf.models import Conference, Options, Result, Team, Player
 
 
-class BaseTestCaseWithData(TestCase):
-    """Base TestCase class with starting data from fixture."""
+class BasicAccessTestCase(TestCase):
+    """Class for testing that every url returns a 200 status code."""
 
     fixtures = ['startdata.json']
-
-
-class BasicAccessTestCase(BaseTestCaseWithData):
-    """Class for testing that every url returns a 200 status code."""
 
     def _test_url(self, url, expected_status_code=200):
         """Helper function for testing url"""
@@ -150,8 +146,10 @@ class TestHelpers(TestCase):
         self.assertTrue(east_qs.exists())
 
 
-class TestHelpersWithData(BaseTestCaseWithData):
+class TestHelpersWithData(TestCase):
     """Class for testing helper functions that require data."""
+
+    fixtures = ['startdata.json']
 
     def test_get_teams_and_players_database(self):
         """Test get_teams_and_players_database from helpers.py"""
@@ -159,16 +157,21 @@ class TestHelpersWithData(BaseTestCaseWithData):
             'limit_teams': '0',
             'hard_mode': False,
         }
+        Player.objects.update(times_guessed_pct=90)
+        least_guessed_player = Player.objects.get(id=55)
+        least_guessed_player.times_guessed_pct = 20
+        least_guessed_player.save()
+
         teams, players = get_teams_and_players_database(game_info)
 
         self.assertEqual(teams[0]['nba_id'], 1610612737)
         self.assertEqual(players[0]['nba_id'], 1630173)
 
+        # If using hard mode, the first one should be least guessed player
         game_info['hard_mode'] = True
         teams, players = get_teams_and_players_database(game_info)
 
-        # TODO: Add data on times_guessed_pct to test proper sort
-        self.assertEqual(players[0]['nba_id'], 1630173)
+        self.assertEqual(players[0]['nba_id'], least_guessed_player.nba_id)
 
     def test_get_score(self):
         """Test get_score from helpers.py"""
@@ -235,13 +238,20 @@ class TestManagementCommands(TestCase):
     @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api_empty)
     def test_update_rosters_without_players(self):
         """Test update_rosters management command"""
-        # TODO: Add data to check for change
+        # Starting set based on fixture
         out = StringIO()
         call_command('update_rosters', stdout=out)
+        stdout = out.getvalue()
+        assert "Starting at" in stdout
+        assert "Getting all the players from the API" in stdout
+        # If get_players_api is empty, we assume NBA.com issue
+        assert "Error with NBA.com" in stdout
 
 
-class TestManagementCommandsWithData(BaseTestCaseWithData):
+class TestManagementCommandsWithData(TestCase):
     """Class for testing management command that require data."""
+
+    fixtures = ['startdata.json']
 
     def test_recalculate_scores(self):
         """Test recalculate scores management command"""
@@ -265,15 +275,37 @@ class TestManagementCommandsWithData(BaseTestCaseWithData):
     @patch('time.sleep', lambda _: ...)
     def test_update_rosters(self):
         """Test update_rosters management command"""
-        # TODO: Add data to check for change
+        # Starting set based on fixture
+        assert Player.objects.count() == 587
+
         out = StringIO()
         call_command('update_rosters', stdout=out)
+        stdout = out.getvalue()
+        assert "Starting at" in stdout
+        assert "Started" in stdout
+        assert "Ended" in stdout
+        assert "Elapsed" in stdout
+        assert "has a face" in stdout
+
+        # After updating the rosters, everyone should be marked as inactive except the valid 6 from the mocked API call
+        assert Player.objects.count() == 6
 
     @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)
     def test_update_rosters_without_faceless_check(self):
         """Test update_rosters management command without
         faceless check
         """
-        # TODO: Add data to check for change
+        # Starting set based on fixture
+        assert Player.objects.count() == 587
+
         out = StringIO()
         call_command('update_rosters', no_faceless_check=True, stdout=out)
+        stdout = out.getvalue()
+        assert "Starting at" in stdout
+        assert "Started" in stdout
+        assert "Ended" in stdout
+        assert "Elapsed" in stdout
+        assert "Has a face" not in stdout
+
+        # After updating the rosters, everyone should be marked as inactive except the valid 6 from the mocked API call
+        assert Player.objects.count() == 6
