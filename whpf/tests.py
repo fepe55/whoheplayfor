@@ -242,10 +242,10 @@ class TestManagementCommands(TestCase):
         out = StringIO()
         call_command('update_rosters', stdout=out)
         stdout = out.getvalue()
-        assert "Starting at" in stdout
-        assert "Getting all the players from the API" in stdout
+        self.assertIn("Starting at", stdout)
+        self.assertIn("Getting all the players from the API", stdout)
         # If get_players_api is empty, we assume NBA.com issue
-        assert "Error with NBA.com" in stdout
+        self.assertIn("Error with NBA.com", stdout)
 
 
 class TestManagementCommandsWithData(TestCase):
@@ -276,19 +276,19 @@ class TestManagementCommandsWithData(TestCase):
     def test_update_rosters(self):
         """Test update_rosters management command"""
         # Starting set based on fixture
-        assert Player.objects.count() == 587
+        self.assertEqual(Player.objects.count(), 587)
 
         out = StringIO()
         call_command('update_rosters', stdout=out)
         stdout = out.getvalue()
-        assert "Starting at" in stdout
-        assert "Started" in stdout
-        assert "Ended" in stdout
-        assert "Elapsed" in stdout
-        assert "has a face" in stdout
+        self.assertIn("Starting at", stdout)
+        self.assertIn("Started", stdout)
+        self.assertIn("Ended", stdout)
+        self.assertIn("Elapsed", stdout)
+        self.assertIn("has a face", stdout)
 
         # After updating the rosters, everyone should be marked as inactive except the valid 6 from the mocked API call
-        assert Player.objects.count() == 6
+        self.assertEqual(Player.objects.count(), 6)
 
     @patch('whpf.management.commands.update_rosters.get_players_api', mocked_get_players_api)
     def test_update_rosters_without_faceless_check(self):
@@ -296,16 +296,16 @@ class TestManagementCommandsWithData(TestCase):
         faceless check
         """
         # Starting set based on fixture
-        assert Player.objects.count() == 587
+        self.assertEqual(Player.objects.count(), 587)
 
         out = StringIO()
         call_command('update_rosters', no_faceless_check=True, stdout=out)
         stdout = out.getvalue()
-        assert "Starting at" in stdout
-        assert "Started" in stdout
-        assert "Ended" in stdout
-        assert "Elapsed" in stdout
-        assert "Has a face" not in stdout
+        self.assertIn("Starting at", stdout)
+        self.assertIn("Started", stdout)
+        self.assertIn("Ended", stdout)
+        self.assertIn("Elapsed", stdout)
+        self.assertNotIn("Has a face", stdout)
 
         # After updating the rosters, everyone should be marked as inactive except the valid 6 from the mocked API call
-        assert Player.objects.count() == 6
+        self.assertEqual(Player.objects.count(), 6)
