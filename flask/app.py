@@ -138,8 +138,13 @@ def tv():
     return render_template('tv.html', videos=videos)
 
 
-@app.route('/', methods=['GET', 'POST', ])
+@app.route('/', methods=['GET'])
 def home():
+    return render_template('home.html')
+
+
+@app.route('/', methods=['POST', ])
+def home_post():
 
     TIMES = [0, 30, 60, 90]
     TIME_DEFAULT = TIMES[2]  # 60
@@ -154,9 +159,6 @@ def home():
     LT_DEFAULT = 'all'
     SPN_DEFAULT = True
     SF_DEFAULT = False
-
-    if request.method != 'POST':
-        return render_template('home.html')
 
     if 'advanced' in request.form:
         time = int(request.form['time'])
@@ -229,9 +231,8 @@ def home():
 
     teams = sorted(teams)
     # player = random.choice(players)
-    return render_template('whpf.html', players=players, teams=teams,
-                           game_info=game_info)
+    return render_template('whpf.html', players=players, teams=teams, game_info=game_info)
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=8000)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', debug=True, port=8000)

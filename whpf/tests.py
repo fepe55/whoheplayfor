@@ -14,13 +14,13 @@ from whpf.helpers import get_score, get_teams_and_players_database, start_data
 from whpf.models import Conference, Options, Result, Team
 
 
-class TestCaseWithData(TestCase):
+class BaseTestCaseWithData(TestCase):
     """Base TestCase class with starting data from fixture."""
 
     fixtures = ['startdata.json']
 
 
-class BasicAccessTestCase(TestCaseWithData):
+class BasicAccessTestCase(BaseTestCaseWithData):
     """Class for testing that every url returns a 200 status code."""
 
     def _test_url(self, url, expected_status_code=200):
@@ -150,7 +150,7 @@ class TestHelpers(TestCase):
         self.assertTrue(east_qs.exists())
 
 
-class TestHelpersWithData(TestCaseWithData):
+class TestHelpersWithData(BaseTestCaseWithData):
     """Class for testing helper functions that require data."""
 
     def test_get_teams_and_players_database(self):
@@ -240,7 +240,7 @@ class TestManagementCommands(TestCase):
         call_command('update_rosters', stdout=out)
 
 
-class TestManagementCommandsWithData(TestCaseWithData):
+class TestManagementCommandsWithData(BaseTestCaseWithData):
     """Class for testing management command that require data."""
 
     def test_recalculate_scores(self):

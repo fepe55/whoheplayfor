@@ -98,9 +98,9 @@ DATABASES = {
         'NAME': os.environ.get(
             'POSTGRES_DB', os.path.join(BASE_DIR, 'db.sqlite3')
         ),
-        'USER': os.environ.get('POSTGRES_USER', None),
-        'HOST': os.environ.get('POSTGRES_HOST', None),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None)
+        'USER': os.environ.get('POSTGRES_USER'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD')
     }
 }
 
