@@ -1,19 +1,22 @@
 # -*- encoding: utf-8 -*-
+import json
 import os
 import os.path
+
 import requests
-import json
-from .teams import (
-    ALL_TEAMS, EAST_TEAMS, WEST_TEAMS,
-    PLAYOFF_TEAMS_2016, FINALS_TEAMS_2016,
-    PLAYOFF_TEAMS_2017,
-)
-from .models import Team, Player, Division, Conference
+
 from whpf.teams import (
-    ATLANTIC_TEAMS, CENTRAL_TEAMS, SOUTHEAST_TEAMS,
-    NORTHWEST_TEAMS, PACIFIC_TEAMS, SOUTHWEST_TEAMS,
+    ATLANTIC_TEAMS,
+    CENTRAL_TEAMS,
+    NORTHWEST_TEAMS,
+    PACIFIC_TEAMS,
+    SOUTHEAST_TEAMS,
+    SOUTHWEST_TEAMS,
     TEAMS_ID,
 )
+
+from .models import Conference, Division, Player, Team
+from .teams import ALL_TEAMS, EAST_TEAMS, FINALS_TEAMS_2016, PLAYOFF_TEAMS_2016, PLAYOFF_TEAMS_2017, WEST_TEAMS
 
 
 def start_data():

@@ -2,19 +2,14 @@
 import json
 from datetime import timedelta
 
-from django.http import HttpResponse, Http404
-from django.utils import formats, timezone
-from django.shortcuts import render, get_object_or_404
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.utils import formats, timezone
 
-from .models import Result, Player, Team, Options, Play, PlaySetting
-from .forms import (
-    GameForm, TIME_CHOICES, ROUNDS_CHOICES, LIMIT_TEAMS_CHOICES,
-)
-from .helpers import (
-    parse_code, get_score, get_guesses,
-    get_teams_and_players_database, get_teams_and_players_api,
-)
+from .forms import LIMIT_TEAMS_CHOICES, ROUNDS_CHOICES, TIME_CHOICES, GameForm
+from .helpers import get_guesses, get_score, get_teams_and_players_api, get_teams_and_players_database, parse_code
+from .models import Options, Play, Player, PlaySetting, Result, Team
 
 
 def get_teams_and_players(game_info):

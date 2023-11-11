@@ -1,7 +1,8 @@
 # coding=utf-8
 from django.core.management.base import BaseCommand
+
 from whpf.helpers import get_players_api
-from whpf.models import (Team, Player, )
+from whpf.models import Player, Team
 
 faceless = [204098, 1626162, 1626210]
 

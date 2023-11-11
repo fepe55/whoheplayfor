@@ -47,10 +47,13 @@ jobs:
         python -m pip install psycopg2-binary
         python -m pip install -r requirements.txt
         python -m pip install pycodestyle
+        python -m pip install isort
         python -m pip install coverage
         python -m pip install django_coverage_plugin
     - name: Check code style and formatting
       run: pycodestyle . --statistics --exclude migrations
+    - name: Isort
+      run: isort . --check
     - name: Run migrations
       run: python manage.py migrate
     - name: Run tests and generate coverage report

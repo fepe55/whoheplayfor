@@ -1,13 +1,14 @@
 # coding=utf-8
 import time
-import requests
 from sys import stdout
 
-from django.utils import timezone
-from django.core.management.base import BaseCommand
+import requests
 
-from whpf.models import (Player, Team, Options)
+from django.core.management.base import BaseCommand
+from django.utils import timezone
+
 from whpf.helpers import get_players_api
+from whpf.models import Options, Player, Team
 
 #  00 - "PERSON_ID"
 #  01 - "PLAYER_LAST_NAME"

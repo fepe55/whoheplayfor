@@ -1,9 +1,9 @@
 # coding=utf-8
 from django.core.management.base import BaseCommand
+
 from whpf.helpers import get_players_api
-from whpf.models import (Team, Division, )
-from whpf.teams import (ATLANTIC_TEAMS, CENTRAL_TEAMS, SOUTHEAST_TEAMS,
-                        NORTHWEST_TEAMS, PACIFIC_TEAMS, SOUTHWEST_TEAMS)
+from whpf.models import Division, Team
+from whpf.teams import ATLANTIC_TEAMS, CENTRAL_TEAMS, NORTHWEST_TEAMS, PACIFIC_TEAMS, SOUTHEAST_TEAMS, SOUTHWEST_TEAMS
 
 
 class Command(BaseCommand):

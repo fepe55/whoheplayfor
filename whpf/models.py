@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
 from __future__ import unicode_literals
+
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
 
 from .managers import PlayerManager
 

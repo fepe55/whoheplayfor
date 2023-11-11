@@ -1,17 +1,17 @@
 from io import StringIO
-from django.apps import apps
-from django.urls import reverse
-from django.test import TestCase
-from django.core.management import call_command
-from django.contrib.auth.models import User
-from django.utils import timezone, formats
-
 from unittest.mock import Mock, patch
 
+from django.apps import apps
+from django.contrib.auth.models import User
+from django.core.management import call_command
+from django.test import TestCase
+from django.urls import reverse
+from django.utils import formats, timezone
+
 from whpf.apps import WhpfConfig
-from whpf.models import Team, Options, Conference, Result
-from whpf.helpers import start_data, get_score, get_teams_and_players_database
 from whpf.context_processors import last_roster_update
+from whpf.helpers import get_score, get_teams_and_players_database, start_data
+from whpf.models import Conference, Options, Result, Team
 
 
 class TestCaseWithData(TestCase):

@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+
 from django.urls import reverse_lazy
+
 # HEROKU
 # import dj_database_url
 

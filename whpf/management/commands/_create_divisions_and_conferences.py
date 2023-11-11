@@ -1,7 +1,7 @@
 # coding=utf-8
 from django.core.management.base import BaseCommand
 
-from whpf.models import (Conference, Division, )
+from whpf.models import Conference, Division
 
 
 class Command(BaseCommand):

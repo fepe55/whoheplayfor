@@ -1,7 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from .models import Team, Player
+from .models import Player, Team
 
 
 class TeamType(DjangoObjectType):
