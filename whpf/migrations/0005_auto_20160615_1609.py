@@ -9,21 +9,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('whpf', '0004_auto_20160425_1804'),
+        ("whpf", "0004_auto_20160425_1804"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Options',
+            name="Options",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('last_roster_update', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("last_roster_update", models.DateTimeField()),
             ],
         ),
         migrations.AlterModelManagers(
-            name='player',
+            name="player",
             managers=[
-                ('all_players', django.db.models.manager.Manager()),
+                ("all_players", django.db.models.manager.Manager()),
             ],
         ),
     ]

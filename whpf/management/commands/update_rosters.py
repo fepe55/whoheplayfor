@@ -41,39 +41,39 @@ from whpf.models import Options, Player, Team
 class Command(BaseCommand):
     """Django Management command base class."""
 
-    help = 'Updates players'
+    help = "Updates players"
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--no-faceless-check',
-            action='store_true',
-            help='Don\'t check faces URLs',
+            "--no-faceless-check",
+            action="store_true",
+            help="Don't check faces URLs",
         )
 
     def handle(self, *args, **options):
         """Update players database using data from API.
         Check if the player's generated face URL exists.
         """
-        no_faceless_check = options['no_faceless_check']
+        no_faceless_check = options["no_faceless_check"]
 
         # Player.all_players.update(active=False)
         start_time = timezone.now()
 
         self.stdout.write(f"Starting at {start_time}")
-        self.stdout.write('Getting all the players from the API... ')
+        self.stdout.write("Getting all the players from the API... ")
         stdout.flush()
         nba_players = get_players_api()
         if not nba_players:
             self.stdout.write("Error with NBA.com")
             return
-        self.stdout.write('DONE')
+        self.stdout.write("DONE")
         stdout.flush()
-        self.stdout.write('Marking all players as being updated... ')
+        self.stdout.write("Marking all players as being updated... ")
         stdout.flush()
         # We mark every player as being_updated and active true (for cases
         # where a player was inactive, then became active)
         Player.all_players.update(being_updated=True, active=True)
-        self.stdout.write('DONE')
+        self.stdout.write("DONE")
         # for p in nba_players:
         #     # I'm guessing teams never change. if they do, all hell breaks
         #     # loose... or I just change a thing or two
@@ -114,7 +114,7 @@ class Command(BaseCommand):
             team = Team.objects.get(code=team_code)
             nba_id = int(p[0])
             name = f"{p[2]} {p[1]}"
-            code = name.replace(' ', '_').lower()
+            code = name.replace(" ", "_").lower()
             player_qs = Player.all_players.filter(nba_id=nba_id)
             # If there is a player with that ID, we update it
             if player_qs.exists():
@@ -143,44 +143,38 @@ class Command(BaseCommand):
         # If your being_updated flag wasn't changed to False, it means you
         # weren't modified or added, so you disappeared. We set you as
         # inactive
-        Player.all_players.filter(being_updated=True).update(
-            being_updated=False, active=False
-        )
+        Player.all_players.filter(being_updated=True).update(being_updated=False, active=False)
 
         # Lastly, we find the faceless-ones
         errors = []
         faceless = []
 
         if not no_faceless_check:
-            active_players = Player.all_players.filter(
-                active=True
-            ).order_by('name')
+            active_players = Player.all_players.filter(active=True).order_by("name")
             current = 1
             for p in active_players:
-                self.stdout.write(f'[{current}/{active_players.count()}]')
+                self.stdout.write(f"[{current}/{active_players.count()}]")
                 current += 1
                 try:
                     r = requests.get(p.picture)
                     if r.status_code == 200:
                         p.faceless = False
                         p.save()
-                        self.stdout.write(f'{p} ({p.id}) has a face')
+                        self.stdout.write(f"{p} ({p.id}) has a face")
                     elif r.status_code == 404:
-                        self.stdout.write(
-                            f'{p} ({p.id}) has no face --------------------'
-                        )
+                        self.stdout.write(f"{p} ({p.id}) has no face --------------------")
                         faceless.append(p)
                         p.faceless = True
                         p.save()
                     else:
-                        self.stdout.write(f'error with {p} ({p.id}) (Error code: {r.status_code}) ++++++')
+                        self.stdout.write(f"error with {p} ({p.id}) (Error code: {r.status_code}) ++++++")
                         p.faceless = True
                         p.save()
-                        errors.append({'player': p, 'error': r.status_code})
+                        errors.append({"player": p, "error": r.status_code})
 
                 except requests.exceptions.RequestException as e:
                     self.stdout.write(str(e))
-                    errors.append({'player': p, 'error': e})
+                    errors.append({"player": p, "error": e})
 
                 # Sleep to avoid a possible throttling or ban from the server
                 time.sleep(2)

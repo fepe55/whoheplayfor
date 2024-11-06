@@ -8,28 +8,28 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('whpf', '0001_initial'),
+        ("whpf", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='result',
-            name='limit_teams',
+            model_name="result",
+            name="limit_teams",
         ),
         migrations.RemoveField(
-            model_name='result',
-            name='rounds',
+            model_name="result",
+            name="rounds",
         ),
         migrations.RemoveField(
-            model_name='result',
-            name='show_player_name',
+            model_name="result",
+            name="show_player_name",
         ),
         migrations.RemoveField(
-            model_name='result',
-            name='shuffle_teams',
+            model_name="result",
+            name="shuffle_teams",
         ),
         migrations.RemoveField(
-            model_name='result',
-            name='time',
+            model_name="result",
+            name="time",
         ),
     ]

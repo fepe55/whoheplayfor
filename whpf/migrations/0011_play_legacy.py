@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('whpf', '0010_play_playsetting'),
+        ("whpf", "0010_play_playsetting"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='play',
-            name='legacy',
+            model_name="play",
+            name="legacy",
             field=models.BooleanField(default=False),
         ),
     ]

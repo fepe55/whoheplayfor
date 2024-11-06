@@ -5,7 +5,7 @@ from whpf.models import Result
 
 
 class Command(BaseCommand):
-    help = 'Recalculates every score'
+    help = "Recalculates every score"
 
     def handle(self, *args, **kwargs):
         for result in Result.objects.all():

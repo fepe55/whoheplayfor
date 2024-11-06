@@ -8,12 +8,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('whpf', '0003_auto_20160423_1833'),
+        ("whpf", "0003_auto_20160423_1833"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='team',
-            options={'ordering': ['division__conference__name', 'code']},
+            name="team",
+            options={"ordering": ["division__conference__name", "code"]},
         ),
     ]

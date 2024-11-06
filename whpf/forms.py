@@ -1,16 +1,24 @@
 # -*- encoding: utf-8 -*-
 from django import forms
 
-TIME_CHOICES = [(0, 'Unlimited time'), (30, '30 seconds'),
-                (60, '60 seconds'), (90, '90 seconds'), ]
-ROUNDS_CHOICES = [(10, 10), (20, 20), (30, 30), ]
+TIME_CHOICES = [
+    (0, "Unlimited time"),
+    (30, "30 seconds"),
+    (60, "60 seconds"),
+    (90, "90 seconds"),
+]
+ROUNDS_CHOICES = [
+    (10, 10),
+    (20, 20),
+    (30, 30),
+]
 LIMIT_TEAMS_CHOICES = [
-    ('0', 'All teams'),
-    ('1', 'East teams'),
-    ('2', 'West teams'),
-    ('3', '2016 Playoff teams (Current rosters)'),
-    ('4', '2016 Finals (Current rosters)'),
-    ('5', '2017 Playoff teams (Current rosters)'),
+    ("0", "All teams"),
+    ("1", "East teams"),
+    ("2", "West teams"),
+    ("3", "2016 Playoff teams (Current rosters)"),
+    ("4", "2016 Finals (Current rosters)"),
+    ("5", "2017 Playoff teams (Current rosters)"),
 ]
 
 

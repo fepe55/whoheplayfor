@@ -8,18 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('whpf', '0008_team_times_guessed'),
+        ("whpf", "0008_team_times_guessed"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='player',
-            name='times_guessed_pct',
+            model_name="player",
+            name="times_guessed_pct",
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(
-            model_name='team',
-            name='times_guessed_pct',
+            model_name="team",
+            name="times_guessed_pct",
             field=models.IntegerField(default=0),
         ),
     ]

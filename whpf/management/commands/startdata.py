@@ -7,7 +7,7 @@ from whpf.helpers import start_data
 class Command(BaseCommand):
     """Django Management command base class."""
 
-    help = 'Creates conferences, divisions, teams and players'
+    help = "Creates conferences, divisions, teams and players"
 
     def handle(self, *args, **kwargs):
         """Create conferences, divisions, teams and players.

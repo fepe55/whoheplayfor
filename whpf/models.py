@@ -37,9 +37,7 @@ class Conference(models.Model):
 
 class Division(models.Model):
     name = models.CharField(max_length=255)
-    conference = models.ForeignKey(
-        Conference, related_name="divisions", on_delete=models.CASCADE
-    )
+    conference = models.ForeignKey(Conference, related_name="divisions", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.name} division"
@@ -51,9 +49,7 @@ class Team(ModelWithDates):
     name = models.CharField(max_length=255)
     abbreviation = models.CharField(max_length=255)
     code = models.CharField(max_length=255)
-    division = models.ForeignKey(
-        Division, related_name="teams", on_delete=models.CASCADE
-    )
+    division = models.ForeignKey(Division, related_name="teams", on_delete=models.CASCADE)
     times_guessed = models.IntegerField(default=0)
     times_guessed_right = models.IntegerField(default=0)
     times_guessed_wrong = models.IntegerField(default=0)
@@ -73,13 +69,22 @@ class Team(ModelWithDates):
         return TEAM_PICTURE_URL.format(team_id=self.nba_id)
 
     def stats_url(self):
-        return reverse('whpf:stats_team', kwargs={'team_code': self.code, })
+        return reverse(
+            "whpf:stats_team",
+            kwargs={
+                "team_code": self.code,
+            },
+        )
 
     def __str__(self):
         return f"{self.city} {self.name}"
 
     class Meta:
-        ordering = ['division__conference__name', 'city', 'name', ]
+        ordering = [
+            "division__conference__name",
+            "city",
+            "name",
+        ]
 
 
 class Player(ModelWithDates):
@@ -104,13 +109,15 @@ class Player(ModelWithDates):
 
     @property
     def picture(self):
-        DEFAULT = "https://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/"\
+        DEFAULT = (
+            "https://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/"
             "statscube/players/large/default_nba_headshot_v2.png"
+        )
         # PLAYER_PICTURE_URL = "http://i.cdn.turner.com/nba/nba/.element/"\
         #     "img/2.0/sect/statscube/players/large/%s.png"
         # PLAYER_PICTURE_URL = "https://ak-static.cms.nba.com/wp-content/"\
         #     "uploads/headshots/nba/latest/260x190/%s.png"
-        PLAYER_PICTURE_URL = 'https://cdn.nba.com/headshots/nba/latest/260x190/{}.png'
+        PLAYER_PICTURE_URL = "https://cdn.nba.com/headshots/nba/latest/260x190/{}.png"
         if self.faceless:
             return DEFAULT
         return PLAYER_PICTURE_URL.format(self.nba_id)
@@ -144,22 +151,24 @@ class Result(ModelWithDates):
     @property
     def parsed_code(self):
         from .helpers import parse_code
+
         return parse_code(self.code)
 
     def calculate_score(self):
         from .helpers import get_score
+
         self.score = get_score(self.code)
         self.save()
         return self.score
 
     class Meta:
-        ordering = ['-score', ]
+        ordering = [
+            "-score",
+        ]
 
 
 class Play(ModelWithDates):
-    player = models.ForeignKey(
-        User, blank=True, null=True, on_delete=models.SET_NULL
-    )
+    player = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     code = models.TextField()
     score = models.IntegerField(default=0)
     finished = models.BooleanField(default=False)

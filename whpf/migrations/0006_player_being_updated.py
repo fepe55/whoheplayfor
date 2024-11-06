@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('whpf', '0005_auto_20160615_1609'),
+        ("whpf", "0005_auto_20160615_1609"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='player',
-            name='being_updated',
+            model_name="player",
+            name="being_updated",
             field=models.BooleanField(default=False),
         ),
     ]

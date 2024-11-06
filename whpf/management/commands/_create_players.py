@@ -10,7 +10,7 @@ faceless = [204098, 1626162, 1626210]
 class Command(BaseCommand):
     """Django Management command base class."""
 
-    help = 'Creates players (DEPRECATED, use startdata)'
+    help = "Creates players (DEPRECATED, use startdata)"
 
     def handle(self, *args, **kwargs):
         """Create players (DEPRECATED, use startdata)."""

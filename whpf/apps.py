@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 
 class WhpfConfig(AppConfig):
-    name = 'whpf'
+    name = "whpf"

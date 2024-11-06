@@ -9,7 +9,7 @@ from whpf.teams import ATLANTIC_TEAMS, CENTRAL_TEAMS, NORTHWEST_TEAMS, PACIFIC_T
 class Command(BaseCommand):
     """Django Management command base class."""
 
-    help = 'Creates teams (DEPRECATED, use startdata)'
+    help = "Creates teams (DEPRECATED, use startdata)"
 
     def handle(self, *args, **kwargs):
         """Create teams (DEPRECATED, use startdata)."""
@@ -17,17 +17,17 @@ class Command(BaseCommand):
         for p in nba_players:
             if p[7] and not Team.objects.filter(nba_id=p[7]).exists():
                 if p[11] in ATLANTIC_TEAMS:
-                    division = Division.objects.get(name='Atlantic')
+                    division = Division.objects.get(name="Atlantic")
                 if p[11] in CENTRAL_TEAMS:
-                    division = Division.objects.get(name='Central')
+                    division = Division.objects.get(name="Central")
                 if p[11] in SOUTHEAST_TEAMS:
-                    division = Division.objects.get(name='Southeast')
+                    division = Division.objects.get(name="Southeast")
                 if p[11] in NORTHWEST_TEAMS:
-                    division = Division.objects.get(name='Northwest')
+                    division = Division.objects.get(name="Northwest")
                 if p[11] in PACIFIC_TEAMS:
-                    division = Division.objects.get(name='Pacific')
+                    division = Division.objects.get(name="Pacific")
                 if p[11] in SOUTHWEST_TEAMS:
-                    division = Division.objects.get(name='Southwest')
+                    division = Division.objects.get(name="Southwest")
 
                 Team.objects.create(
                     nba_id=p[7],

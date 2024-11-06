@@ -11,32 +11,61 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('whpf', '0009_auto_20170125_1652'),
+        ("whpf", "0009_auto_20170125_1652"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Play',
+            name="Play",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('last_modified', models.DateTimeField(auto_now=True)),
-                ('code', models.TextField()),
-                ('score', models.IntegerField(default=0)),
-                ('finished', models.BooleanField(default=False)),
-                ('player', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("last_modified", models.DateTimeField(auto_now=True)),
+                ("code", models.TextField()),
+                ("score", models.IntegerField(default=0)),
+                ("finished", models.BooleanField(default=False)),
+                (
+                    "player",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='PlaySetting',
+            name="PlaySetting",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('value', models.CharField(max_length=255)),
-                ('play', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='whpf.Play')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("value", models.CharField(max_length=255)),
+                (
+                    "play",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="whpf.Play"
+                    ),
+                ),
             ],
         ),
     ]
