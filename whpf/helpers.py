@@ -258,7 +258,7 @@ def get_players_api() -> List:
     PARAMS = {
         "Historical": "0",
         "LeagueID": "00",
-        "Season": "2023-24",
+        "Season": "2024-25",
     }
     HEADERS = {
         "User-Agent": ("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) " "Gecko/20100101 Firefox/82.0"),
