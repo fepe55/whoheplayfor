@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 import json
 from datetime import timedelta
 
@@ -8,7 +7,14 @@ from django.urls import reverse
 from django.utils import formats, timezone
 
 from .forms import LIMIT_TEAMS_CHOICES, ROUNDS_CHOICES, TIME_CHOICES, GameForm
-from .helpers import get_guesses, get_score, get_teams_and_players_api, get_teams_and_players_database, parse_code
+from .helpers import (
+    get_guesses,
+    get_score,
+    get_teams_and_players_api,
+    get_teams_and_players_database,
+    parse_code,
+    request_is_ajax,
+)
 from .models import Options, Play, Player, PlaySetting, Result, Team
 
 
@@ -279,7 +285,7 @@ def save(request, code):
     """Ajax view. Upon getting a code, create a Result object.
     Return json.
     """
-    if not request.is_ajax():
+    if not request_is_ajax(request):
         raise Http404
     r = Result.objects.create(
         user=request.user,
@@ -444,7 +450,7 @@ def score(request, code):
     """Ajax view for getting the score from a code.
     Return a json {'score': score_value}
     """
-    if not request.is_ajax():
+    if not request_is_ajax(request):
         raise Http404
 
     score_value = get_score(code)
@@ -486,7 +492,7 @@ def right_guess(request, pid):
     """Ajax view for a right guess.
     Update player and team accordingly.
     """
-    if not request.is_ajax():
+    if not request_is_ajax(request):
         raise Http404
     guess(pid, "right")
     to_json = {
@@ -499,7 +505,7 @@ def wrong_guess(request, pid):
     """Ajax view for a wrong guess.
     Update player and team accordingly.
     """
-    if not request.is_ajax():
+    if not request_is_ajax(request):
         raise Http404
     guess(pid, "wrong")
     to_json = {

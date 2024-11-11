@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 import json
 import os
 import os.path
@@ -18,6 +17,10 @@ from whpf.teams import (
 
 from .models import Conference, Division, Player, Team
 from .teams import ALL_TEAMS, EAST_TEAMS, FINALS_TEAMS_2016, PLAYOFF_TEAMS_2016, PLAYOFF_TEAMS_2017, WEST_TEAMS
+
+
+def request_is_ajax(request) -> bool:
+    return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
 
 def start_data() -> None:

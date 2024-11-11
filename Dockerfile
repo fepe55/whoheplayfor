@@ -1,4 +1,4 @@
-FROM python:3.9.7-alpine3.14
+FROM python:3.12-alpine
 
 ADD requirements.txt /app/requirements.txt
 
@@ -14,7 +14,8 @@ RUN set -ex \
     && /env/bin/pip install --no-cache-dir wheel \
     && /env/bin/pip install --no-cache-dir -r /app/requirements.txt \
     && /env/bin/pip install --no-cache-dir sentry-sdk \
-    && /env/bin/pip install --no-cache-dir psycopg2==2.8.6 \
+    # && /env/bin/pip install --no-cache-dir psycopg2==2.8.6 \
+    && /env/bin/pip install --no-cache-dir psycopg[binary] \
     && /env/bin/pip install --no-cache-dir gunicorn \
     && runDeps="$(scanelf --needed --nobanner --recursive /env \
         | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
