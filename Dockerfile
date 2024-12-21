@@ -8,6 +8,7 @@ WORKDIR /app
 RUN set -ex \
     && apk add --no-cache --virtual .build-deps build-base \
     && apk add --no-cache --virtual .build-deps gcc musl-dev python3-dev libffi-dev postgresql-dev openssl-dev cargo \
+    && apk add --no-cache bash \
     # && apk add --no-cache --virtual .build-deps postgresql-dev \
     && python -m venv /env \
     && /env/bin/pip install --upgrade pip \
@@ -26,10 +27,14 @@ RUN set -ex \
     && apk del .build-deps \
     && /env/bin/python manage.py collectstatic --no-input
 
-
 ENV VIRTUAL_ENV /env
 ENV PATH /env/bin:$PATH
 
 EXPOSE 8000
+
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "whoheplayfor.wsgi"]
