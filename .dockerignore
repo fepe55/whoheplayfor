@@ -65,3 +65,4 @@ local_settings.py
 
 whoheplayfor/local_settings.py
 env
+.venv

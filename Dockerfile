@@ -1,34 +1,29 @@
-FROM python:3.12-alpine
+FROM ghcr.io/astral-sh/uv:python3.12-alpine
 
 ADD requirements.txt /app/requirements.txt
 
-ADD . /app
 WORKDIR /app
 
-RUN set -ex \
-    && apk add --no-cache --virtual .build-deps build-base \
-    && apk add --no-cache --virtual .build-deps gcc musl-dev python3-dev libffi-dev postgresql-dev openssl-dev cargo \
-    && apk add --no-cache bash \
-    # && apk add --no-cache --virtual .build-deps postgresql-dev \
-    && python -m venv /env \
-    && /env/bin/pip install --upgrade pip \
-    && /env/bin/pip install --no-cache-dir wheel \
-    && /env/bin/pip install --no-cache-dir -r /app/requirements.txt \
-    && /env/bin/pip install --no-cache-dir sentry-sdk \
-    # && /env/bin/pip install --no-cache-dir psycopg2==2.8.6 \
-    && /env/bin/pip install --no-cache-dir psycopg[binary] \
-    && /env/bin/pip install --no-cache-dir gunicorn \
-    && runDeps="$(scanelf --needed --nobanner --recursive /env \
-        | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-        | sort -u \
-        | xargs -r apk info --installed \
-        | sort -u)" \
-    && apk add --virtual rundeps $runDeps \
-    && apk del .build-deps \
-    && /env/bin/python manage.py collectstatic --no-input
+# Enable bytecode compilation
+ENV UV_COMPILE_BYTECODE=1
 
-ENV VIRTUAL_ENV /env
-ENV PATH /env/bin:$PATH
+# Copy from the cache instead of linking since it's a mounted volume
+ENV UV_LINK_MODE=copy
+
+# Install the project's dependencies using the lockfile and settings
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project --no-dev
+
+ADD . /app
+
+RUN set -ex \
+    && apk add --no-cache bash \
+    && uv run python manage.py collectstatic --no-input
+
+ENV PATH="/app/.venv/bin:$PATH"
+ENV VIRTUAL_ENV="/app/.venv"
 
 EXPOSE 8000
 

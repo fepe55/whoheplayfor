@@ -1,3 +1,20 @@
+[project]
+name = "whoheplayfor"
+version = "0.1.0"
+description = "Who he play for?"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django~=4.2",
+    "graphene-django==3.2.2",
+    "gunicorn>=23.0.0",
+    "psycopg[binary]>=3.2.3",
+    "requests~=2.32",
+    "sentry-sdk>=2.19.2",
+    "social-auth-app-django==5.4.2",
+    "whitenoise~=6.8",
+]
+
 [tool.black]
 line-length = 119
 exclude = "migrations"
