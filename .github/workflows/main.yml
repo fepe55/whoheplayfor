@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, uv]
   pull_request:
-    branches: [master]
+    branches: [master, uv]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -13,54 +13,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 3
-    env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
-
-    services:
-      postgres: # we need a postgres docker image to be booted a side car service to run the tests that needs a db
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432 # exposing 5432 port for application to use
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
+
+      - name: Set up Python
         uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install psycopg2-binary
-          python -m pip install -r requirements.txt
-          python -m pip install flake8
-          python -m pip install isort
-          python -m pip install pytest-django
-          python -m pip install coverage
-          python -m pip install django_coverage_plugin
-      - name: Check code style and formatting
-        run: flake8 .
-      - name: Isort
-        run: isort . --check
-      - name: Run migrations
-        run: python manage.py migrate
+
       - name: Run tests and generate coverage report
         run: |
-          coverage run -m pytest
-          coverage report
-          coverage xml
+          docker compose -f docker-compose.ci.yml run backend /bin/bash -c "coverage run -m pytest && coverage report && coverage xml"
+
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v4
         with:

@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: .
+      args:
+        DEV_MODE: 1
+    env_file: "env.ci"
+    ports:
+      - "8000:8000"
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    env_file: "env.ci"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U whpf"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

@@ -4,6 +4,8 @@ ADD requirements.txt /app/requirements.txt
 
 WORKDIR /app
 
+ARG DEV_MODE=0
+
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
 
@@ -14,7 +16,7 @@ ENV UV_LINK_MODE=copy
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project --no-dev
+    sh -c "if [ \"$DEV_MODE\" -eq 1 ]; then uv sync --frozen --no-install-project; else uv sync --frozen --no-install-project --no-dev; fi"
 
 ADD . /app
 

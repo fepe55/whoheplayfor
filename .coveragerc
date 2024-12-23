@@ -7,3 +7,4 @@ omit =
   requirements.txt
   whoheplayfor/wsgi.py
   whpf/management/commands/_*.py
+  .venv/*
