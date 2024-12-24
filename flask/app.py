@@ -1,17 +1,14 @@
-# -*- encoding: utf-8 -*-
-
 import json
 import os.path
 from datetime import datetime, timedelta
 
 import requests
-
 from teams import ALL_TEAMS, EAST_TEAMS, PLAYOFF_TEAMS, WEST_TEAMS
 
 from flask import Flask, abort, render_template, request, session
 
 app = Flask(__name__)
-# Of course this is for development purposes only son don't even try it
+# Of course this is for development purposes only so don't even try it
 app.config["SECRET_KEY"] = "J\x88P\x0b-R]\xf3\xa2\x0e\xb6\x0b\xb3\x84\xc7\xde\xf1\xfe\xd7\x06\xc3\xa26\xa6"
 
 

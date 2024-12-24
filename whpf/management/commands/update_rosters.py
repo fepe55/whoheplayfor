@@ -1,9 +1,7 @@
-# coding=utf-8
 import time
 from sys import stdout
 
 import requests
-
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
