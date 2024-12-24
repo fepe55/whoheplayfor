@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [master, uv]
+    branches: [master]
   pull_request:
-    branches: [master, uv]
+    branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
