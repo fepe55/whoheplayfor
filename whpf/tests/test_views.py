@@ -152,12 +152,9 @@ def test_get_scoreboard_single_user(results_fixture):
     assert result == [results_fixture[0]]
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize("view_name", ["whpf:right_guess", "whpf:wrong_guess"])
-def test_non_ajax_request_to_guess_view(client, user, view_name):
+def test_non_ajax_request_to_guess_view(client, view_name):
     """Test that a non-AJAX request raises an Http404."""
-
-    client.force_login(user)
 
     # Make a regular (non-AJAX) request
     response = client.post(reverse(view_name, args=["1"]))
@@ -173,10 +170,7 @@ def test_ajax_request_to_guess_view(request_is_ajax_mock, client, user, create_p
 
     client.force_login(user)
 
-    # AJAX headers
-    headers = {"HTTP_X_REQUESTED_WITH": "XMLHttpRequest"}
-
-    response = client.post(reverse(view_name, args=["1"]), headers=headers)
+    response = client.post(reverse(view_name, args=["1"]))
 
     request_is_ajax_mock.assert_called_once()
     assert response.status_code == HTTPStatus.OK
@@ -187,3 +181,24 @@ def test_ajax_request_to_guess_view(request_is_ajax_mock, client, user, create_p
     # Check the response JSON content
     response_data = json.loads(response.content)
     assert response_data["success"] is True
+
+
+def test_non_ajax_request_to_save_view(client):
+    """Test that a non-AJAX request raises an Http404."""
+
+    # Make a regular (non-AJAX) request
+    response = client.post(reverse("whpf:save", args=["somecode"]))
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+@pytest.mark.django_db
+@mock.patch("whpf.views.request_is_ajax", return_value=True, spec_set=True)
+def test_save_view(request_is_ajax_mock, client, user, code):
+    client.force_login(user)
+    response = client.post(reverse("whpf:save", args=[code]))
+    request_is_ajax_mock.assert_called_once()
+    result = Result.objects.get()
+    assert result.user == user
+    assert result.code == code
+    assert response.status_code == HTTPStatus.OK
