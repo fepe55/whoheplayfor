@@ -22,14 +22,8 @@ dev = [
     "pytest-django>=4.9.0",
 ]
 
-[tool.black]
-line-length = 119
-exclude = "migrations"
+[tool.ruff]
+line-length = 120
 
-[tool.isort]
-profile = "black"
-line_length = 119
-combine_as_imports = "True"
-known_django = "django"
-known_requests = "requests"
-sections = "FUTURE,STDLIB,REQUESTS,DJANGO,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+[tool.ruff.lint]
+select = ["E4", "E5", "E7", "E9", "F"]
