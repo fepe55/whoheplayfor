@@ -315,7 +315,7 @@ def results(request, code):
     )
 
 
-def get_scoreboard(qs):
+def _get_scoreboard(qs):
     """Given a queryset of results, order by score, then for time left,
     filter only one per user and return, at most, the first
     HARD_LIMIT amount.
@@ -356,10 +356,10 @@ def scoreboard(request):
 
     first_hundred_results = Result.objects.all()[:100]
 
-    scoreboard_last24h = get_scoreboard(last24h)
-    scoreboard_last7d = get_scoreboard(last7d)
-    scoreboard_last365d = get_scoreboard(last365d)
-    scoreboard_global = get_scoreboard(first_hundred_results)
+    scoreboard_last24h = _get_scoreboard(last24h)
+    scoreboard_last7d = _get_scoreboard(last7d)
+    scoreboard_last365d = _get_scoreboard(last365d)
+    scoreboard_global = _get_scoreboard(first_hundred_results)
 
     return render(
         request,

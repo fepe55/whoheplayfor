@@ -6,7 +6,8 @@ from django.urls import reverse
 from django.utils import timezone
 
 from whpf.forms import LIMIT_TEAMS_CHOICES, ROUNDS_CHOICES, TIME_CHOICES, GameForm
-from whpf.models import Options, Play, PlaySetting, Team
+from whpf.models import Options, Play, PlaySetting, Result, Team
+from whpf.views import _get_scoreboard
 
 
 class BasicAccessTestCase(TestCase):
@@ -130,3 +131,20 @@ def test_home_post_invalid_game_choices(client):
     response = client.post(reverse("whpf:home"), data)
 
     assert response.status_code == HTTPStatus.OK
+
+
+@pytest.mark.django_db
+def test_get_scoreboard_empty_queryset():
+    """Test the case where the queryset is empty."""
+    result = _get_scoreboard(Result.objects.none())  # Empty queryset
+    assert result == []  # Should return an empty list
+
+
+@pytest.mark.django_db
+def test_get_scoreboard_single_user(results_fixture):
+    """Test the case where all results belong to one user."""
+    user_results = Result.objects.filter(user=results_fixture[0].user)  # Get results for the first user
+    result = _get_scoreboard(user_results)
+
+    # The best result for the user should be first (score 100, time_left 10)
+    assert result == [results_fixture[0]]
