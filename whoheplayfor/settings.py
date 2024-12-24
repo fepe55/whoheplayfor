@@ -153,7 +153,7 @@ admin_emails = os.environ.get("ADMIN_EMAILS")
 if admin_names and admin_emails:
     admin_names = admin_names.split(",")
     admin_emails = admin_emails.split(",")
-    ADMINS = list(zip(admin_names, admin_emails))
+    ADMINS = list(zip(admin_names, admin_emails, strict=True))
 
 EMAIL_ENABLED = os.environ.get("EMAIL_ENABLED", "False").lower() in TRUE_VALUES
 

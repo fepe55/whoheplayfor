@@ -48,24 +48,7 @@ class Command(BaseCommand):
             help="Don't check faces URLs",
         )
 
-    def handle(self, *args, **options):
-        """Update players database using data from API.
-        Check if the player's generated face URL exists.
-        """
-        no_faceless_check = options["no_faceless_check"]
-
-        # Player.all_players.update(active=False)
-        start_time = timezone.now()
-
-        self.stdout.write(f"Starting at {start_time}")
-        self.stdout.write("Getting all the players from the API... ")
-        stdout.flush()
-        nba_players = get_players_api()
-        if not nba_players:
-            self.stdout.write("Error with NBA.com")
-            return
-        self.stdout.write("DONE")
-        stdout.flush()
+    def _update_players(self, nba_players) -> None:
         self.stdout.write("Marking all players as being updated... ")
         stdout.flush()
         # We mark every player as being_updated and active true (for cases
@@ -143,6 +126,7 @@ class Command(BaseCommand):
         # inactive
         Player.all_players.filter(being_updated=True).update(being_updated=False, active=False)
 
+    def _check_faces(self, no_faceless_check: bool) -> None:
         # Lastly, we find the faceless-ones
         errors = []
         faceless = []
@@ -176,16 +160,6 @@ class Command(BaseCommand):
 
                 # Sleep to avoid a possible throttling or ban from the server
                 time.sleep(2)
-
-        # And we update the last_roster_update date
-        options = Options.objects.all()
-        if options.exists():
-            options = options.get()
-        else:
-            options = Options()
-        options.last_roster_update = timezone.now()
-        options.save()
-
         if errors:
             self.stdout.write("ERRORS")
             for error in errors:
@@ -194,6 +168,38 @@ class Command(BaseCommand):
             self.stdout.write("FACELESS")
             for player in faceless:
                 self.stdout.write(player.name)
+
+    def handle(self, *args, **options):
+        """Update players database using data from API.
+        Check if the player's generated face URL exists.
+        """
+        no_faceless_check = options["no_faceless_check"]
+
+        # Player.all_players.update(active=False)
+        start_time = timezone.now()
+
+        self.stdout.write(f"Starting at {start_time}")
+        self.stdout.write("Getting all the players from the API... ")
+        stdout.flush()
+        nba_players = get_players_api()
+        if not nba_players:
+            self.stdout.write("Error with NBA.com")
+            return
+        self.stdout.write("DONE")
+        stdout.flush()
+
+        self._update_players(nba_players)
+
+        self._check_faces(no_faceless_check)
+
+        # We update the last_roster_update date
+        options = Options.objects.all()
+        if options.exists():
+            options = options.get()
+        else:
+            options = Options()
+        options.last_roster_update = timezone.now()
+        options.save()
 
         end_time = timezone.now()
         self.stdout.write("Started")

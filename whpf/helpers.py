@@ -23,16 +23,10 @@ def request_is_ajax(request) -> bool:
     return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
 
-def start_data() -> None:
-    """
-    Populates the database with everything for the first time.
-    Conferences, divisiones, teams and players
-    """
-    # First, we create the conferences
+def _create_conferences_divisiones_and_teams(nba_players: List) -> None:
     east, _ = Conference.objects.get_or_create(name="East")
     west, _ = Conference.objects.get_or_create(name="West")
 
-    # Second, we create the divisions
     atlantic, _ = Division.objects.get_or_create(name="Atlantic", conference=east)
     central, _ = Division.objects.get_or_create(name="Central", conference=east)
     southeast, _ = Division.objects.get_or_create(name="Southeast", conference=east)
@@ -41,52 +35,6 @@ def start_data() -> None:
     pacific, _ = Division.objects.get_or_create(name="Pacific", conference=west)
     southwest, _ = Division.objects.get_or_create(name="Southwest", conference=west)
 
-    # Third, we create the teams
-    nba_players = get_players_api()
-
-    # al_atlantic = False
-    # al_central = False
-    # al_southeast = False
-    # al_northwest = False
-    # al_pacific = False
-    # al_southwest = False
-    # mocked_nba_players = []
-
-    # for p in nba_players:
-    #     team_code = p[5]
-    #     if team_code in ATLANTIC_TEAMS:
-    #         if not al_atlantic:
-    #             mocked_nba_players.append(p)
-    #             al_atlantic = True
-    #     if team_code in CENTRAL_TEAMS:
-    #         if not al_central:
-    #             mocked_nba_players.append(p)
-    #             al_central = True
-    #     if team_code in SOUTHEAST_TEAMS:
-    #         if not al_southeast:
-    #             mocked_nba_players.append(p)
-    #             al_southeast = True
-    #     if team_code in NORTHWEST_TEAMS:
-    #         if not al_northwest:
-    #             mocked_nba_players.append(p)
-    #             al_northwest = True
-    #     if team_code in PACIFIC_TEAMS:
-    #         if not al_pacific:
-    #             mocked_nba_players.append(p)
-    #             al_pacific = True
-    #     if team_code in SOUTHWEST_TEAMS:
-    #         if not al_southwest:
-    #             mocked_nba_players.append(p)
-    #             al_southwest = True
-
-    #     if all([
-    #         al_atlantic, al_central, al_southeast, al_northwest, al_pacific,
-    #         al_southwest
-    #     ]):
-    #         print(mocked_nba_players)
-    #         a = 1/0
-
-    # b = 1 / 0
     for p in nba_players:
         # team_city = p['teamData']['city']
         # team_name = p['teamData']['nickname']
@@ -123,9 +71,8 @@ def start_data() -> None:
                 division=division,
             )
 
-    # And fourth, we create the players
-    # We loop twice on the nba_players for an easier code to read
-    # faceless = [204098, 1626162, 1626210]
+
+def _create_players(nba_players: list):
     faceless = []
     for p in nba_players:
         if p[4] == 0:
@@ -149,6 +96,18 @@ def start_data() -> None:
                 code=code,
                 faceless=fl,
             )
+
+
+def start_data() -> None:
+    """
+    Populates the database with everything for the first time.
+    Conferences, divisiones, teams and players
+    """
+    nba_players = get_players_api()
+
+    _create_conferences_divisiones_and_teams(nba_players)
+
+    _create_players(nba_players)
 
 
 def team_to_dict(team: Team) -> Dict:
