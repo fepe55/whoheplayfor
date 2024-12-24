@@ -1,7 +1,5 @@
 FROM ghcr.io/astral-sh/uv:python3.12-alpine
 
-ADD requirements.txt /app/requirements.txt
-
 WORKDIR /app
 
 ARG DEV_MODE=0
