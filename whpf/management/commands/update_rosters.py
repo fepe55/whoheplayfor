@@ -138,7 +138,7 @@ class Command(BaseCommand):
                 self.stdout.write(f"[{current}/{active_players.count()}]")
                 current += 1
                 try:
-                    r = requests.get(p.picture)
+                    r = requests.get(p.picture, timeout=5)
                     if r.status_code == 200:
                         p.faceless = False
                         p.save()

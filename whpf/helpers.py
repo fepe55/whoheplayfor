@@ -241,7 +241,7 @@ def get_players_api() -> List:
         os.remove(filename)
     else:
         try:
-            r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS)
+            r = requests.get(PLAYERS_URL, params=PARAMS, headers=HEADERS, timeout=5)
 
         except requests.exceptions.RequestException as e:
             print(e)

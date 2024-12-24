@@ -9,7 +9,7 @@ from flask import Flask, abort, render_template, request, session
 
 app = Flask(__name__)
 # Of course this is for development purposes only so don't even try it
-app.config["SECRET_KEY"] = "J\x88P\x0b-R]\xf3\xa2\x0e\xb6\x0b\xb3\x84\xc7\xde\xf1\xfe\xd7\x06\xc3\xa26\xa6"
+app.config["SECRET_KEY"] = "J\x88P\x0b-R]\xf3\xa2\x0e\xb6\x0b\xb3\x84\xc7\xde\xf1\xfe\xd7\x06\xc3\xa26\xa6"  # noqa: S105
 
 
 @app.context_processor
@@ -33,7 +33,7 @@ def get_players():
         tries_left -= 1
 
     PLAYERS_URL = "http://stats.nba.com/stats/commonallplayers" "?IsOnlyCurrentSeason=1&LeagueID=00&Season=2015-16"
-    r = requests.get(PLAYERS_URL)
+    r = requests.get(PLAYERS_URL, timeout=5)
 
     try:
         j = r.json()
