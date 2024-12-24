@@ -198,7 +198,38 @@ def test_save_view(request_is_ajax_mock, client, user, code):
     client.force_login(user)
     response = client.post(reverse("whpf:save", args=[code]))
     request_is_ajax_mock.assert_called_once()
+    assert response.status_code == HTTPStatus.OK
+
     result = Result.objects.get()
     assert result.user == user
     assert result.code == code
+
+
+def test_non_ajax_request_to_score_view(client):
+    """Test that a non-AJAX request raises an Http404."""
+
+    # Make a regular (non-AJAX) request
+    response = client.post(reverse("whpf:score", args=["somecode"]))
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+@pytest.mark.django_db
+@mock.patch("whpf.views.request_is_ajax", return_value=True, spec_set=True)
+def test_score_view_with_play(request_is_ajax_mock, client, user, code):
+    play = Play.objects.create(player=user)
+    client.force_login(user)
+    session = client.session
+    session["play_id"] = play.id
+    session.save()
+    assert play.code == ""
+    assert play.finished is False
+    assert play.score == 0
+    response = client.post(reverse("whpf:score", args=[code]))
+    request_is_ajax_mock.assert_called_once()
     assert response.status_code == HTTPStatus.OK
+
+    play.refresh_from_db()
+    assert play.code == code
+    assert play.finished is True
+    assert ["score"] == list(response.json().keys())

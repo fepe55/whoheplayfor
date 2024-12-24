@@ -454,9 +454,7 @@ def score(request, code):
         p.score = score_value
         p.finished = True
         p.save()
-    to_json = {
-        "score": score_value,
-    }
+    to_json = {"score": score_value}
     return HttpResponse(json.dumps(to_json), content_type="application/json")
 
 
