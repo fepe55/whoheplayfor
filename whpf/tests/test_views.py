@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from whpf.forms import LIMIT_TEAMS_CHOICES, ROUNDS_CHOICES, TIME_CHOICES, GameForm
+from whpf.helpers import get_score
 from whpf.models import Options, Play, PlaySetting, Result, Team
 from whpf.views import _get_scoreboard
 
@@ -216,6 +217,19 @@ def test_non_ajax_request_to_score_view(client):
 
 @pytest.mark.django_db
 @mock.patch("whpf.views.request_is_ajax", return_value=True, spec_set=True)
+def test_score_view_without_play(request_is_ajax_mock, client, code):
+    session = client.session
+    session["play_id"] = "123"
+    session.save()
+    response = client.post(reverse("whpf:score", args=[code]))
+    request_is_ajax_mock.assert_called_once()
+    assert response.status_code == HTTPStatus.OK
+
+    assert {"score": get_score(code)} == response.json()
+
+
+@pytest.mark.django_db
+@mock.patch("whpf.views.request_is_ajax", return_value=True, spec_set=True)
 def test_score_view_with_play(request_is_ajax_mock, client, user, code):
     play = Play.objects.create(player=user)
     client.force_login(user)
@@ -232,4 +246,4 @@ def test_score_view_with_play(request_is_ajax_mock, client, user, code):
     play.refresh_from_db()
     assert play.code == code
     assert play.finished is True
-    assert ["score"] == list(response.json().keys())
+    assert {"score": get_score(code)} == response.json()
