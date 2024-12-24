@@ -488,9 +488,7 @@ def right_guess(request, pid):
     if not request_is_ajax(request):
         raise Http404
     guess(pid, "right")
-    to_json = {
-        "success": True,
-    }
+    to_json = {"success": True}
     return HttpResponse(json.dumps(to_json), content_type="application/json")
 
 
@@ -501,7 +499,5 @@ def wrong_guess(request, pid):
     if not request_is_ajax(request):
         raise Http404
     guess(pid, "wrong")
-    to_json = {
-        "success": True,
-    }
+    to_json = {"success": True}
     return HttpResponse(json.dumps(to_json), content_type="application/json")

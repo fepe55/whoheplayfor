@@ -1,4 +1,6 @@
+import json
 from http import HTTPStatus
+from unittest import mock
 
 import pytest
 from django.test import TestCase
@@ -148,3 +150,40 @@ def test_get_scoreboard_single_user(results_fixture):
 
     # The best result for the user should be first (score 100, time_left 10)
     assert result == [results_fixture[0]]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("view_name", ["whpf:right_guess", "whpf:wrong_guess"])
+def test_non_ajax_request_to_guess_view(client, user, view_name):
+    """Test that a non-AJAX request raises an Http404."""
+
+    client.force_login(user)
+
+    # Make a regular (non-AJAX) request
+    response = client.post(reverse(view_name, args=["1"]))
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("view_name", ["whpf:right_guess", "whpf:wrong_guess"])
+@mock.patch("whpf.views.request_is_ajax", return_value=True, spec_set=True)
+def test_ajax_request_to_guess_view(request_is_ajax_mock, client, user, create_players, view_name):
+    """Test that the guess views work for valid AJAX requests."""
+
+    client.force_login(user)
+
+    # AJAX headers
+    headers = {"HTTP_X_REQUESTED_WITH": "XMLHttpRequest"}
+
+    response = client.post(reverse(view_name, args=["1"]), headers=headers)
+
+    request_is_ajax_mock.assert_called_once()
+    assert response.status_code == HTTPStatus.OK
+
+    # Check that the response content type is JSON
+    assert response["Content-Type"] == "application/json"
+
+    # Check the response JSON content
+    response_data = json.loads(response.content)
+    assert response_data["success"] is True

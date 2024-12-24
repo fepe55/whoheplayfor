@@ -23,7 +23,7 @@ def request_is_ajax(request) -> bool:
     return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
 
-def _create_conferences_divisiones_and_teams(nba_players: List) -> None:
+def _create_conferences_divisions_and_teams(nba_players: List) -> None:
     east, _ = Conference.objects.get_or_create(name="East")
     west, _ = Conference.objects.get_or_create(name="West")
 
@@ -105,7 +105,7 @@ def start_data() -> None:
     """
     nba_players = get_players_api()
 
-    _create_conferences_divisiones_and_teams(nba_players)
+    _create_conferences_divisions_and_teams(nba_players)
 
     _create_players(nba_players)
 

@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import datetime
 
 from django.db import migrations, models
-from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
@@ -23,7 +22,7 @@ class Migration(migrations.Migration):
             name="created",
             field=models.DateTimeField(
                 auto_now_add=True,
-                default=datetime.datetime(2016, 4, 23, 18, 33, 38, 173437, tzinfo=utc),
+                default=datetime.datetime(2016, 4, 23, 18, 33, 38, 173437, tzinfo=datetime.timezone.utc),
             ),
             preserve_default=False,
         ),
@@ -32,7 +31,7 @@ class Migration(migrations.Migration):
             name="last_modified",
             field=models.DateTimeField(
                 auto_now=True,
-                default=datetime.datetime(2016, 4, 23, 18, 33, 42, 220974, tzinfo=utc),
+                default=datetime.datetime(2016, 4, 23, 18, 33, 42, 220974, tzinfo=datetime.timezone.utc),
             ),
             preserve_default=False,
         ),

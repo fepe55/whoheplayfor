@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth.models import User
 
 from whpf.helpers import get_score
-from whpf.models import Result
+from whpf.models import Conference, Division, Player, Result, Team
 
 
 @pytest.fixture
@@ -30,18 +30,50 @@ def code():
 
 
 @pytest.fixture
-def user_fixture():
+def user():
     """Fixture to create a user for the tests."""
     return User.objects.create_user(username="testuser", password="password123")
 
 
 @pytest.fixture
-def results_fixture(user_fixture, code):
+def create_conferences_and_divisions():
+    east, _ = Conference.objects.get_or_create(name="East")
+    west, _ = Conference.objects.get_or_create(name="West")
+
+    atlantic, _ = Division.objects.get_or_create(name="Atlantic", conference=east)
+    central, _ = Division.objects.get_or_create(name="Central", conference=east)
+    southeast, _ = Division.objects.get_or_create(name="Southeast", conference=east)
+
+    northwest, _ = Division.objects.get_or_create(name="Northwest", conference=west)
+    pacific, _ = Division.objects.get_or_create(name="Pacific", conference=west)
+    southwest, _ = Division.objects.get_or_create(name="Southwest", conference=west)
+
+
+@pytest.fixture
+def create_players(create_conferences_and_divisions):
+    team = Team.objects.create(
+        nba_id=1,
+        city="Test City",
+        name="Test Team",
+        abbreviation="TST",
+        code="test_team",
+        division=Division.objects.get(name="Atlantic"),
+    )
+    Player.objects.create(
+        nba_id=1,
+        name="Test Player",
+        team=team,
+        code="test_player",
+    )
+
+
+@pytest.fixture
+def results_fixture(user, code):
     """Fixture to create multiple Result instances for testing."""
     results = [
-        Result.objects.create(user=user_fixture, score=get_score(code), code=code),
-        Result.objects.create(user=user_fixture, score=get_score(code), code=code),
-        Result.objects.create(user=user_fixture, score=get_score(code), code=code),
+        Result.objects.create(user=user, score=get_score(code), code=code),
+        Result.objects.create(user=user, score=get_score(code), code=code),
+        Result.objects.create(user=user, score=get_score(code), code=code),
     ]
     other_user = User.objects.create_user(username="another_user", password="password123")
     results.append(Result.objects.create(user=other_user, score=get_score(code), code=code))
