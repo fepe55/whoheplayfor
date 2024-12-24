@@ -151,7 +151,6 @@ def home():
     ],
 )
 def home_post():
-
     TIMES = [0, 30, 60, 90]
     TIME_DEFAULT = TIMES[2]  # 60
     ROUNDS = [10, 20, 30]

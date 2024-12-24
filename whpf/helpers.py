@@ -380,7 +380,6 @@ def get_guesses(code: str) -> List:
         guess_str = code[12 * i : 12 * i + 12]  # noqa
         player_id = int(guess_str[:8])
         if Player.all_players.filter(nba_id=player_id).exists():
-
             player = Player.all_players.get(nba_id=player_id)
             team_id = int(guess_str[8:10])
             team = Team.objects.get(nba_id__endswith=team_id)

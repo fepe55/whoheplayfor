@@ -8,7 +8,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("whpf", "0009_auto_20170125_1652"),
@@ -62,9 +61,7 @@ class Migration(migrations.Migration):
                 ("value", models.CharField(max_length=255)),
                 (
                     "play",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="whpf.Play"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="whpf.Play"),
                 ),
             ],
         ),

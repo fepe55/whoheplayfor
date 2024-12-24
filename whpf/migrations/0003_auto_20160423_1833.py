@@ -9,7 +9,6 @@ from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("whpf", "0002_auto_20160423_1745"),
     ]

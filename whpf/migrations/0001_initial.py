@@ -10,7 +10,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -109,9 +108,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "rounds",
-                    models.CharField(
-                        choices=[(10, 10), (20, 20), (30, 30)], max_length=255
-                    ),
+                    models.CharField(choices=[(10, 10), (20, 20), (30, 30)], max_length=255),
                 ),
                 (
                     "limit_teams",
@@ -174,8 +171,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="player",
             name="team",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="whpf.Team"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="whpf.Team"),
         ),
     ]
