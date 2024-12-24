@@ -20,6 +20,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
 
+      - name: Run Ruff
+        uses: astral-sh/ruff-action@v2
+
       - name: Run tests and generate coverage report
         run: |
           docker compose -f docker-compose.ci.yml run backend /bin/bash -c "coverage run -m pytest && coverage report && coverage xml"
