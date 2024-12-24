@@ -78,7 +78,7 @@ class AppsTestCase(TestCase):
         self.assertEqual(apps.get_app_config("whpf").name, "whpf")
 
 
-def mocked_requests_get(*args):
+def mocked_requests_get(*args, **kwargs):
     """Basic requests.get mock"""
     mock = Mock()
     mock.status_code = 200
@@ -298,7 +298,7 @@ def mocked_get_players_api_empty():
 class TestHelpers(TestCase):
     """Class for testing helper functions that don't require data."""
 
-    @patch("whpf.helpers.get_players_api", mocked_get_players_api)
+    @patch("whpf.helpers.get_players_api", mocked_get_players_api, spec_set=True)
     def test_start_data(self):
         start_data()
         east_qs = Conference.objects.filter(name="East")
@@ -382,7 +382,7 @@ class TestContextProcessor(TestCase):
 class TestManagementCommands(TestCase):
     """Class for testing management command that don't require data."""
 
-    @patch("whpf.helpers.get_players_api", mocked_get_players_api)
+    @patch("whpf.helpers.get_players_api", mocked_get_players_api, spec_set=True)
     def test_start_data(self):
         """Test start_data management command"""
         east_qs = Conference.objects.filter(name="East")
@@ -391,10 +391,7 @@ class TestManagementCommands(TestCase):
         east_qs = Conference.objects.filter(name="East")
         self.assertTrue(east_qs.exists())
 
-    @patch(
-        "whpf.management.commands.update_rosters.get_players_api",
-        mocked_get_players_api_empty,
-    )
+    @patch("whpf.management.commands.update_rosters.get_players_api", mocked_get_players_api_empty, spec_set=True)
     def test_update_rosters_without_players(self):
         """Test update_rosters management command"""
         # Starting set based on fixture
@@ -429,13 +426,10 @@ class TestManagementCommandsWithData(TestCase):
         result.refresh_from_db()
         self.assertEqual(result.score, 40)
 
-    @patch(
-        "whpf.management.commands.update_rosters.get_players_api",
-        mocked_get_players_api,
-    )
-    @patch("requests.get", mocked_requests_get)
-    @patch("time.sleep", lambda _: ...)
-    def test_update_rosters(self):
+    @patch("whpf.management.commands.update_rosters.get_players_api", mocked_get_players_api, spec_set=True)
+    @patch("requests.get", mocked_requests_get, spec_set=True)
+    @patch("time.sleep", spec_set=True)
+    def test_update_rosters(self, mock_sleep):
         """Test update_rosters management command"""
         # Starting set based on fixture
         self.assertEqual(Player.objects.count(), 587)
@@ -452,10 +446,7 @@ class TestManagementCommandsWithData(TestCase):
         # After updating the rosters, everyone should be marked as inactive except the valid 6 from the mocked API call
         self.assertEqual(Player.objects.count(), 6)
 
-    @patch(
-        "whpf.management.commands.update_rosters.get_players_api",
-        mocked_get_players_api,
-    )
+    @patch("whpf.management.commands.update_rosters.get_players_api", mocked_get_players_api, spec_set=True)
     def test_update_rosters_without_faceless_check(self):
         """Test update_rosters management command without
         faceless check
