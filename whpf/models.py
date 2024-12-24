@@ -12,6 +12,9 @@ from .managers import PlayerManager
 class Options(models.Model):
     last_roster_update = models.DateTimeField()
 
+    def __str__(self):
+        return "Options"
+
 
 class ModelWithDates(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -24,14 +27,14 @@ class ModelWithDates(models.Model):
 class Conference(models.Model):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return f"{self.name}ern conference"
+
     def get_teams(self):
         teams = Team.objects.none()
         for division in self.divisions.all():
             teams |= division.teams.all()
         return teams
-
-    def __str__(self):
-        return f"{self.name}ern conference"
 
 
 class Division(models.Model):
@@ -54,6 +57,12 @@ class Team(ModelWithDates):
     times_guessed_wrong = models.IntegerField(default=0)
     times_guessed_pct = models.IntegerField(default=0)
 
+    class Meta:
+        ordering = ["division__conference__name", "city", "name"]
+
+    def __str__(self):
+        return f"{self.city} {self.name}"
+
     @property
     def times_guessed_wrong_pct(self):
         return 100 - self.times_guessed_pct
@@ -75,16 +84,6 @@ class Team(ModelWithDates):
             },
         )
 
-    def __str__(self):
-        return f"{self.city} {self.name}"
-
-    class Meta:
-        ordering = [
-            "division__conference__name",
-            "city",
-            "name",
-        ]
-
 
 class Player(ModelWithDates):
     active = models.BooleanField(default=True)
@@ -101,6 +100,9 @@ class Player(ModelWithDates):
 
     all_players = models.Manager()
     objects = PlayerManager()
+
+    def __str__(self):
+        return self.name
 
     @property
     def times_guessed_wrong_pct(self):
@@ -121,15 +123,18 @@ class Player(ModelWithDates):
             return DEFAULT
         return PLAYER_PICTURE_URL.format(self.nba_id)
 
-    def __str__(self):
-        return self.name
-
 
 class Result(ModelWithDates):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     code = models.TextField()
     score = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["-score"]
+
+    def __str__(self):
+        return self.code
 
     # @property
     # def show_player_name(self):
@@ -160,11 +165,6 @@ class Result(ModelWithDates):
         self.save()
         return self.score
 
-    class Meta:
-        ordering = [
-            "-score",
-        ]
-
 
 class Play(ModelWithDates):
     player = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
@@ -173,8 +173,14 @@ class Play(ModelWithDates):
     finished = models.BooleanField(default=False)
     legacy = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.code
+
 
 class PlaySetting(models.Model):
     name = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
     play = models.ForeignKey(Play, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name}: {self.value}"
