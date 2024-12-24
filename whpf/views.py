@@ -108,14 +108,7 @@ def home(request):
         or rounds not in [x[0] for x in ROUNDS_CHOICES]
         or limit_teams not in [x[0] for x in LIMIT_TEAMS_CHOICES]
     ):
-        # request.session.clear()
         raise Http404()
-
-    # request.session['time'] = time
-    # request.session['rounds'] = rounds
-    # request.session['limit_teams'] = limit_teams
-    # request.session['shuffle_teams'] = shuffle_teams
-    # request.session['show_player_name'] = show_player_name
 
     game_info = {
         "time": time,
