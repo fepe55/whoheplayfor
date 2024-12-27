@@ -1,7 +1,6 @@
 import json
 from http import HTTPStatus
 from unittest import mock
-from unittest.mock import MagicMock
 
 import pytest
 from django.test import TestCase
@@ -11,7 +10,7 @@ from django.utils import timezone
 from whpf.forms import LIMIT_TEAMS_CHOICES, ROUNDS_CHOICES, TIME_CHOICES, GameForm
 from whpf.helpers import get_score
 from whpf.models import Options, Play, PlaySetting, Result, Team
-from whpf.views import _get_scoreboard, results
+from whpf.views import _get_scoreboard
 
 
 class BasicAccessTestCase(TestCase):
@@ -122,6 +121,70 @@ def test_home_post_valid_data(client):
 
 
 @pytest.mark.django_db
+def test_home_post_valid_data_with_logged_in_user_only_east_teams(startdata, client, user):
+    data = {
+        "time": 60,
+        "rounds": 20,
+        "limit_teams": "1",
+        "shuffle_teams": False,
+        "show_player_name": True,
+        "hard_mode": False,
+    }
+
+    client.force_login(user)
+    response = client.post(reverse("whpf:home"), data)
+
+    assert response.status_code == HTTPStatus.OK
+    assert "whpf.html" in [t.name for t in response.templates]
+
+    # Verify the game info is in the context
+    assert "game_info" in response.context
+    assert response.context["game_info"]["time"] == 60
+    assert response.context["game_info"]["rounds"] == 20
+    assert response.context["game_info"]["limit_teams"] == "1"
+
+    # Ensure Play and PlaySetting are created
+    play = Play.objects.first()
+    assert play is not None
+
+    # Check if PlaySetting objects are created correctly
+    for setting_name, setting_value in data.items():
+        assert PlaySetting.objects.filter(play=play, name=setting_name, value=str(setting_value)).exists()
+
+
+@pytest.mark.django_db
+def test_home_post_valid_data_with_logged_in_user(django_db_setup, client, user):
+    data = {
+        "time": 60,
+        "rounds": 20,
+        "limit_teams": "0",
+        "shuffle_teams": False,
+        "show_player_name": True,
+        "hard_mode": False,
+    }
+
+    client.force_login(user)
+    response = client.post(reverse("whpf:home"), data)
+
+    assert response.status_code == HTTPStatus.OK
+    assert "whpf.html" in [t.name for t in response.templates]
+
+    # Verify the game info is in the context
+    assert "game_info" in response.context
+    assert response.context["game_info"]["time"] == 60
+    assert response.context["game_info"]["rounds"] == 20
+    assert response.context["game_info"]["limit_teams"] == "0"
+
+    # Ensure Play and PlaySetting are created
+    play = Play.objects.first()
+    assert play is not None
+
+    # Check if PlaySetting objects are created correctly
+    for setting_name, setting_value in data.items():
+        assert PlaySetting.objects.filter(play=play, name=setting_name, value=str(setting_value)).exists()
+
+
+@pytest.mark.django_db
 def test_home_post_invalid_game_choices(client):
     data = {
         "time": 1000,  # Invalid time, not in TIME_CHOICES
@@ -138,15 +201,24 @@ def test_home_post_invalid_game_choices(client):
 
 
 @pytest.mark.django_db
-@mock.patch("whpf.views.render", spec_set=True)
-def test_results_with_result_object(render_mock, user):
+def test_scoreboard_with_results(client, user, user_facebook, code):
+    """Test scoreboard view with results"""
+    Result.objects.create(user=user, code=code)
+    Result.objects.create(user=user_facebook, code=code)
+
+    url = reverse("whpf:scoreboard")
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
+
+
+@pytest.mark.django_db
+def test_results_with_result_object(client, user, code):
     """Test results view"""
-    code = "v001010000000600020200020270443460162839544449224755947494"
 
     Result.objects.create(user=user, code=code)
-    results(MagicMock(), code)
-
-    render_mock.assert_called_once()
+    url = reverse("whpf:results", args=[code])
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
 
 
 @pytest.mark.django_db

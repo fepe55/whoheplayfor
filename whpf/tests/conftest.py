@@ -1,8 +1,15 @@
 import pytest
 from django.contrib.auth.models import User
+from django.core.management import call_command
+from social_django.models import UserSocialAuth
 
 from whpf.helpers import get_score
 from whpf.models import Conference, Division, Player, Result, Team
+
+
+@pytest.fixture
+def startdata():
+    call_command("loaddata", "startdata.json")
 
 
 @pytest.fixture
@@ -31,8 +38,18 @@ def code():
 
 @pytest.fixture
 def user():
-    """Fixture to create a user for the tests."""
-    return User.objects.create_user(username="testuser", password="password123")
+    """Fixture to create a user with socialauth for the tests."""
+    user = User.objects.create_user(username="testuser", password="password123")
+    UserSocialAuth.objects.create(user=user, provider="google-oauth2", uid="123")
+    return user
+
+
+@pytest.fixture
+def user_facebook():
+    """Fixture to create a user with Facebook as socialauth for the tests."""
+    user = User.objects.create_user(username="facebooktestuser", password="password123")
+    UserSocialAuth.objects.create(user=user, provider="facebook", uid="123", extra_data={"id": "123"})
+    return user
 
 
 @pytest.fixture
