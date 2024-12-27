@@ -10,7 +10,6 @@ from .forms import LIMIT_TEAMS_CHOICES, ROUNDS_CHOICES, TIME_CHOICES, GameForm
 from .helpers import (
     get_guesses,
     get_score,
-    get_teams_and_players_api,
     get_teams_and_players_database,
     parse_code,
     request_is_ajax,
@@ -18,12 +17,10 @@ from .helpers import (
 from .models import Options, Play, Player, PlaySetting, Result, Team
 
 
-def get_teams_and_players(game_info):
-    """Get teams and players from Database or API"""
-    database = True
-    if database:
-        return get_teams_and_players_database(game_info)
-    return get_teams_and_players_api(game_info)
+def _get_teams_and_players(game_info):
+    """Get teams and players from the Database"""
+    return get_teams_and_players_database(game_info)
+    # return get_teams_and_players_api(game_info)
 
 
 def home(request):
@@ -119,7 +116,7 @@ def home(request):
         "hard_mode": hard_mode,
     }
 
-    (teams, players) = get_teams_and_players(game_info)
+    (teams, players) = _get_teams_and_players(game_info)
 
     data = {
         "game_info": game_info,
@@ -265,13 +262,7 @@ def faq(request):
                 questions.remove(q)
                 break
 
-    return render(
-        request,
-        "faq.html",
-        {
-            "questions": questions,
-        },
-    )
+    return render(request, "faq.html", {"questions": questions})
 
 
 def save(request, code):

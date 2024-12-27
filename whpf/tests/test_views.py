@@ -1,6 +1,7 @@
 import json
 from http import HTTPStatus
 from unittest import mock
+from unittest.mock import MagicMock
 
 import pytest
 from django.test import TestCase
@@ -10,7 +11,7 @@ from django.utils import timezone
 from whpf.forms import LIMIT_TEAMS_CHOICES, ROUNDS_CHOICES, TIME_CHOICES, GameForm
 from whpf.helpers import get_score
 from whpf.models import Options, Play, PlaySetting, Result, Team
-from whpf.views import _get_scoreboard
+from whpf.views import _get_scoreboard, results
 
 
 class BasicAccessTestCase(TestCase):
@@ -137,14 +138,26 @@ def test_home_post_invalid_game_choices(client):
 
 
 @pytest.mark.django_db
-def test_get_scoreboard_empty_queryset():
+@mock.patch("whpf.views.render", spec_set=True)
+def test_results_with_result_object(render_mock, user):
+    """Test results view"""
+    code = "v001010000000600020200020270443460162839544449224755947494"
+
+    Result.objects.create(user=user, code=code)
+    results(MagicMock(), code)
+
+    render_mock.assert_called_once()
+
+
+@pytest.mark.django_db
+def test__get_scoreboard_empty_queryset():
     """Test the case where the queryset is empty."""
     result = _get_scoreboard(Result.objects.none())  # Empty queryset
     assert result == []  # Should return an empty list
 
 
 @pytest.mark.django_db
-def test_get_scoreboard_single_user(results_fixture):
+def test__get_scoreboard_single_user(results_fixture):
     """Test the case where all results belong to one user."""
     user_results = Result.objects.filter(user=results_fixture[0].user)  # Get results for the first user
     result = _get_scoreboard(user_results)
