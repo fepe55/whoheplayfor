@@ -1,4 +1,4 @@
-name: Test, build and push
+name: Lint, test, build and push
 
 on:
   push:
@@ -10,15 +10,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  linting:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
-
+    name: Linting
     steps:
       - uses: actions/checkout@v4
 
       - name: Run Ruff
         uses: astral-sh/ruff-action@v2
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Run tests and generate coverage report
         run: |
@@ -32,8 +37,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }} # required
 
   build-and-push:
-    name: Push Docker image to Docker Hub
-    needs: test
+    name: Build image and push to Docker Hub
+    needs: [test, linting]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
